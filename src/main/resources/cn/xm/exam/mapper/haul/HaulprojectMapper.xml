@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.HaulprojectMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.haul.Haulproject" >
+    <id column="haulprojectid" property="haulprojectid" jdbcType="INTEGER" />
+    <result column="bigid" property="bigid" jdbcType="VARCHAR" />
+    <result column="projectId" property="projectid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    haulprojectid, bigid, projectId
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.haul.HaulprojectExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from haulproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from haulproject
+    where haulprojectid = #{haulprojectid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from haulproject
+    where haulprojectid = #{haulprojectid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.haul.HaulprojectExample" >
+    delete from haulproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.haul.Haulproject" >
+    insert into haulproject (haulprojectid, bigid, projectId
+      )
+    values (#{haulprojectid,jdbcType=INTEGER}, #{bigid,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.haul.Haulproject" >
+    insert into haulproject
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="haulprojectid != null" >
+        haulprojectid,
+      </if>
+      <if test="bigid != null" >
+        bigid,
+      </if>
+      <if test="projectid != null" >
+        projectId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="haulprojectid != null" >
+        #{haulprojectid,jdbcType=INTEGER},
+      </if>
+      <if test="bigid != null" >
+        #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        #{projectid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.haul.HaulprojectExample" resultType="java.lang.Integer" >
+    select count(*) from haulproject
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update haulproject
+    <set >
+      <if test="record.haulprojectid != null" >
+        haulprojectid = #{record.haulprojectid,jdbcType=INTEGER},
+      </if>
+      <if test="record.bigid != null" >
+        bigid = #{record.bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectid != null" >
+        projectId = #{record.projectid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update haulproject
+    set haulprojectid = #{record.haulprojectid,jdbcType=INTEGER},
+      bigid = #{record.bigid,jdbcType=VARCHAR},
+      projectId = #{record.projectid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.haul.Haulproject" >
+    update haulproject
+    <set >
+      <if test="bigid != null" >
+        bigid = #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="projectid != null" >
+        projectId = #{projectid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where haulprojectid = #{haulprojectid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.haul.Haulproject" >
+    update haulproject
+    set bigid = #{bigid,jdbcType=VARCHAR},
+      projectId = #{projectid,jdbcType=VARCHAR}
+    where haulprojectid = #{haulprojectid,jdbcType=INTEGER}
+  </update>
+</mapper>

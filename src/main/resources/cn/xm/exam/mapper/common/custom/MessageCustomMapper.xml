@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.common.custom.MessageCustomMapper">
+	<!-- 查询未读的消息，每次显示6条 -->
+	<select id="getMessageByEmptype" parameterType="string"
+		resultType="cn.xm.exam.bean.common.Message">
+		select * from message where empType=#{value} and isDispose='0' limit 0,6
+	</select>
+	<!-- 根据ID设置消息状态 -->
+	<update id="updateMessageStatusByMessageId">
+	update message set isDispose='1' where messageid = #{value}
+	</update>
+</mapper>

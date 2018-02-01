@@ -1,0 +1,99 @@
+/*违章*/
+#addUnitForm .el_spans,
+#updateForm .el_spans{
+	width:105px !important;
+	text-align:right !important;
+}
+
+#el_bRInfor .modal-dialog {
+	width: 60%;
+}
+/*违章情况表*/
+.el_BRCase {
+	width: 100%;
+}
+.el_BRCase caption {
+	font-size: 20px;
+	margin-top: 10px;
+}
+
+.el_BRCase tr {
+	height: 30px;
+	border-bottom: 1px solid #ccc;
+}
+.el_BRCase tr th {
+	text-align: center;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+}
+.el_BRCase tr td {
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	min-width: 80px;
+	padding: 5px;
+}
+.el_dp a{
+	display:block;
+	width:100% !important;
+	height:30px !important;
+	line-height:30px !important;
+	text-align:center;
+	color:blue;
+	font-weight:bolder;
+}
+.el_dp {
+	padding:0 !important;	
+}
+.success:hover{
+	cursor:pointer;
+}
+
+
+
+.big-photo{
+	position:absolute;
+	right:0;
+	top:0;
+	width:30px;
+	height:50px;
+	border:3px solid #ccc;
+}
+.el_modellist0 {
+    margin: 10px;
+    margin-bottom: 15px;
+    width: 300px;
+}
+/*单选按钮的字体大小*/
+.el_modellist0  label{
+    font-size:13px;
+}
+#el_addEmp .input-group{
+	width:350px !important;
+}
+
+.select2-selection__rendered,
+.select2-container--default .select2-selection--single {
+	height: 25px;
+	line-height: 20px;
+    border-radius: 3px;
+    width: 310px;
+    font-size: 12px;
+    background-color: white;    
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    display: table-cell;
+    position: relative;
+    z-index: 2;
+    float: left;
+    margin-bottom: 0;
+    background-image: none;
+    border: 1px solid #ccc;
+    color: #555;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);/* 
+    transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s; */
+}
+.select2-dropdown,
+ .select2-dropdown--below{
+	width:310px !important;	
+}

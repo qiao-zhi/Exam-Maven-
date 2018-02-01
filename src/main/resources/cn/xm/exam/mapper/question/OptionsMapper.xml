@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.question.OptionsMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.question.Options" >
+    <id column="optionId" property="optionid" jdbcType="VARCHAR" />
+    <result column="questionId" property="questionid" jdbcType="VARCHAR" />
+    <result column="optionContent" property="optioncontent" jdbcType="VARCHAR" />
+    <result column="optionWithTag" property="optionwithtag" jdbcType="VARCHAR" />
+    <result column="optionSequence" property="optionsequence" jdbcType="VARCHAR" />
+    <result column="isAnswer" property="isanswer" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    optionId, questionId, optionContent, optionWithTag, optionSequence, isAnswer, description
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.question.OptionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from options
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from options
+    where optionId = #{optionid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from options
+    where optionId = #{optionid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.question.OptionsExample" >
+    delete from options
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.question.Options" >
+    insert into options (optionId, questionId, optionContent, 
+      optionWithTag, optionSequence, isAnswer, 
+      description)
+    values (#{optionid,jdbcType=VARCHAR}, #{questionid,jdbcType=VARCHAR}, #{optioncontent,jdbcType=VARCHAR}, 
+      #{optionwithtag,jdbcType=VARCHAR}, #{optionsequence,jdbcType=VARCHAR}, #{isanswer,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.question.Options" >
+    insert into options
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="optionid != null" >
+        optionId,
+      </if>
+      <if test="questionid != null" >
+        questionId,
+      </if>
+      <if test="optioncontent != null" >
+        optionContent,
+      </if>
+      <if test="optionwithtag != null" >
+        optionWithTag,
+      </if>
+      <if test="optionsequence != null" >
+        optionSequence,
+      </if>
+      <if test="isanswer != null" >
+        isAnswer,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="optionid != null" >
+        #{optionid,jdbcType=VARCHAR},
+      </if>
+      <if test="questionid != null" >
+        #{questionid,jdbcType=VARCHAR},
+      </if>
+      <if test="optioncontent != null" >
+        #{optioncontent,jdbcType=VARCHAR},
+      </if>
+      <if test="optionwithtag != null" >
+        #{optionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="optionsequence != null" >
+        #{optionsequence,jdbcType=VARCHAR},
+      </if>
+      <if test="isanswer != null" >
+        #{isanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.question.OptionsExample" resultType="java.lang.Integer" >
+    select count(*) from options
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update options
+    <set >
+      <if test="record.optionid != null" >
+        optionId = #{record.optionid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionid != null" >
+        questionId = #{record.questionid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optioncontent != null" >
+        optionContent = #{record.optioncontent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionwithtag != null" >
+        optionWithTag = #{record.optionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.optionsequence != null" >
+        optionSequence = #{record.optionsequence,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isanswer != null" >
+        isAnswer = #{record.isanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update options
+    set optionId = #{record.optionid,jdbcType=VARCHAR},
+      questionId = #{record.questionid,jdbcType=VARCHAR},
+      optionContent = #{record.optioncontent,jdbcType=VARCHAR},
+      optionWithTag = #{record.optionwithtag,jdbcType=VARCHAR},
+      optionSequence = #{record.optionsequence,jdbcType=VARCHAR},
+      isAnswer = #{record.isanswer,jdbcType=VARCHAR},
+      description = #{record.description,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.question.Options" >
+    update options
+    <set >
+      <if test="questionid != null" >
+        questionId = #{questionid,jdbcType=VARCHAR},
+      </if>
+      <if test="optioncontent != null" >
+        optionContent = #{optioncontent,jdbcType=VARCHAR},
+      </if>
+      <if test="optionwithtag != null" >
+        optionWithTag = #{optionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="optionsequence != null" >
+        optionSequence = #{optionsequence,jdbcType=VARCHAR},
+      </if>
+      <if test="isanswer != null" >
+        isAnswer = #{isanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where optionId = #{optionid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.question.Options" >
+    update options
+    set questionId = #{questionid,jdbcType=VARCHAR},
+      optionContent = #{optioncontent,jdbcType=VARCHAR},
+      optionWithTag = #{optionwithtag,jdbcType=VARCHAR},
+      optionSequence = #{optionsequence,jdbcType=VARCHAR},
+      isAnswer = #{isanswer,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR}
+    where optionId = #{optionid,jdbcType=VARCHAR}
+  </update>
+</mapper>

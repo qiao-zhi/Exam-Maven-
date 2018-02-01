@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+   
+  
+	<package name="system" extends="json-default,struts-default" namespace="/">
+	
+      
+        <global-results>
+             <result name="permissionException" type="chain">
+             	<param name="actionName">errorProcessor</param>
+             </result>
+         </global-results>
+         <global-exception-mappings>
+             <exception-mapping name="permissionException" result="permissionException" exception="org.apache.shiro.authz.UnauthorizedException">
+             </exception-mapping>
+         </global-exception-mappings>
+       
+		<action name="user_*" class="userAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="role_*" class="roleAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="permission_*" class="permissionAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="errorProcessor" class="perExceptionAction">
+             
+         </action>
+	</package>
+</struts>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+    "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="department" extends="json-default" namespace="/">
+		
+		<action name="department_*" class="cn.xm.exam.action.employee.in.DepartmentAction"
+		method="{1}">
+		<result type="json">
+			<param name="root">result</param>
+		</result>
+		<result name="innerdepartEmpManage">/view/innerDepart/innerdepartEmpManage.jsp</result>
+		</action>
+		
+		<!-- ll 部门统计action -->
+		<action name="departmentCount_*" class="departmentCountAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+	</package>
+</struts>

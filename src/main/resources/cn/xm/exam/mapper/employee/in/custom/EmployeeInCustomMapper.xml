@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.in.custom.EmployeeInCustomMapper">
+
+
+	<!-- S qlq -->
+	<!-- S 查询内部参考人员 -->
+	<select id="getExamEmployeeIns" resultType="map"
+		parameterType="hashmap">
+		select
+		e.employeeId,
+		e.departmentId,
+		e.name,
+		e.sex,
+		e.idcode,
+		e.trainstatus,
+		d.departmentname
+		from employee_in e,
+		department d
+		<where>
+			<include refid="getExamEmployeeIns_where"></include>
+		</where>
+		order by CONVERT(d.departmentName USING gbk), CONVERT(e.name USING gbk)
+	</select>
+	<sql id="getExamEmployeeIns_where">
+		<!-- 根据部门名称查询部门ID -->
+		<if test="departmentNames !=null">
+			and e.departmentId in
+			<foreach collection="departmentNames" item="departmentName"
+				separator="," open="(" close=")">
+				#{departmentName}
+			</foreach>
+		</if>
+		<if test="sex!=null">
+			and e.sex=#{sex}
+		</if>
+		<if test="idCode!=null">
+			and e.idCode like '%${idCode}%'
+		</if>
+		<if test="trainStatus!=null">
+			and e.trainStatus=#{trainStatus}
+		</if>
+		<if test="name!=null">
+			and e.name like '%${name}%'
+		</if>
+		<if test="1==1">
+			and e.departmentId = d.departmentId
+		</if>
+	</sql>
+	<!-- E 查询外部参考人员 -->
+
+	<!-- E qlq -->
+
+	<!-- S zwy -->
+
+	<!-- 查询分页 -->
+
+	<sql id="queryPage_limit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+	<!--查询部门的条件 -->
+	<sql id="query_employeeIn_where">
+		<!-- 如果isOnlyManager是true则只查询管理员  否则查询所有用户 -->
+		<if test="isOnlyManager!=null and isOnlyManager=='true'">
+			and departmentid = #{departmentid}
+		</if>
+		<if test="departmentid!=null and isOnlyManager!=null and isOnlyManager=='false'">
+			and departmentid like '${departmentid}%'
+		</if>
+		<if test="departmentId != null and isOnlyManager!=null and isOnlyManager=='false'">
+			AND departmentId like '${departmentId}%'
+		</if>
+		<if test="name!=null">
+			<!-- and name=#{name} -->
+			and name like '%${name}%'
+		</if>
+		<if test="sex!=null">
+			and sex=#{sex}
+		</if>
+		<if test="idcode!=null">
+			<!-- and idcode=#{idcode} -->
+			and idcode like '%${idcode}%'
+		</if>
+
+		<if test="trainstatus!=null">
+			and trainstatus=#{trainstatus}
+		</if>
+
+
+	</sql>
+	<!-- 得到所有的员工信息 -->
+	<select id="findEmployeeInByCondition" resultType="cn.xm.exam.bean.employee.in.EmployeeIn"
+		parameterType="hashmap">
+		SELECT * FROM employee_in
+		<where>
+			<include refid="query_employeeIn_where"></include>
+		</where>
+		order by CONVERT(NAME USING GBK),sort DESC
+		<include refid="queryPage_limit"></include>
+	</select>
+
+	<!-- 得到符合该条件的员工数量 -->
+	<select id="getEmployeeInCountByCondition" resultType="int"
+		parameterType="hashmap">
+		SELECT count(*) FROM employee_in
+		<where>
+			<include refid="query_employeeIn_where"></include>
+		</where>
+	</select>
+
+	<!-- 通过id得到员工 -->
+	<select id="findEmployeeInById" resultType="cn.xm.exam.bean.employee.in.EmployeeIn"
+		parameterType="string">
+		SELECT * FROM employee_in where employeeid=#{employeeid}
+	</select>
+	<!-- 通过departmentid得到该部门的员工数量 -->
+	<select id="getCountByDepartmentId" resultType="int"
+		parameterType="string">
+		SELECT count(*) FROM employee_in where
+		departmentid=#{departmentid}
+	</select>
+
+	<!-- 通过departmentid得到该部门的员工 -->
+	<select id="getALLEmployeeInByDepartmentId" resultType="string"
+		parameterType="string">
+		SELECT employeeId FROM employee_in where
+		departmentid=#{departmentid}
+
+	</select>
+
+	<!-- 通过身份证删除该员工的黑名单记录 -->
+	<select id="deleteBlackrulesById" parameterType="string">
+		delete from
+		blacklist where blackIdcard=#{idCode} and temporaryInStatus="0" and
+		employeeStatus="0";
+	</select>
+
+
+	<!-- 批量加入内部员工的基本信息 -->
+	<insert id="addEmployeeInBatch" parameterType="list">
+		<!-- insert into employee_in (employeeId, employeeNumber, name, idCode, 
+			sex, birthday, address, finger, headaddress) values <foreach collection="list" 
+			item="employeeOutInfo" separator=","> (#{employeeOutInfo.employeeid,jdbcType=VARCHAR}, 
+			#{employeeOutInfo.employeenumber,jdbcType=VARCHAR}, #{employeeOutInfo.name,jdbcType=VARCHAR}, 
+			#{employeeOutInfo.idcode,jdbcType=CHAR}, #{employeeOutInfo.sex,jdbcType=VARCHAR}, 
+			#{employeeOutInfo.birthday,jdbcType=DATE}, #{employeeOutInfo.address,jdbcType=VARCHAR}, 
+			#{employeeOutInfo.finger,jdbcType=VARCHAR}, #{employeeOutInfo.headaddress,jdbcType=VARCHAR}) 
+			</foreach> -->
+		insert into employee_in (employeeId, employeeNumber, name,
+		idCode, sex,
+		birthday, photo,
+		phone, email, address,
+		duty, departmentId, finger,
+		isDelete, trainStatus,sort)
+		values
+		<foreach collection="list" item="employeeInInfo" separator=",">
+			(#{employeeInInfo.employeeid,jdbcType=VARCHAR},
+			#{employeeInInfo.employeenumber,jdbcType=VARCHAR},
+			#{employeeInInfo.name,jdbcType=VARCHAR},
+			#{employeeInInfo.idcode,jdbcType=CHAR},
+			#{employeeInInfo.sex,jdbcType=VARCHAR},
+			#{employeeInInfo.birthday,jdbcType=DATE},
+			#{employeeInInfo.photo,jdbcType=VARCHAR},
+			#{employeeInInfo.phone,jdbcType=VARCHAR},
+			#{employeeInInfo.email,jdbcType=VARCHAR},
+			#{employeeInInfo.address,jdbcType=VARCHAR},
+			#{employeeInInfo.duty,jdbcType=VARCHAR},
+			#{employeeInInfo.departmentid,jdbcType=VARCHAR},
+			#{employeeInInfo.finger,jdbcType=VARCHAR},
+			#{employeeInInfo.isdelete,jdbcType=VARCHAR},
+			#{employeeInInfo.trainstatus,jdbcType=INTEGER},
+			#{employeeInInfo.sort,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	<!-- 判断是否在黑名单中 -->
+	<select id="isBlackList" parameterType="string" resultType="string">
+		SELECT temporaryInStatus from blacklist where
+		blacklist.blackIdcard=#{idcode} and employeeStatus="0";
+	</select>
+
+	<!-- 判断是否是内部部门 -->
+	<select id="isNeibu" parameterType="string" resultType="string">
+		SELECT
+		departmentType from department where departmentId=#{value};
+	</select>
+	<!-- 分页查询该部门下的所有员工信息 -->
+	<sql id="queryEmpCaseInfo_limit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+	<select id="getEmpCaseInfoByCondition" resultType="hashmap"
+		parameterType="hashmap">
+		SELECT name,sex,phone,duty,trainStatus FROM employee_in where
+		departmentid=#{empbumen}
+		order by convert(name using gbk)
+		<include refid="queryEmpCaseInfo_limit"></include>
+	</select>
+
+	<!-- 通过身份证得到员工信息 -->
+	<select id="getEmployeeInByIdcode" parameterType="string"
+		resultType="cn.xm.exam.bean.employee.in.EmployeeIn">
+		SELECT * from employee_in where idCode=#{idcode};
+	</select>
+	
+	<!-- E zwy -->
+
+
+</mapper>

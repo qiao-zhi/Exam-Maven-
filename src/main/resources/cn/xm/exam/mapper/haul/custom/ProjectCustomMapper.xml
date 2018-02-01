@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.custom.ProjectCustomMapper">
+
+	<!-- 批量插入工程信息 -->
+	<insert id="insertProjectBatch" parameterType="list"
+		useGeneratedKeys="true" keyProperty="projectid">
+		INSERT INTO `project`(`projectname`) VALUES
+		<foreach collection="list" item="project" separator="," index="index">
+			(#{project.projectname})
+		</foreach>
+	</insert>
+
+	<!-- 根据大修ID查询工程信息 -->
+	<select id="getProjectsByBigId" parameterType="string"
+		resultType="map">
+		SELECT * FROM project WHERE projectid IN (SELECT projectId
+		FROM haulproject WHERE bigid = #{value})
+	</select>
+
+</mapper>

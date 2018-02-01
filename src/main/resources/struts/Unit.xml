@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="unit" namespace="/" extends="json-default,struts-default">
+		<!-- 全局结果集，将response转换为json传到前台 -->
+		<global-results>
+			<result name="success" type="json">
+				<param name="root">response</param>
+			</result>
+		</global-results>
+		<!-- 添加部门 -->
+		<action name="addUnit_*" method="{1}" class="addUnitAction"></action>
+		<!-- 查询大修单位 -->
+		<action name="unit_*" class="findUnitAction" method="{1}"></action>
+		<!-- 修改单位基本信息 -->
+		<action name="updateUnit" class="updateUnitAction"></action>
+		<!-- 修改单位基本信息 -->
+		<action name="deleteUnit" class="deleteUnitAction"></action>
+		
+		
+		<!--分配员工  -->
+		
+		
+	</package>
+</struts>

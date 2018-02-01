@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.common.custom.NewsPictureCustomMapper">
+	<!-- 图片 -->
+	<!-- 查询所有图片 -->
+	<select id="selectAllnewsPicture" resultType="cn.xm.exam.bean.news.NewsPicture">
+		select * from newsPicture
+	</select>
+
+	<!-- 批量插入图片 -->
+	<insert id="insertnewsPictureBatch" parameterType="java.util.List">
+		insert into newsPicture
+		(newsPCurFileName,newsPOldFileName) values 
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+			(#{item.newsPCurFileName},#{item.newsPOldFileName})
+		</foreach>
+	</insert>
+
+	<!-- 批量删除图片 -->
+	<delete id="deletenewsPicturesBatch">
+		delete from newsPicture
+	</delete>
+
+	<!-- 查询图片数量 -->
+	<select id="newsPicturesNums">
+		select count(*) from newsPicture;
+	</select>
+</mapper>

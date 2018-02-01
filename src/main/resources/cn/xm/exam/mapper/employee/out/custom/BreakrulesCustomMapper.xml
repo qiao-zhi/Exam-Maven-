@@ -1,0 +1,594 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.custom.BreakrulesCustomMapper">
+	<!-- ====lixianyuan start =========== -->
+	<!-- 根据单位编号unitid和单位大修id获取外来职工名字、性别、身份证、违章记分，根据当前页页号、每页显示的记录数进行分页查找 这个sql语句要修改一下 -->
+	<select id="selectLeftToTable" parameterType="map" resultType="map">
+		SELECT
+		employee_out.name,employee_out.sex,employee_out.idCode,employee_out.employeeId,
+		unit.name AS
+		'depName',haulemployeeout.empType,unit.unitId,haulemployeeout.bigId,
+		haulemployeeout.empOutphone,
+		haulemployeeout.BigEmployeeoutId,
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		),0) AS
+		'sumBreakScore',
+		IFNULL((select blacklist.temporaryInStatus from
+		blacklist where
+		blacklist.employeestatus='1' and blacklist.employeeId =
+		haulemployeeout.employeeId),'否') as 'status'
+
+		FROM
+		haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				and haulinfo.bigId = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+		</where>
+		ORDER BY sumBreakScore DESC ,unit.name ASC
+		LIMIT #{curPage},
+		#{curTotal}
+	</select>
+
+	<!-- 根据单位编号unitid获取外来职工名字、性别、身份证、违章记分，总共有多少条记录数 -->
+	<select id="selectLeftToTableCount" parameterType="map"
+		resultType="int">
+		SELECT count(*)
+
+		FROM haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				and haulinfo.bigId = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+		</where>
+
+	</select>
+
+	<!-- 根据BigEmployeeoutId、职工id employeeid 去违章表中查询该大修下该职工的所有违章记录 -->
+	<select id="selBreakRulesByEmployeeId" parameterType="map"
+		resultType="cn.xm.exam.bean.employee.out.Breakrules">
+		select * from breakrules where breakrules.employeeId =
+		#{employeeid}
+		<!-- and
+		breakrules.BigEmployeeoutId = #{bigemployeeoutid} -->
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		ORDER BY minusNum DESC
+	</select>
+
+
+
+	<!-- 根据单位编号去单位大修表中获取总该单位的总积分(也就是该单位编号对应的积分) -->
+	<select id="selHaulunitByUnitId" parameterType="String"
+		resultType="cn.xm.exam.bean.haul.Haulunit">
+		SELECT * FROM haulunit WHERE haulunit.unitId = #{unitId}
+	</select>
+
+	<!-- 根据大修单位编号获取大修信息 -->
+	<select id="selHaulunitByUnitBigHualId" parameterType="map"
+		resultType="cn.xm.exam.bean.haul.Haulunit">
+		SELECT * FROM haulunit WHERE haulunit.bigId = #{unitbigid}
+		AND
+		haulunit.unitId = #{unitid}
+	</select>
+
+
+
+
+	<!-- 与左侧的树绑定之后 根据条件进行分页查询 (就是顶部查询的那些条件 ，这个是没有点击黑名单的情况的查询) -->
+	<select id="selectMsgByFyCondition" parameterType="map"
+		resultType="map">
+		SELECT
+		employee_out.name,employee_out.sex,employee_out.idCode,employee_out.employeeId,
+		unit.name AS 'depName',haulemployeeout.empType,
+		haulemployeeout.empOutphone,
+		haulemployeeout.BigEmployeeoutId,haulemployeeout.bigId,unit.unitId,
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId 
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		) ,0)AS 'sumBreakScore',
+		IFNULL((select blacklist.temporaryInStatus
+		from blacklist where
+		blacklist.employeestatus='1' and
+		blacklist.employeeId =
+		haulemployeeout.employeeId),'否') as 'status'
+
+
+		FROM haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+			and
+			employee_out.name like '%${name}%'
+			and employee_out.idCode like
+			'%${idcode}%'
+			and employee_out.sex like '%${sex}%'
+
+			and IFNULL((SELECT
+			SUM(breakrules.minusNum) FROM breakrules
+			WHERE breakrules.employeeId =
+			employee_out.employeeId and
+			haulemployeeout.BigEmployeeoutId =
+			breakrules.BigEmployeeoutId),0)
+			BETWEEN #{minusnumstart} and
+			#{minusnumend}
+
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				AND haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+		ORDER BY sumBreakScore DESC ,unit.name ASC
+		LIMIT #{curPage},
+		#{curTotal}
+	</select>
+
+	<!-- 根与左边的树绑定之后的按条件分页查询 黑名单不为"是的情况,也不为否的情况"也就是没有点击黑名单的时候，查询符合条件的总记录数 -->
+	<select id="selectMsgByFyConditionCount" parameterType="map"
+		resultType="int">
+		SELECT count(*)
+
+		FROM haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+			and
+			employee_out.name like '%${name}%'
+			and employee_out.idCode like
+			'%${idcode}%'
+			and employee_out.sex like '%${sex}%'
+			<if
+				test="minusnumstart !=null &amp;&amp; minusnumstart !='' &amp;&amp; minusnumstart !=100 ">
+				and IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+				WHERE breakrules.employeeId = employee_out.employeeId and
+				haulemployeeout.BigEmployeeoutId = breakrules.BigEmployeeoutId),0)
+				BETWEEN #{minusnumstart} and #{minusnumend}
+			</if>
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				and haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+	</select>
+
+
+
+	<!-- 与左边的树绑定之后的按条件分页查询 点击了黑名单之后的情况，也就是“是”黑名单的情况 -->
+	<select id="selLeftTreeAndConditionBlack" parameterType="map"
+		resultType="map">
+		SELECT
+		employee_out.name,employee_out.sex,employee_out.idCode,employee_out.employeeId,
+		unit.name AS 'depName',haulemployeeout.empType,
+		haulemployeeout.empOutphone,
+		haulemployeeout.BigEmployeeoutId,haulemployeeout.bigId,unit.unitId,
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		),0) AS
+		'sumBreakScore',
+		IFNULL((select blacklist.temporaryInStatus from
+		blacklist where
+		blacklist.employeestatus='1' and blacklist.employeeId =
+		haulemployeeout.employeeId),'否') as 'status'
+
+		FROM
+		haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+			and
+			employee_out.name like '%${name}%'
+			and employee_out.idCode like
+			'%${idcode}%'
+			and employee_out.sex like '%${sex}%'
+
+			and (SELECT
+			SUM(breakrules.minusNum) FROM breakrules
+			WHERE breakrules.employeeId =
+			employee_out.employeeId and
+			haulemployeeout.BigEmployeeoutId =
+			breakrules.BigEmployeeoutId) >=12
+
+			and (select
+			blacklist.temporaryInStatus from blacklist where
+			blacklist.employeestatus='1' and blacklist.employeeId =
+			haulemployeeout.employeeId)='1'
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				AND haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+		ORDER BY sumBreakScore DESC ,unit.name ASC
+		LIMIT #{curPage},#{curTotal}
+	</select>
+
+
+	<!-- 与左边的树绑定之后的按条件分页查询的总记录数 点击了黑名单之后的情况，也就是“是”黑名单的情况 -->
+	<select id="selLeftTreeAndConditionBlackCount" parameterType="map"
+		resultType="int">
+		SELECT count(*)
+
+		FROM haulemployeeout,employee_out,haulinfo,unit
+
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+			and
+			employee_out.name like '%${name}%'
+			and employee_out.idCode like
+			'%${idcode}%'
+			and employee_out.sex like '%${sex}%'
+
+			and (SELECT
+			SUM(breakrules.minusNum) FROM breakrules
+			WHERE breakrules.employeeId =
+			employee_out.employeeId and
+			haulemployeeout.BigEmployeeoutId =
+			breakrules.BigEmployeeoutId) >=12
+			and (select
+			blacklist.temporaryInStatus from blacklist where
+			blacklist.employeestatus='1' and blacklist.employeeId =
+			haulemployeeout.employeeId)='1'
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				AND haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+	</select>
+
+
+	<!-- 与左边的树绑定之后黑名单状态为"否"的情况 -->
+	<select id="blackStatusFalse" parameterType="map" resultType="map">
+		SELECT
+		employee_out.name,employee_out.sex,employee_out.idCode,employee_out.employeeId,
+		unit.name AS 'depName',haulemployeeout.empType,
+		haulemployeeout.empOutphone,
+		haulemployeeout.BigEmployeeoutId,haulemployeeout.bigId,unit.unitId,
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		),0) AS
+		'sumBreakScore',
+		IFNULL((select blacklist.temporaryInStatus from
+		blacklist where
+		blacklist.employeestatus='1' and blacklist.employeeId =
+		haulemployeeout.employeeId),'否') as 'status'
+
+		FROM
+		haulemployeeout,employee_out,haulinfo,unit
+
+		<where>
+			unit.unitId = haulemployeeout.unitId
+			and haulemployeeout.employeeId =
+			employee_out.employeeid
+			and haulemployeeout.bigId = haulinfo.bigId
+			and
+			employee_out.name like '%${name}%'
+			and employee_out.idCode like
+			'%${idcode}%'
+			and employee_out.sex like '%${sex}%'
+			and IFNULL((select
+			blacklist.temporaryInStatus from blacklist where
+			blacklist.employeestatus='1' and blacklist.employeeId =
+			haulemployeeout.employeeId),'否')!='1'
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				AND haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+		ORDER BY sumBreakScore DESC ,unit.name ASC
+		LIMIT #{curPage},#{curTotal}
+	</select>
+
+
+	<!-- 与左边的树绑定之后黑名单状态为"否"的情况总条数 -->
+	<select id="blackStatusFalseCount" parameterType="map"
+		resultType="int">
+		SELECT count(*)
+
+		FROM haulemployeeout,employee_out,haulinfo,unit
+
+
+
+		<where>
+			IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+			WHERE
+			breakrules.employeeId = employee_out.employeeId and
+			haulemployeeout.BigEmployeeoutId = breakrules.BigEmployeeoutId),0)
+			between 0 and 11
+
+
+			and unit.unitId = haulemployeeout.unitId
+			and
+			haulemployeeout.employeeId = employee_out.employeeid
+			and
+			haulemployeeout.bigId = haulinfo.bigId
+			and employee_out.name like
+			'%${name}%'
+			and employee_out.idCode like '%${idcode}%'
+			and
+			employee_out.sex like '%${sex}%'
+
+
+			<if test="unitbigid !=null &amp;&amp; unitbigid !='' ">
+				AND haulinfo.bigid = #{unitbigid}
+			</if>
+			<if test="unitid !=null &amp;&amp; unitid !='' ">
+				and unit.unitId = #{unitid}
+			</if>
+			and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+		</where>
+	</select>
+
+
+
+	<!-- 查询当前大修下该职工的违章记分 -->
+	<select id="selSumBreakScoreByEmpId" parameterType="map"
+		resultType="Integer">
+		SELECT SUM(minusNum) FROM breakrules
+		WHERE breakrules.employeeId =
+		#{employeeid}
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- and breakrules.BigEmployeeoutId = #{bigemployeeoutid} -->
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>
+		
+	</select>
+	<select id="selSumBreakScoreByEmpId1" parameterType="String"
+		resultType="Integer">
+		SELECT SUM(minusNum) FROM breakrules
+		WHERE breakrules.employeeId = #{value}
+		and breakTime like CONCAT(Year(CurDate()),'%')
+	</select>
+
+
+	<!-- 根据职工id去黑名单表中删除对应的记录 只删除外部员工 -->
+	<delete id="delBlacklistByEmployeeId" parameterType="String">
+		DELETE FROM
+		blacklist WHERE blacklist.employeeId = #{employeeid} and
+		blacklist.employeestatus = '1'
+	</delete>
+
+
+	<!-- 根据职工id获取外来职工表中的信息 -->
+	<select id="selEmployeeOutByEmployeeId" parameterType="String"
+		resultType="cn.xm.exam.bean.employee.out.EmployeeOut">
+		SELECT * FROM employee_out WHERE employee_out.employeeId =
+		#{employeeid}
+	</select>
+
+	<!-- 根据职工id获取黑名单信息 只获取外部员工的黑名单信息 -->
+	<select id="selBlackListByEmpId" parameterType="String"
+		resultType="cn.xm.exam.bean.employee.out.Blacklist">
+		SELECT * FROM blacklist WHERE blacklist.employeeId =
+		#{employeeid} and
+		blacklist.employeestatus = '1'
+	</select>
+
+	<!-- 根据职工id获取大修外来职工表中的单位id -->
+	<select id="selHaulemployeeoutByUnitId" parameterType="String"
+		resultType="cn.xm.exam.bean.haul.Haulemployeeout">
+		SELECT * FROM haulemployeeout WHERE
+		haulemployeeout.employeeId =
+		#{employeeid}
+	</select>
+
+
+
+	<!-- 页面初始化要用的数据 -->
+	<select id="initPage" parameterType="map" resultType="map">
+		SELECT
+		employee_out.name,employee_out.sex,employee_out.idCode,employee_out.employeeId,
+		unit.name AS 'depName',haulemployeeout.empType,
+		haulemployeeout.empOutphone,
+		haulemployeeout.BigEmployeeoutId,haulemployeeout.bigId,unit.unitId,
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId 
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if>),0) AS
+		'sumBreakScore',
+		IFNULL((select blacklist.temporaryInStatus from
+		blacklist where
+		blacklist.employeestatus='1' and blacklist.employeeId =
+		haulemployeeout.employeeId),'否') as 'status'
+
+		FROM
+		haulemployeeout,employee_out,haulinfo,unit
+		WHERE unit.unitId =
+		haulemployeeout.unitId
+		and haulemployeeout.employeeId =
+		employee_out.employeeid
+		and haulemployeeout.bigId = haulinfo.bigId
+		and haulinfo.bigId NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+
+		ORDER BY sumBreakScore DESC ,unit.name ASC
+
+		LIMIT #{curPage},
+		#{curTotal}
+
+	</select>
+
+	<!-- 页面初始化数据的总条数 -->
+	<select id="initPageCount" resultType="int">
+
+		SELECT count(*)
+
+		FROM
+		haulemployeeout,employee_out,haulinfo,unit
+		WHERE unit.unitId =
+		haulemployeeout.unitId
+		AND haulemployeeout.employeeId =
+		employee_out.employeeid
+		AND haulemployeeout.bigId = haulinfo.bigId
+
+	</select>
+
+	<!-- 先根据大修id bigid和单位id unitid查询出该大修单位的信息 -->
+	<select id="selHaulUnitByUnitidBigid" parameterType="map"
+		resultType="cn.xm.exam.bean.haul.Haulunit">
+
+		select * from haulunit where haulunit.bigId = #{bigid} and
+		haulunit.unitId =
+		#{unitid}
+
+	</select>
+
+	<!-- 加载树的sql -->
+	<select id="findLeftTree" resultType="map">
+		select * FROM overhaul_unit
+		where
+		id NOT IN ("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3") 
+		and upid NOT IN("b10d26e434b146d5af902d586f809dd9","595925c6a55349acb6cc77b3cd47f7a3")
+	</select>
+
+	<!-- 根据外部员工id 获取黑名单状态 -->
+	<select id="getBlackStatusByEmpoutId" parameterType="String"
+		resultType="String">
+		select blacklist.temporaryInStatus from blacklist where
+		blacklist.employeestatus = '1' and blacklist.employeeId =
+		#{employeeid}
+	</select>
+
+	<!-- 根据大修id获取大修名称 -->
+	<select id="selHaulInfoNameByBigId" parameterType="String"
+		resultType="String">
+		select haulinfo.bigName from haulinfo where
+		haulinfo.bigId=#{bigid}
+	</select>
+	<!-- =====lixianyuan end ================= -->
+</mapper>

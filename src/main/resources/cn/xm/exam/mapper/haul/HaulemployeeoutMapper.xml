@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.HaulemployeeoutMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.haul.Haulemployeeout" >
+    <id column="BigEmployeeoutId" property="bigemployeeoutid" jdbcType="VARCHAR" />
+    <result column="unitId" property="unitid" jdbcType="VARCHAR" />
+    <result column="employeeId" property="employeeid" jdbcType="VARCHAR" />
+    <result column="bigId" property="bigid" jdbcType="VARCHAR" />
+    <result column="empoutIdcard" property="empoutidcard" jdbcType="VARCHAR" />
+    <result column="trainStatus" property="trainstatus" jdbcType="VARCHAR" />
+    <result column="empType" property="emptype" jdbcType="VARCHAR" />
+    <result column="empOutphone" property="empoutphone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    BigEmployeeoutId, unitId, employeeId, bigId, empoutIdcard, trainStatus, empType, 
+    empOutphone
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.haul.HaulemployeeoutExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from haulemployeeout
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from haulemployeeout
+    where BigEmployeeoutId = #{bigemployeeoutid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from haulemployeeout
+    where BigEmployeeoutId = #{bigemployeeoutid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.haul.HaulemployeeoutExample" >
+    delete from haulemployeeout
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.haul.Haulemployeeout" >
+    insert into haulemployeeout (BigEmployeeoutId, unitId, employeeId, 
+      bigId, empoutIdcard, trainStatus, 
+      empType, empOutphone)
+    values (#{bigemployeeoutid,jdbcType=VARCHAR}, #{unitid,jdbcType=VARCHAR}, #{employeeid,jdbcType=VARCHAR}, 
+      #{bigid,jdbcType=VARCHAR}, #{empoutidcard,jdbcType=VARCHAR}, #{trainstatus,jdbcType=VARCHAR}, 
+      #{emptype,jdbcType=VARCHAR}, #{empoutphone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.haul.Haulemployeeout" >
+    insert into haulemployeeout
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bigemployeeoutid != null" >
+        BigEmployeeoutId,
+      </if>
+      <if test="unitid != null" >
+        unitId,
+      </if>
+      <if test="employeeid != null" >
+        employeeId,
+      </if>
+      <if test="bigid != null" >
+        bigId,
+      </if>
+      <if test="empoutidcard != null" >
+        empoutIdcard,
+      </if>
+      <if test="trainstatus != null" >
+        trainStatus,
+      </if>
+      <if test="emptype != null" >
+        empType,
+      </if>
+      <if test="empoutphone != null" >
+        empOutphone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bigemployeeoutid != null" >
+        #{bigemployeeoutid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitid != null" >
+        #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="bigid != null" >
+        #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutidcard != null" >
+        #{empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="trainstatus != null" >
+        #{trainstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="emptype != null" >
+        #{emptype,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutphone != null" >
+        #{empoutphone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.haul.HaulemployeeoutExample" resultType="java.lang.Integer" >
+    select count(*) from haulemployeeout
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update haulemployeeout
+    <set >
+      <if test="record.bigemployeeoutid != null" >
+        BigEmployeeoutId = #{record.bigemployeeoutid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitid != null" >
+        unitId = #{record.unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeid != null" >
+        employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigid != null" >
+        bigId = #{record.bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empoutidcard != null" >
+        empoutIdcard = #{record.empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.trainstatus != null" >
+        trainStatus = #{record.trainstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emptype != null" >
+        empType = #{record.emptype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empoutphone != null" >
+        empOutphone = #{record.empoutphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update haulemployeeout
+    set BigEmployeeoutId = #{record.bigemployeeoutid,jdbcType=VARCHAR},
+      unitId = #{record.unitid,jdbcType=VARCHAR},
+      employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      bigId = #{record.bigid,jdbcType=VARCHAR},
+      empoutIdcard = #{record.empoutidcard,jdbcType=VARCHAR},
+      trainStatus = #{record.trainstatus,jdbcType=VARCHAR},
+      empType = #{record.emptype,jdbcType=VARCHAR},
+      empOutphone = #{record.empoutphone,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.haul.Haulemployeeout" >
+    update haulemployeeout
+    <set >
+      <if test="unitid != null" >
+        unitId = #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        employeeId = #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="bigid != null" >
+        bigId = #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutidcard != null" >
+        empoutIdcard = #{empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="trainstatus != null" >
+        trainStatus = #{trainstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="emptype != null" >
+        empType = #{emptype,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutphone != null" >
+        empOutphone = #{empoutphone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where BigEmployeeoutId = #{bigemployeeoutid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.haul.Haulemployeeout" >
+    update haulemployeeout
+    set unitId = #{unitid,jdbcType=VARCHAR},
+      employeeId = #{employeeid,jdbcType=VARCHAR},
+      bigId = #{bigid,jdbcType=VARCHAR},
+      empoutIdcard = #{empoutidcard,jdbcType=VARCHAR},
+      trainStatus = #{trainstatus,jdbcType=VARCHAR},
+      empType = #{emptype,jdbcType=VARCHAR},
+      empOutphone = #{empoutphone,jdbcType=VARCHAR}
+    where BigEmployeeoutId = #{bigemployeeoutid,jdbcType=VARCHAR}
+  </update>
+</mapper>

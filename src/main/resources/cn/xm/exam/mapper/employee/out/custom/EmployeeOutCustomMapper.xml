@@ -1,0 +1,656 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.custom.EmployeeOutCustomMapper">
+
+	<!-- 为大修部门树准备数据 -->
+	<select id="getDepartAndOverHaulInfoTree" parameterType="map" resultType="map">
+		select *
+		from overhaul_unit
+		<where>
+			<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+			<!-- 内部培训 -->
+			<if test="markTrainType_In !=null">
+				and id IN (#{regular_train},#{longterm_train})
+				or upid IN (#{regular_train},#{longterm_train})
+			</if>
+			<!-- 外部培训 -->
+			<if test="markTrainType_Out !=null">
+				and id NOT IN (#{regular_train},#{longterm_train})
+				and upid NOT IN (#{regular_train},#{longterm_train})
+			</if>
+			<!-- 增加检修状态的判断 -->
+			<if test="bigStatus != null">
+				and bigStatus != #{bigStatus}
+			</if>
+		</where>
+	</select>
+
+	 <!-- 组合条件查询员工总数 -->
+	 <!--
+	<select id="findEmployeeOutWithCondition" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*) FROM employee_out_base_info
+		<where>
+			<include refid="query_employeeOut_where"></include>
+		</where>
+	</select>
+	组合条件查询员工的基本信息,分页显示数据
+	<select id="findEmployeeOutBaseInfoEWithCondition"
+		parameterType="map" resultType="cn.xm.exam.vo.employee.out.EmployeeOutBaseInfo">
+		SELECT * FROM employee_out_base_info
+		<where>
+			<include refid="query_employeeOut_where"></include>
+		</where>
+		ORDER BY bigCreateDate DESC , trainStatus DESC
+		<include refid="query_page_limit"></include>
+	</select> -->
+
+	<!-- 根据外来员工的身份证号获取培训考试信息 -->
+	<select id="getExamsInfoByEmployeeOutIdCard" parameterType="map"
+		resultType="map">
+		select
+		exam.examId,exam.examName,exam.startTime,exam.endTime,exam.`status`,exam.paperId,exam.bigStatus,exam.bigId,exam.xueshi,exam.traincontent,exampaper.`level`,exampaper.paperScore,
+		employeeexam.employeeId,
+		employeeexam.employeeName,employeeexam.employeeType,
+		employeeexam.examMethod,employeeexam.grade,
+		CASE
+		employeeexam.grade>=exampaper.paperScore*0.9 when true then "是" ELSE
+		"否" END isPass,
+		(SELECT emptype FROM haulemployeeout WHERE bigemployeeoutid=employeeexam.bigemployeeoutid)
+		employeeOutType,
+		(SELECT haulinfo.bigName FROM haulinfo WHERE bigid =
+		exam.bigId ) bigName
+		from exam,exampaper,employeeexam
+		where exam.examId
+		= employeeexam.examId and exam.paperId = exampaper.paperId AND
+		employeeexam.employeeId = #{idCard} AND employeeexam.employeeType="1"
+		AND exam.`status`="已结束"
+		ORDER BY startTime DESC
+		<include refid="query_page_limit"></include>
+	</select>
+
+	<!-- 根据外来员工的身份证号获取参加考试总数 -->
+	<select id="getCountExamsInfoByEmployeeOutIdCard" parameterType="String"
+		resultType="int">
+		SELECT COUNT(*) FROM exam,exampaper,employeeexam
+		where
+		exam.examId = employeeexam.examId and exam.paperId = exampaper.paperId
+		AND employeeexam.employeeId = #{value} AND
+		employeeexam.employeeType="1"
+		AND exam.`status`="已结束"
+	</select>
+
+	<!-- 根据员工ID和参加大修员工ID查询违章信息 -->
+	<select id="getBreakRulesInfoByCondition" parameterType="map"
+		resultType="cn.xm.exam.bean.employee.out.Breakrules">
+		SELECT * FROM breakrules
+		<where>
+			<if test="employeeOutId != null">
+				and employeeId = #{employeeOutId}
+			</if>
+			<if test="bigEmployeeOutId != null">
+				and BigEmployeeoutId = #{bigEmployeeOutId}
+			</if>
+		</where>
+		ORDER BY breakTime DESC
+	</select>
+
+	<!-- 根据条件生成符合条件的员工信息 -->
+	<select id="getEmpInfoForCertificateWithCondition"
+		parameterType="map" resultType="cn.xm.exam.vo.employee.out.EmployeeOutBaseInfo">
+		SELECT * FROM employee_out_base_info
+		<where>
+			<if test="unitId != null">
+				and unitid = #{unitId}
+			</if>
+			<if test="bigId != null">
+				and bigid = #{bigId}
+			</if>
+			<if test="employeeOutIds != null and employeeOutIds.size()>0">
+				<foreach collection="employeeOutIds" item="employeeOutId"
+					open="and empoutIdcard in (" close=")" separator=",">
+					<!--每个遍历需要拼接的串 -->
+					#{employeeOutId}
+				</foreach>
+			</if>
+			and trainStatus >= 3
+		</where>
+		ORDER BY CONVERT(`name` USING gbk)
+	</select>
+	
+	<!-- 根据条件生成符合条件的员工信息 -->
+	<select id="getEmpInfoForCertificateWithCondition1"
+		parameterType="map" resultType="cn.xm.exam.vo.employee.out.EmployeeOutBaseInfo">
+		SELECT * FROM employee_out_base_info
+		<where>			
+			<if test="bigEmployeeOutIds != null and bigEmployeeOutIds.size()>0">
+				<foreach collection="bigEmployeeOutIds" item="employeeOutId"
+					open="and BigEmployeeoutId in (" close=")" separator=",">
+					<!--每个遍历需要拼接的串 -->
+					#{employeeOutId}
+				</foreach>
+			</if>			
+		</where>
+		ORDER BY CONVERT(`name` USING gbk)
+	</select>
+
+	<!-- 批量加入外部员工的基本信息 -->
+	<insert id="addEmployeeOutBatch" parameterType="list">
+		insert into employee_out (employeeId, employeeNumber, name,
+		idCode,
+		sex, birthday, address,
+		finger, headaddress)
+		values
+		<foreach collection="list" item="employeeOutInfo" separator=",">
+			(#{employeeOutInfo.employeeid,jdbcType=VARCHAR},
+			#{employeeOutInfo.employeenumber,jdbcType=VARCHAR},
+			#{employeeOutInfo.name,jdbcType=VARCHAR},
+			#{employeeOutInfo.idcode,jdbcType=CHAR},
+			#{employeeOutInfo.sex,jdbcType=VARCHAR},
+			#{employeeOutInfo.birthday,jdbcType=DATE},
+			#{employeeOutInfo.address,jdbcType=VARCHAR},
+			#{employeeOutInfo.finger,jdbcType=VARCHAR},
+			#{employeeOutInfo.headaddress,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<!-- 批量加入参加大修的员工信息 -->
+	<insert id="addHaulEmployeeOutBatch" parameterType="list">
+		insert into haulemployeeout (BigEmployeeoutId, unitId, employeeId,
+		bigId, empoutIdcard, trainStatus,
+		empType, empOutphone)
+		values
+		<foreach collection="list" item="haulEmployeeOutInfo"
+			separator=",">
+			(#{haulEmployeeOutInfo.bigemployeeoutid,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.unitid,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.employeeid,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.bigid,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.empoutidcard,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.trainstatus,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.emptype,jdbcType=VARCHAR},
+			#{haulEmployeeOutInfo.empoutphone,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<!-- 根据身份证号查询员工的基本信息 -->
+	<select id="getEmployeeOutBaseInfo" parameterType="String"
+		resultType="cn.xm.exam.vo.employee.out.EmployeeOutBaseInfo">
+		SELECT * FROM employee_out_base_info where idCard =
+		#{value}
+	</select>
+
+	<!-- 根据身份证集合查询员工的id集合 -->
+	<select id="findEmployeeOutIdByIdCards" parameterType="list"
+		resultType="String">
+		SELECT employeeId FROM employee_out
+		<where>
+			<foreach collection="list" item="haulemployeeout" separator=","
+				open="and idCode in (" close=")">
+				#{haulemployeeout.empoutidcard}
+			</foreach>
+		</where>
+		ORDER BY idCode
+	</select>
+
+	<!-- 根据大修ID和工种修改参加大修员工的信息 -->
+	<update id="updateHaulEmployeeOutInfoByCondition" parameterType="map">
+		UPDATE haulemployeeout SET empType =#{employeeType} WHERE empoutIdcard
+		= #{employeeOutIdCard} AND bigId = #{bigId} AND
+		BigEmployeeoutId=#{bigEmployeeOutId}
+	</update>
+
+	<!-- 根据大修ID和员工ID，大修员工ID查询员工的基本信息 -->
+	<select id="getEmployeeOutInfoByCondition" parameterType="map"
+		resultType="cn.xm.exam.vo.employee.out.EmployeeOutBaseInfo">
+		SELECT * FROM employee_out_base_info
+		<where>
+			<!-- 身份证号 -->
+			<if test="employeeOutIdCard != null">
+				and idCard = #{employeeOutIdCard}
+			</if>
+			<!-- 大修ID -->
+			<if test="bigId != null">
+				and bigid = #{bigId}
+			</if>
+			<!-- 大修员工ID -->
+			<if test="bigEmployeeOutId != null">
+				and BigEmployeeoutId = #{bigEmployeeOutId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 根据大修ID和身份证号查询所有的考试ID -->
+	<select id="getExamIdsByCondition" parameterType="map"
+		resultType="String">
+		SELECT examid from employee_exam_grade
+		<where>
+			<!-- 身份证号 -->
+			<if test="employeeOutIdCard != null">
+				and idCode = #{employeeOutIdCard}
+			</if>
+			<!-- 大修ID -->
+			<if test="bigId != null">
+				and bigId = #{bigId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 批量添加外来单位员工分配信息用于初始化表 -->
+	<insert id="addEmpOutDistributeInfoList" parameterType="list">
+		insert into employeeoutdistribute ( bigid, haulempid,
+		unitid, departmentId, outempname,
+		empOutIdCard, empOutexamStatus, empOutTrainGrade
+		)
+		values
+		<foreach collection="list" item="distributeInfoList"
+			separator=",">
+			(#{distributeInfoList.bigid,jdbcType=VARCHAR}, #{distributeInfoList.haulempid,jdbcType=VARCHAR},
+			#{distributeInfoList.unitid,jdbcType=VARCHAR},
+			#{distributeInfoList.departmentid,jdbcType=VARCHAR},
+			#{distributeInfoList.outempname,jdbcType=VARCHAR},
+			#{distributeInfoList.empoutidcard,jdbcType=VARCHAR},
+			#{distributeInfoList.empoutexamstatus,jdbcType=VARCHAR},
+			#{distributeInfoList.empouttraingrade,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<!-- 根据字典编号查询字典的描述 -->
+	<select id="getDictionaryInfoById" parameterType="String"
+		resultType="String">
+		SELECT discription FROM dictionary WHERE dictionaryId =
+		#{value}
+	</select>
+
+	<!-- 根据身份证号设置外来单位员工的姓名 -->
+	<update id="updateEmployeeOutNameByIdCard">
+		UPDATE employeeoutdistribute empdis SET outempname =
+		(SELECT `name` FROM employee_out where idCode = empdis.empOutIdCard)
+	</update>
+	
+	<!-- 根据大修员工ID和状态码修改大修员工表的培训状态 -->
+	<update id="updateHaulEmployeeOutTrainStatusByCondition" parameterType="map">
+		UPDATE haulemployeeout SET trainStatus = #{trainStatus}
+		<where>
+			<foreach collection="bigEmployeeOutIds" item="haulEmpOutId" open="and BigEmployeeoutId in ("
+				close=")" separator=",">
+				<!--每个遍历需要拼接的串 -->
+				#{haulEmpOutId}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- 查询外部员工的条件 -->
+	<sql id="query_employeeOut_where">
+		<!-- 员工姓名 -->
+		<if test="employeeOutName != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="employeeOutNames" value="'%'+employeeOutName+'%'" />
+			and name like #{employeeOutNames}
+		</if>
+		<!-- 员工性别 -->
+		<if test="employeeOutSex != null">
+			and sex = #{employeeOutSex}
+		</if>
+		<!-- 身份证号 -->
+		<if test="employeeOutIdCard != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="employeeOutIdCards" value="'%'+employeeOutIdCard+'%'" />
+			and idCard like #{employeeOutIdCards}
+		</if>
+		<!-- 违章积分 -->
+		<if test="minusNumLeft != null">
+			and minusNum &gt;= #{minusNumLeft}
+		</if>
+		<if test="minusNumRight != null">
+			and minusNum &lt; #{minusNumRight}
+		</if>
+		<!-- 是否黑名单 -->
+		<if test="blackListInfo != null">
+			and isblacklist = #{blackListInfo}
+		</if>
+		<!-- 培训情况 -->
+		<if test="trainStatus != null">
+			and trainStatus = #{trainStatus}
+		</if>
+		<!-- 工种 -->
+		<if test="employeeType != null">
+			and empType = #{employeeType}
+		</if>
+		<!-- 单位ID -->
+		<if test="unitId != null">
+			and unitid = #{unitId}
+		</if>
+		<!-- 大修ID -->
+		<if test="bigId != null">
+			and bigid = #{bigId}
+		</if>
+		<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+		<!-- 内部培训 -->
+		<if test="markTrainType_In !=null">
+			and bigId IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and bigId NOT IN (#{regular_train},#{longterm_train})
+		</if>
+	</sql>
+
+	<!-- 查询分页 -->
+	<sql id="query_page_limit">
+		<!-- 分页索引 -->
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+
+
+
+
+
+
+
+	<!-- S qlq -->
+	<!-- S 查询外部参考人员 -->
+	<select id="getExamEmployeeOuts" resultType="map" parameterType="hashmap">
+		SELECT
+		haem.bigid,
+		haem.bigemployeeoutid,
+		emp.employeeId,
+		emp.name,
+		emp.idCode,
+		emp.sex,
+		dist.distributeid,
+		haem.trainStatus,
+		haem.empType,
+		<include refid="selectMinus"></include>
+		AS minusNum,
+		un.unitId,
+		un.name AS
+		unitname
+		FROM employee_out emp,
+		unit un,
+		haulemployeeout haem,
+		employeeoutdistribute dist
+		<where>
+			<include refid="getExamEmployeeOuts_where"></include>
+		</where>
+		order by CONVERT(unitname USING gbk),CONVERT(emp.name USING gbk)
+	</select>
+	<!-- 查询积分的sql语句 -->
+	<sql id="selectMinus">
+		IFNULL((SELECT
+		SUM(minusNum)
+		FROM breakrules
+		WHERE
+		employeeId =
+		(SELECT
+		employeeId
+		FROM employee_out
+		WHERE
+		idCode =emp.idCode)),0)
+	</sql>
+	<sql id="getExamEmployeeOuts_where">
+		<!-- 根据部门名称查询部门ID -->
+		<if test="1==1">
+			and emp.employeeId = haem.employeeId
+			AND un.unitId =
+			haem.unitId and dist.unitId=un.unitId
+			and dist.departmentId=#{departmentId} and dist.empOutIdCard=emp.idCode
+			and dist.empOutexamStatus='0' and
+			dist.haulempid=haem.BigEmployeeoutId
+		</if>
+		<if test="bigId != null ">
+			AND haem.bigId = #{bigId}
+		</if>
+		<if test="unitNames !=null">
+			AND haem.unitId IN(SELECT
+			unitId
+			FROM unit
+			WHERE unit.name IN
+			<foreach collection="unitNames" item="unitName" separator=","
+				open="(" close=")">
+				#{unitName}
+			</foreach>
+			)
+		</if>
+		<if test="sex!=null">
+			and emp.sex=#{sex}
+		</if>
+		<if test="empType != null">
+			and haem.empType=#{empType}
+		</if>
+		<if test="idCode!=null">
+			and emp.idCode like '%${idCode}%'
+		</if>
+		<if test="trainStatus!=null">
+			and dist.empOutTrainGrade=#{trainStatus}
+		</if>
+		<if test="name!=null">
+			and emp.name like '%${name}%'
+		</if>
+		<!-- 拼装查询积分组装条件 -->
+		<trim prefix="having" prefixOverrides="AND">
+			<if test="mixMinus!=null">
+				and
+				<include refid="selectMinus"></include>
+				&gt;=#{mixMinus}
+			</if>
+			<if test="maxMinus!=null">
+				and
+				<include refid="selectMinus"></include>
+				&lt;=#{maxMinus}
+			</if>
+			<!-- 如果选择进入黑名单扣分大于12 -->
+			<if test="isBlack!=null">
+				and
+				<include refid="selectMinus"></include>
+				&gt;=12
+			</if>
+		</trim>
+
+	</sql>
+	<!-- E 查询外部参考人员 -->
+
+	<!-- E qlq -->
+	
+	<!-- lixianyuan start -->
+	<!-- 组合条件查询员工总数 -->
+    <select id="findEmployeeOutWithCondition" parameterType="map"
+		resultType="int">
+		SELECT COUNT(*) 
+		FROM employee_out,haulemployeeout,haulinfo 
+	
+	  WHERE employee_out.employeeId = haulemployeeout.employeeId AND haulemployeeout.bigId = haulinfo.bigId 
+	
+		AND employee_out.name LIKE '%${employeeOutName}%' AND employee_out.sex LIKE '%${employeeOutSex}%' AND employee_out.idCode LIKE '%${employeeOutIdCard}%' AND haulemployeeout.empType like '%${employeeType}%'
+		<if test="blackListInfo !=null and blackListInfo!='' ">
+			and (CASE (SELECT	id FROM blacklist WHERE blacklist.blackIdcard = haulemployeeout.empoutIdcard AND temporaryInStatus =1 AND employeeStatus="1") IS NULL WHEN TRUE THEN "否" ELSE "是" END ) = #{blackListInfo}
+		</if>
+		
+		
+		<!-- 单位ID -->
+		<if test="unitId != null">
+			and haulemployeeout.unitid = #{unitId}
+		</if>
+		<!-- 大修ID -->
+		<if test="bigId != null">
+			and haulemployeeout.bigid = #{bigId}
+		</if>
+		<!-- 家庭住址 -->
+		<if test="address != null">
+			and employee_out.address like "%${address}%"
+		</if>
+		<!-- 年龄段左侧参数 -->
+		<if test="age_left != null">
+			and TIMESTAMPDIFF(YEAR, employee_out.birthday, CURDATE()) >= #{age_left}
+		</if>
+		<!-- 年龄段右侧参数 -->
+		<if test="age_right != null">
+			and TIMESTAMPDIFF(YEAR, employee_out.birthday, CURDATE()) &lt;= #{age_right}
+		</if>
+		
+		
+		<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+		<!-- 内部培训 -->
+		<if test="markTrainType_In !=null">
+			and haulemployeeout.bigId IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and haulemployeeout.bigId NOT IN (#{regular_train},#{longterm_train})
+		</if>
+		
+		<!-- 增加检修状态的判断 -->
+		<if test="bigStatus != null">
+			and haulinfo.bigStatus != #{bigStatus}
+		</if>
+		
+		<if test="minusNumLeft !=null and minusNumLeft !='' ">
+			and 
+			<include refid="sql_findSumbreak_ByConditionLeft"></include>
+		</if>
+		<if test="minusNumRight !=null and minusNumRight !='' ">
+			and 
+			<include refid="sql_findSumbreak_ByConditionRight"></include>
+		</if>
+	</select> 
+	<!-- 组合条件查询员工的基本信息,分页显示数据   -->
+	<select id="findEmployeeOutBaseInfoEWithCondition"
+		parameterType="map" resultType="map">
+		SELECT employee_out.`name`,employee_out.idCode idCard,employee_out.sex,employee_out.address,employee_out.birthday,employee_out.headaddress photo,
+			haulemployeeout.*,haulinfo.bigBeginDate,haulinfo.bigCreateDate,haulinfo.bigdescription,haulinfo.bigEndDate,haulinfo.bigName,haulinfo.bigStatus, 
+			(SELECT unit.`name` FROM unit WHERE unitId = haulemployeeout.unitId) departmentName,
+			CASE (SELECT SUM(breakrules.minusNum) FROM breakrules WHERE  employeeId = haulemployeeout.employeeId AND breakTime LIKE CONCAT(YEAR(CURDATE()),'%'))  IS NULL 
+			WHEN TRUE THEN 0 ELSE (SELECT SUM(breakrules.minusNum) FROM breakrules WHERE  employeeId = haulemployeeout.employeeId AND breakTime LIKE CONCAT(YEAR(CURDATE()),'%')) END minusNum,
+			CASE (SELECT SUM(breakrules.minusNum) FROM breakrules WHERE employeeId = haulemployeeout.employeeId ) IS NULL WHEN TRUE THEN 0 ELSE
+			(SELECT SUM(breakrules.minusNum) FROM breakrules WHERE employeeId = haulemployeeout.employeeId )END minusNumSum,
+	
+			IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+			WHERE
+			breakrules.employeeId = employee_out.employeeId
+			<if test="fstarttime != null">
+				and breakTime &gt;= #{fstarttime}
+			</if>
+			<if test="fendtime != null">
+				and breakTime &lt;= #{fendtime}
+			</if>
+			<!-- 当前年 -->
+			<if test="current_Year != null and current_Year != ''">
+				and breakrules.breakTime LIKE  '${current_Year}%'
+			</if>
+			<!-- 历史年 -->
+			<if test="history_Year != null and history_Year != ''">
+				AND breakrules.breakTime between #{history_Year} AND NOW()
+			</if>
+			),0) AS 'sumBreakScore',
+	
+			CASE (SELECT	id FROM blacklist WHERE blacklist.blackIdcard = haulemployeeout.empoutIdcard AND temporaryInStatus =1 AND employeeStatus="1") IS NULL WHEN TRUE THEN "否" ELSE "是" END isblackList,
+			CASE (SELECT	id FROM blacklist WHERE blacklist.blackIdcard = haulemployeeout.empoutIdcard AND employeeStatus="1") IS NULL WHEN TRUE THEN "否" ELSE "是" END isInBlackList
+
+	  FROM employee_out,haulemployeeout,haulinfo 
+	
+	  WHERE employee_out.employeeId = haulemployeeout.employeeId AND haulemployeeout.bigId = haulinfo.bigId 
+	
+		AND employee_out.name LIKE '%${employeeOutName}%' AND employee_out.sex LIKE '%${employeeOutSex}%' AND employee_out.idCode LIKE '%${employeeOutIdCard}%' AND haulemployeeout.empType like '%${employeeType}%'
+		<if test="blackListInfo !=null and blackListInfo!='' ">
+			and (CASE (SELECT	id FROM blacklist WHERE blacklist.blackIdcard = haulemployeeout.empoutIdcard AND temporaryInStatus =1 AND employeeStatus="1") IS NULL WHEN TRUE THEN "否" ELSE "是" END ) = #{blackListInfo}
+		</if>
+		
+		<!-- 单位ID -->
+		<if test="unitId != null">
+			and haulemployeeout.unitid = #{unitId}
+		</if>
+		<!-- 大修ID -->
+		<if test="bigId != null">
+			and haulemployeeout.bigid = #{bigId}
+		</if>
+		
+		<!-- 家庭住址 -->
+		<if test="address != null">
+			and employee_out.address like "%${address}%"
+		</if>
+		
+		<!-- 年龄段左侧参数 -->
+		<if test="age_left != null">
+			and TIMESTAMPDIFF(YEAR, employee_out.birthday, CURDATE()) >= #{age_left}
+		</if>
+		<!-- 年龄段右侧参数 -->
+		<if test="age_right != null">
+			and TIMESTAMPDIFF(YEAR, employee_out.birthday, CURDATE()) &lt;= #{age_right}
+		</if>
+		
+		<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+		<!-- 内部培训 -->
+		<if test="markTrainType_In !=null">
+			and haulemployeeout.bigId IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and haulemployeeout.bigId NOT IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 增加检修状态的判断 -->
+		<if test="bigStatus != null">
+			and haulinfo.bigStatus != #{bigStatus}
+		</if>
+		
+		
+		<if test="minusNumLeft !=null and minusNumLeft !='' ">
+			and 
+			<include refid="sql_findSumbreak_ByConditionLeft"></include>
+		</if>
+		<if test="minusNumRight !=null and minusNumRight !='' ">
+			and 
+			<include refid="sql_findSumbreak_ByConditionRight"></include>
+		</if>
+				
+		ORDER BY haulinfo.bigCreateDate DESC , sumBreakScore DESC
+		<include refid="query_page_limit"></include>
+	</select>
+	
+	<!-- 根据时间条件查询当前时间段的违章积分 -->
+	<sql id="sql_findSumbreak_ByConditionLeft">
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if> 
+		),0) &gt;= #{minusNumLeft}
+	</sql>
+	
+	<sql id="sql_findSumbreak_ByConditionRight">
+		IFNULL((SELECT SUM(breakrules.minusNum) FROM breakrules
+		WHERE
+		breakrules.employeeId = employee_out.employeeId
+		<if test="fstarttime != null and fstarttime!='' ">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null and fendtime!='' ">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and breakrules.breakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND breakrules.breakTime between #{history_Year} AND NOW()
+		</if> 
+		),0) &lt;= #{minusNumRight}
+	</sql>
+	
+	<!-- lixianyuan end -->
+	
+</mapper>

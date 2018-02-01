@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.exam.OnlineexaminforMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.exam.Onlineexaminfor" >
+    <id column="onLineExamId" property="onlineexamid" jdbcType="VARCHAR" />
+    <result column="examId" property="examid" jdbcType="VARCHAR" />
+    <result column="employeeId" property="employeeid" jdbcType="VARCHAR" />
+    <result column="loginTime" property="logintime" jdbcType="TIMESTAMP" />
+    <result column="startTime" property="starttime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endtime" jdbcType="TIMESTAMP" />
+    <result column="ipAddress" property="ipaddress" jdbcType="VARCHAR" />
+    <result column="examStatus" property="examstatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    onLineExamId, examId, employeeId, loginTime, startTime, endTime, ipAddress, examStatus
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.exam.OnlineexaminforExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from onlineexaminfor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from onlineexaminfor
+    where onLineExamId = #{onlineexamid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from onlineexaminfor
+    where onLineExamId = #{onlineexamid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.exam.OnlineexaminforExample" >
+    delete from onlineexaminfor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.exam.Onlineexaminfor" >
+    insert into onlineexaminfor (onLineExamId, examId, employeeId, 
+      loginTime, startTime, endTime, 
+      ipAddress, examStatus)
+    values (#{onlineexamid,jdbcType=VARCHAR}, #{examid,jdbcType=VARCHAR}, #{employeeid,jdbcType=VARCHAR}, 
+      #{logintime,jdbcType=TIMESTAMP}, #{starttime,jdbcType=TIMESTAMP}, #{endtime,jdbcType=TIMESTAMP}, 
+      #{ipaddress,jdbcType=VARCHAR}, #{examstatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.exam.Onlineexaminfor" >
+    insert into onlineexaminfor
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="onlineexamid != null" >
+        onLineExamId,
+      </if>
+      <if test="examid != null" >
+        examId,
+      </if>
+      <if test="employeeid != null" >
+        employeeId,
+      </if>
+      <if test="logintime != null" >
+        loginTime,
+      </if>
+      <if test="starttime != null" >
+        startTime,
+      </if>
+      <if test="endtime != null" >
+        endTime,
+      </if>
+      <if test="ipaddress != null" >
+        ipAddress,
+      </if>
+      <if test="examstatus != null" >
+        examStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="onlineexamid != null" >
+        #{onlineexamid,jdbcType=VARCHAR},
+      </if>
+      <if test="examid != null" >
+        #{examid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="starttime != null" >
+        #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ipaddress != null" >
+        #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="examstatus != null" >
+        #{examstatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.exam.OnlineexaminforExample" resultType="java.lang.Integer" >
+    select count(*) from onlineexaminfor
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update onlineexaminfor
+    <set >
+      <if test="record.onlineexamid != null" >
+        onLineExamId = #{record.onlineexamid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.examid != null" >
+        examId = #{record.examid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeid != null" >
+        employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.logintime != null" >
+        loginTime = #{record.logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.starttime != null" >
+        startTime = #{record.starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endtime != null" >
+        endTime = #{record.endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ipaddress != null" >
+        ipAddress = #{record.ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="record.examstatus != null" >
+        examStatus = #{record.examstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update onlineexaminfor
+    set onLineExamId = #{record.onlineexamid,jdbcType=VARCHAR},
+      examId = #{record.examid,jdbcType=VARCHAR},
+      employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      loginTime = #{record.logintime,jdbcType=TIMESTAMP},
+      startTime = #{record.starttime,jdbcType=TIMESTAMP},
+      endTime = #{record.endtime,jdbcType=TIMESTAMP},
+      ipAddress = #{record.ipaddress,jdbcType=VARCHAR},
+      examStatus = #{record.examstatus,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.exam.Onlineexaminfor" >
+    update onlineexaminfor
+    <set >
+      <if test="examid != null" >
+        examId = #{examid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        employeeId = #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="logintime != null" >
+        loginTime = #{logintime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="starttime != null" >
+        startTime = #{starttime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endtime != null" >
+        endTime = #{endtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ipaddress != null" >
+        ipAddress = #{ipaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="examstatus != null" >
+        examStatus = #{examstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where onLineExamId = #{onlineexamid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.exam.Onlineexaminfor" >
+    update onlineexaminfor
+    set examId = #{examid,jdbcType=VARCHAR},
+      employeeId = #{employeeid,jdbcType=VARCHAR},
+      loginTime = #{logintime,jdbcType=TIMESTAMP},
+      startTime = #{starttime,jdbcType=TIMESTAMP},
+      endTime = #{endtime,jdbcType=TIMESTAMP},
+      ipAddress = #{ipaddress,jdbcType=VARCHAR},
+      examStatus = #{examstatus,jdbcType=VARCHAR}
+    where onLineExamId = #{onlineexamid,jdbcType=VARCHAR}
+  </update>
+</mapper>

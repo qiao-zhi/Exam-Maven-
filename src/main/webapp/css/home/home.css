@@ -1,0 +1,20 @@
+.html_middle {
+    width: 100%;
+}
+
+.el_left {
+    /*width: 170px;*/
+    float:left;
+    margin-top: 3px;
+    width:12%;
+    min-width:120px;
+    margin-left:10px;
+    height:500px;
+}
+
+.el_right {
+    margin-top: 3px;
+    width:87%;
+    /*width: 900px;*/
+    float:right;
+}

@@ -1,0 +1,251 @@
+/*鍓╀綑鏃堕棿*/
+.el_downTime {
+    position: absolute;
+    left: 500px;
+    bottom: 25px;
+    width: 300px;
+}
+
+/*考生姓名*/
+.el_userName{
+	position: absolute;
+    left: 225px;
+    bottom: 25px;
+    width: 300px;
+}
+
+#examName{
+	position: absolute;
+	left: 190px;
+    top: 0;
+    color: yellow;
+}
+
+.el_downTime span {
+    font-size: 14px;
+}
+
+#timer {
+    position: absolute;
+    top: 0;
+    left: 190px;
+    font-size: 14px;
+    color: red;
+}
+
+
+
+
+#body {
+    background-color: #ccc;
+}
+
+.container {
+    width: 80%;
+    position: absolute;
+    top: 70px;
+    left: 10%;
+    background-color: white;
+    margin-bottom: 50px;
+    box-shadow: 1px 1px 2px #999, -1px 0 2px #999;
+    border-radius: 2px
+}
+
+/*璇曞嵎鍚嶇О*/
+#el_examTitle {
+    text-align: center;
+    width: 100%;
+    height: 70px;
+    line-height: 70px;
+    margin: 10px auto;
+    background-color: rgb(254, 254, 254);
+    border-radius: 5px 5px 0 0;
+    box-shadow: 2px 0 2px #aaa, -2px 0 2px #aaa;
+}
+
+/*绫诲瀷澶ч鏍�*/
+.elquesTitle {
+    width: 99%;
+    height: 50px;
+    line-height: 50px;
+    background-color: rgb(245, 245, 245);
+    padding-left: 20px;
+    font-weight: 500;
+    font-size: 18px;
+    border: 1px solid #ccc;
+    margin: 5px;
+}
+
+/*璇曢涓昏鏍峰紡*/
+.el_questionMain {
+    width: 90%;
+    height: auto;
+    margin: 5px auto;
+}
+
+/*璇曢鏍囬*/
+.el_questionTitle {
+    font-size: 15px;
+    margin-top: 10px;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    background-color: #fed36c
+}
+
+/*璇曢閫夐」*/
+.el_qusSelect {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    padding-left: 30px;
+    font-size: 14px;
+}
+
+.el_qusSelect li {
+    list-style: none;
+    margin: 5px 60px 5px 0;
+}
+
+.el_qusSelect li label {
+    font-weight: 500;
+}
+
+/*鍥炲埌椤堕儴*/
+#el_returnTop {
+    width: 30px;
+    height: 90px;
+    text-align: center;
+    line-height: 15px;
+    position: fixed;
+    right: 16%;
+    bottom: 30px;
+    padding: 3px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    z-index:200;
+    background-color:white;
+}
+
+#el_returnTop img {
+    width: 23px;
+    position: absolute;
+    top: -5px;
+    right: 3px;
+}
+
+#el_returnTop:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+#el_tip {
+    position: fixed;
+    right: 0;
+    top: 100px;
+    width: 15%;
+    padding: 10px;
+    border: 2px solid rgb(250, 126, 40);
+    border-radius: 5px;
+    color: black;
+    background-color: rgb(252, 247, 243);
+    padding-top: 20px;
+    opacity: 0.9;
+    z-index: 20;
+}
+
+.el_tipTime {
+    padding-left: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    display: inline-block;
+    border-bottom: 1px solid #ccc;
+}
+
+.el_tipTitle {
+    font-size: 16px;
+}
+
+.el_tipUL {
+    padding: 5px;
+    width: 100%;
+    padding-left: 15px;
+}
+
+.el_tipUL li {
+    list-style: none;
+    float: left;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    margin-right: 2px;
+    margin-bottom: 5px;
+    border: 1px solid orangered;
+}
+
+.el_tipQuestion {
+    margin-top: 10px;
+    clear: both;
+}
+
+/*涓棿bodyson*/
+#bodySon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: green;
+    clear: both;
+}
+
+/*澶�*/
+#el_header {
+    width: 100%;
+    height: 50px;
+    background-color: rgb(51, 122, 183);
+    color: white;
+    box-shadow: 0 2px 2px #aaa;
+    position: fixed;
+    top: 0;
+    z-index: 20;
+}
+
+/*椤堕儴瀵艰埅鏍�*/
+.el_logoName {
+    position: absolute;
+    height: 60px;
+    font-size: 14px;
+    width: 210px;
+    text-align: center;
+    padding-top: 5px;
+    margin-left: 20px;
+}
+
+.el_logoName a {
+    display: block;
+    height: 100%;
+    color: white;
+    float: right;
+    width: 150px;
+    text-decoration: none;
+}
+
+#el_headerRightinfo {
+    float: right;
+    height: 55px;
+    position: relative;
+}
+
+#el_opration {
+    width: 150px;
+    margin-right: 90px;
+    height: 50px;
+    line-height: 50px;
+}
+
+#el_opration a:first-child {
+    margin-right: 10px;
+    text-decoration: none;
+}
+

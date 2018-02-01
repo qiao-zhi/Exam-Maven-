@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.EmployeeOutMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.employee.out.EmployeeOut" >
+    <id column="employeeId" property="employeeid" jdbcType="VARCHAR" />
+    <result column="employeeNumber" property="employeenumber" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="idCode" property="idcode" jdbcType="CHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="finger" property="finger" jdbcType="VARCHAR" />
+    <result column="headaddress" property="headaddress" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    employeeId, employeeNumber, name, idCode, sex, birthday, address, finger, headaddress
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.employee.out.EmployeeOutExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from employee_out
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from employee_out
+    where employeeId = #{employeeid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from employee_out
+    where employeeId = #{employeeid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.employee.out.EmployeeOutExample" >
+    delete from employee_out
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.employee.out.EmployeeOut" >
+    insert into employee_out (employeeId, employeeNumber, name, 
+      idCode, sex, birthday, address, 
+      finger, headaddress)
+    values (#{employeeid,jdbcType=VARCHAR}, #{employeenumber,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{idcode,jdbcType=CHAR}, #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{address,jdbcType=VARCHAR}, 
+      #{finger,jdbcType=VARCHAR}, #{headaddress,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.employee.out.EmployeeOut" >
+    insert into employee_out
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="employeeid != null" >
+        employeeId,
+      </if>
+      <if test="employeenumber != null" >
+        employeeNumber,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="idcode != null" >
+        idCode,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="finger != null" >
+        finger,
+      </if>
+      <if test="headaddress != null" >
+        headaddress,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="employeenumber != null" >
+        #{employeenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idcode != null" >
+        #{idcode,jdbcType=CHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="finger != null" >
+        #{finger,jdbcType=VARCHAR},
+      </if>
+      <if test="headaddress != null" >
+        #{headaddress,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.employee.out.EmployeeOutExample" resultType="java.lang.Integer" >
+    select count(*) from employee_out
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update employee_out
+    <set >
+      <if test="record.employeeid != null" >
+        employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeenumber != null" >
+        employeeNumber = #{record.employeenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.name != null" >
+        name = #{record.name,jdbcType=VARCHAR},
+      </if>
+      <if test="record.idcode != null" >
+        idCode = #{record.idcode,jdbcType=CHAR},
+      </if>
+      <if test="record.sex != null" >
+        sex = #{record.sex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.birthday != null" >
+        birthday = #{record.birthday,jdbcType=DATE},
+      </if>
+      <if test="record.address != null" >
+        address = #{record.address,jdbcType=VARCHAR},
+      </if>
+      <if test="record.finger != null" >
+        finger = #{record.finger,jdbcType=VARCHAR},
+      </if>
+      <if test="record.headaddress != null" >
+        headaddress = #{record.headaddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update employee_out
+    set employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      employeeNumber = #{record.employeenumber,jdbcType=VARCHAR},
+      name = #{record.name,jdbcType=VARCHAR},
+      idCode = #{record.idcode,jdbcType=CHAR},
+      sex = #{record.sex,jdbcType=VARCHAR},
+      birthday = #{record.birthday,jdbcType=DATE},
+      address = #{record.address,jdbcType=VARCHAR},
+      finger = #{record.finger,jdbcType=VARCHAR},
+      headaddress = #{record.headaddress,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.employee.out.EmployeeOut" >
+    update employee_out
+    <set >
+      <if test="employeenumber != null" >
+        employeeNumber = #{employeenumber,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="idcode != null" >
+        idCode = #{idcode,jdbcType=CHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="finger != null" >
+        finger = #{finger,jdbcType=VARCHAR},
+      </if>
+      <if test="headaddress != null" >
+        headaddress = #{headaddress,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where employeeId = #{employeeid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.employee.out.EmployeeOut" >
+    update employee_out
+    set employeeNumber = #{employeenumber,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      idCode = #{idcode,jdbcType=CHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      address = #{address,jdbcType=VARCHAR},
+      finger = #{finger,jdbcType=VARCHAR},
+      headaddress = #{headaddress,jdbcType=VARCHAR}
+    where employeeId = #{employeeid,jdbcType=VARCHAR}
+  </update>
+</mapper>

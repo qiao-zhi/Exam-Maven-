@@ -1,0 +1,25 @@
+/*<!--工程区域-->*/
+    /*<!--工程区域-->*/
+.el_threeScoreList {
+    width: 500px;
+    margin: 10px auto;
+    height: 80px;
+    font-size:13px;
+}
+ #treeDemo{
+ 	overflow:auto;
+ }
+/*分页*/
+#paginationID table{
+    position:relative;
+    top:-10px;
+}
+#paginationID table tbody tr:first-child td:nth-child(2){
+    position:relative;
+    top:10px;
+}
+
+
+.el_qlmQuery2{
+	width:330px !important;	
+}

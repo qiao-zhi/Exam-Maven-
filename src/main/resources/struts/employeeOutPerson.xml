@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="employeeOutPerson" extends="json-default,struts-default" namespace="/">
+		
+		<!-- 外来单位员工管理action -->
+		<action name="employeeOutPerson_*" class="employeeOutPersonAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		<!-- 导出员工信息的action -->
+		<action name="exportEmpInfo_*" class="exportExcelEmployeeOutInfoAction" method="{1}">	
+			<result type="stream">
+				<!-- 其他的参数在类中设置或者使用默认 -->
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+				<param name="bufferSize">8192</param>
+			</result>
+		</action>	
+	</package>
+</struts>

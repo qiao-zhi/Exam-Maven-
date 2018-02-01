@@ -1,0 +1,169 @@
+/*<!--!*上传图片*!-->*/
+.el_loadPictrue {
+    width: 200px;
+    display: inline
+}
+
+
+.error{
+	color:red;
+}
+
+/*<!--!*所有内容*!-->*/
+     /*标题*/
+ #myMo34dalLabel{
+     margin-top:20px;
+ }
+
+.input-group {
+    margin: 20px;
+}
+
+.el_queryBox form {
+    margin-top: 20px;
+}
+
+.el_modellist .form-control {
+    height: 30px;
+    font-size: 12px;
+    border-radius: 3px;
+    width: 70%;
+}
+
+/*试题区*/
+.el_questionDepart {
+    width: 90%;
+    float: right;
+    margin-bottom: 10px;
+    margin-top: 0;
+    border-radius: 3px;
+}
+
+.el_questionDepart2 {
+    position: absolute;
+    top: 0;
+    right: 0;
+    overflow: auto;
+    height: 100%;
+}
+
+#el_panduanChoose li {
+    list-style: none;
+    display: inline-block;
+    width: 170px;
+}
+
+#el_panduanChoose li label {
+    font-weight: 500;
+}
+
+#el_panduanChoose li label input {
+    position: relative;
+    top: 7px;
+}
+
+#el_panduanChoose li span:nth-child(2) {
+    font-weight: 700;
+}
+
+/*编辑区*/
+.el_editorBox {
+    width: 100%;
+    height: 205px;
+
+}
+
+.el_title {
+    float: left;
+    width: 10%;
+    height: 100%;
+    text-align: right;
+    padding: 5px 10px;
+    background-color: #f7f7f7;
+    border-right: 1px solid #eee;
+}
+
+.el_title h5 {
+    min-width: 70px;
+}
+
+.el_questionContent {
+    margin: 20px;
+}
+
+.el_bigBlock {
+    padding: 0;
+    border: 1px solid #eee;
+}
+
+/*选项*/
+.el_bigBlock2 {
+    width: 100%;
+    padding: 0;
+    border: 1px solid #eee;
+    height: 300px;
+    position: relative;
+}
+
+#el_upInfoPanel {
+    padding: 0;
+    border: 1px solid #eee;
+    height: 200px;
+}
+
+.el_bigBlock3 {
+    position: relative;
+    top: -10px;
+}
+
+
+
+
+
+/*<!--!*选项区域*!-->*/
+ .title_itram {
+     position: relative;
+     padding: 10px 0 10px 0;
+ }
+
+.kzjxx_iteam {
+    margin: 0;
+}
+
+.kzqy_czbut {
+    position: absolute;
+    top: 10px;
+}
+
+.kzqy_czbut a {
+
+}
+
+
+
+/*<!--!*span改变样式后的样子*!-->*/
+     /*模态框中的内容*/
+ .el_modellist {
+     margin: 10px;
+     margin-bottom: 15px;
+     width: 80%;
+     position:relative;
+ }
+
+.el_spans {
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    border-radius: 4px;
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.el_modelinput {
+    width: 300px;
+}

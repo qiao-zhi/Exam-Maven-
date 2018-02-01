@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.exam.custom.ExamCustomMapper">
+
+	<!--S 查询满足条件的总数 -->
+
+	<!--E 查询满足条件的总数 -->
+	<select id="getExamBaseTotalByCondition" resultType="int"
+		parameterType="hashmap">
+		SELECT COUNT(e.examId) FROM exam e,exampaper p
+		<where>
+			<include refid="query_exam_where"></include>
+		</where>
+	</select>
+
+	<!--S 查询考试信息 -->
+	<select id="getExamBaseInfoByCondition" resultType="map"
+		parameterType="hashmap">
+		SELECT
+		e.examId,
+		e.examName,
+		(SELECT COUNT(gradeId) FROM
+		employeeexam
+		WHERE employeeexam.examId = e.examId) as
+		employeeNum,
+		IFNULL((SELECT
+		haulinfo.bigName FROM haulinfo WHERE bigId =
+		e.bigId),'无') AS
+		bigName,
+		e.examLevel,
+		e.examType,
+		p.paperId,
+		e.answerTime
+		as totalTime,
+		e.traincontent,
+		e.xueshi,
+		e.status,
+		e.startTime,
+		e.endTime
+		FROM exam e,
+		exampaper p
+		<where>
+			<include refid="query_exam_where"></include>
+			ORDER BY e.createTime DESC
+			<include refid="query_exam_limit"></include>
+		</where>
+	</select>
+	<sql id="query_exam_where">
+		<if test="1==1">
+			and e.paperId=p.paperId
+		</if>
+		<if test="examName!=null">
+			AND e.examName LIKE '%${examName}%'
+		</if>
+		<if test="departmentId != null">
+			AND e.departmentId=#{departmentId}
+		</if>
+		<if test="bigId!=null">
+			AND e.bigId = #{bigId}
+		</if>
+		<if test="level!=null">
+			AND p.level=#{level}
+		</if>
+		<if test="status!=null">
+			AND e.status=#{status}
+		</if>
+		<!-- 按月份统计 -->
+		<if test="month!=null">
+			AND
+			DATE_FORMAT(e.startTime,'%Y-%m')=DATE_FORMAT(#{month},'%Y-%m')
+		</if>
+	</sql>
+	<!-- 分页信息 -->
+	<sql id="query_exam_limit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+	<!--E 查询考试信息 -->
+
+
+	<!--S 根据试卷ID查询试卷使用次数 -->
+	<select id="getPaperUseTimesByPaperId" parameterType="string"
+		resultType="_int">
+		select count(paperId) from exam where paperId=#{value}
+	</select>
+	<!--E 根据试卷ID查询试卷使用次数 -->
+
+
+	<!--S 根据试卷ID查询状态为未考试但是使用试卷的总数，判断试卷能否修改 -->
+	<select id="getExamCountByPaperIdAndStatus" resultType="_int"
+		parameterType="string">
+		SELECT
+		COUNT(examId) FROM exam WHERE
+		paperId=#{value} AND
+		exam.status != '未开始'
+	</select>
+	<!--E 根据试卷ID查询状态为未考试但是使用试卷的总数，判断试卷能否修改 -->
+
+	<!-- S 根据关键字模糊查询考试名称和级别 -->
+	<select id="getExamNameAndLevelByName" parameterType="string"
+		resultType="map">
+		SELECT DISTINCT examName,examlevel,traincontent,xueshi FROM
+		exam WHERE examName LIKE
+		'%${value}%' limit 0,5
+	</select>
+	<!-- E 根据关键字模糊查询考试名称和级别 -->
+
+
+
+	<!-- S zwy -->
+
+	<!-- 员工培训查询 -->
+
+	<sql id="queryExamInfo_limit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+
+	<!-- <select id="getExamInfoByEmployeeId" resultType="hashmap" parameterType="string"> 
+		select exam.examName,exam.examLevel,exam.startTime,exampaper.paperScore,employeeexam.grade 
+		from exam ,employeeexam,exampaper where employeeexam.examId=exam.examId and 
+		exampaper.paperId=exam.paperId and employeeexam.employeeId=#{employeeid} 
+		ORDER BY exam.startTime DESC; </select> -->
+	<select id="getExamInfoByCondition" resultType="hashmap"
+		parameterType="hashmap">
+
+		select
+		exam.examName,exam.examLevel,exam.traincontent,exam.xueshi,exam.startTime,exam.endTime,exampaper.paperScore,employeeexam.grade
+		from exam ,employeeexam,exampaper where
+		employeeexam.examId=exam.examId and exampaper.paperId=exam.paperId and
+		employeeexam.employeeId=#{hiddenidcode} and exam.status="已结束" and
+		employeeexam.employeeType="0" ORDER BY
+		exam.startTime DESC
+		<include refid="queryExamInfo_limit"></include>
+	</select>
+
+
+	<select id="getExamCountByCondition" resultType="int"
+		parameterType="string">
+		select
+		count(exam.examName)
+		from exam
+		,employeeexam,exampaper where
+		employeeexam.examId=exam.examId and
+		exampaper.paperId=exam.paperId and
+		employeeexam.employeeId=#{employeeid} and exam.status="已结束" and
+		employeeexam.employeeType="0";
+
+	</select>
+	<select id="getExamInfoByEmployeeId" resultType="hashmap"
+		parameterType="string">
+		select
+		exam.examName,exam.examLevel,exam.traincontent,exam.xueshi,exam.startTime,exam.endTime,exampaper.paperScore,employeeexam.grade
+		from exam ,employeeexam,exampaper where
+		employeeexam.examId=exam.examId and exampaper.paperId=exam.paperId and
+		employeeexam.employeeId=#{employeeid} and exam.status="已结束" and
+		employeeexam.employeeType="0" ORDER BY
+		exam.startTime DESC;
+
+	</select>
+	<select id="getExamByEmployeeInIdcode" resultType="cn.xm.exam.bean.grade.Employeeexam"
+		parameterType="string">
+		SELECT * from employeeexam where
+		employeeexam.employeeId=#{value};
+	</select>
+	<!-- E zwy -->
+
+
+
+</mapper>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="createExampaper" namespace="/"
+		extends="json-default,struts-default">
+
+		<global-results>
+			<result name="success"></result>
+		</global-results>
+
+		<!-- 抽取试卷 -->
+		<action name="createPaper_*" class="createExampaperAction"
+			method="{1}">
+			<result name="quickGene">/view/examParper/examPaper/autoCreateExamPaper.jsp
+			</result>
+			<result name="bankGene">/view/examParper/examPaper/bankSaveExamPaper.jsp
+			</result>
+			<!--带试题跳转的页面 (试卷保存页面) -->
+			<result name="quickGene2">/view/examParper/examPaper/autoSaveExamPaper.jsp
+			</result>
+			<result name="knowledgeGenePaper">/view/examParper/examPaper/autoSaveExamPaper.jsp
+			</result>
+			<!-- 根据题库生成试卷查询的试题以json形式返回 -->
+			<result name="bankGenePaperWithQues" type="json">
+				<param name="root">questions</param>
+			</result>
+		</action>
+
+
+
+		<!-- 保存试卷 -->
+		<action name="paper_*" class="savePaper" method="{1}">
+			<result name="add" type="json">
+				<param name="root">saveResult</param>
+			</result>
+		</action>
+
+
+		<!-- 查询试卷 -->
+		<action name="findPaper_*" class="findPaperAction" method="{1}">
+			<!--分页查询试卷基本信息 -->
+			<result name="success" type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="findPaperAllInfo">/view/examParper/examPaper/parperModel.jsp
+			</result>
+		</action>
+
+		<!-- 删除试卷 -->
+		<action name="deletePaper" class="deletePaperAction" method="deletePaper">
+			<result type="json">
+				<param name="root">deleteResult</param>
+			</result>
+		</action>
+
+		<!-- 修改试卷 -->
+		<action name="update_*" class="updatePaperAction" method="{1}">
+			<!--点击修改的时候带着页面跳转的页面 -->
+			<result name="findPaperAllInfo">/view/examParper/examPaper/updateExamPaper.jsp
+			</result>
+			<!-- 能否修改结果以JSON形式返回 -->
+			<result name="surerResult" type="json">
+				<param name="root">sureResult</param>
+			</result>
+			<!-- 修改结果以JSON形式返回 -->
+			<result name="update" type="json">
+				<param name="root">updateResult</param>
+			</result>
+		</action>
+
+
+		<!-- 使用历史试卷 -->
+		<action name="usePaper_*" class="updatePaperAction" method="{1}">
+			<!--点击修改的时候带着页面跳转的页面 -->
+			<result name="findPaperAllInfo">/view/examParper/examPaper/useHistoryPaper.jsp
+			</result>
+			<!-- 使用结果以JSON形式返回 -->
+			<result name="update" type="json">
+				<param name="root">updateResult</param>
+			</result>
+		</action>
+
+
+
+
+	</package>
+</struts>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<constant name="struts.i18n.encoding" value="utf-8"></constant>
+	<constant name="devMode" value="true"></constant>
+	<constant name="struts.enable.DynamicMethodInvocation" value="true" />
+	<!-- 配置拦截的后缀 -->
+	<constant name="struts.action.extension" value="action,do" />
+	<!-- 与spring整合 -->
+	<constant name="struts.objectFactory" value="spring"></constant>
+
+
+
+	<!-- leilong -->
+	<include file="struts/question.xml"></include>
+	<include file="struts/grade.xml"></include>
+	<include file="struts/onlineExam.xml"></include>
+	<include file="struts/employeeOutPerson.xml"></include>
+	<include file="struts/blackListEmpInfo.xml"></include>
+
+	<!-- 乔利强引入的 -->
+	<include file="struts/ExamPaper.xml"></include>
+	<include file="struts/Exam.xml"></include>
+	<include file="struts/Haul.xml"></include>
+	<include file="struts/Unit.xml"></include>
+	<include file="struts/Distribute.xml"></include> 
+	<include file="struts/blackUnit.xml"></include> 
+	<include file="struts/message.xml"></include> 
+
+
+
+	<!-- 张文艺引入的 -->
+	<include file="struts/innerdepartment.xml"></include>
+	<include file="struts/innerdepartmentEmp.xml"></include>
+
+	<!-- lixianyun start -->
+	<include file="struts/traincontent.xml"></include>
+	<include file="struts/dictionary.xml"></include>
+	<include file="struts/newscenter.xml"></include>
+	<include file="struts/project.xml"></include>
+	<include file="struts/breakrules.xml"></include>
+	<include file="struts/emplyInBreakrules.xml"></include>
+	<!-- lixianyuan end -->
+
+
+	<!-- mf start -->
+	<include file="struts/struts_system.xml"></include>
+	<!-- mf end -->
+
+	<!-- jx start -->
+	<include file="struts/newscenter.xml"></include>
+	<!-- jx end -->
+
+</struts>

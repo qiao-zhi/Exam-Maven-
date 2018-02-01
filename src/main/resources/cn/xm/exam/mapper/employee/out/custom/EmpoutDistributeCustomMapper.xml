@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper
+	namespace="cn.xm.exam.mapper.employee.out.custom.EmpoutDistributeCustomMapper">
+	<!-- S查询分给给本单位的大修单位与大修树 -->
+	<select id="getHaulunitTreeByDepartmentId" resultType="map"
+		parameterType="map">
+		SELECT *
+		FROM overhaul_unit
+		WHERE ((id IN(SELECT
+		unitid
+		FROM
+		employeeoutdistribute
+		WHERE departmentId = #{departmentId})
+		AND upid
+		IN(SELECT
+		bigid
+		FROM employeeoutdistribute
+		WHERE departmentId =
+		#{departmentId}))
+		OR (upid = '1'
+		AND id IN(SELECT
+		bigid
+		FROM
+		employeeoutdistribute
+		WHERE departmentId = #{departmentId})))
+		<if test="markTrainType_In !=null">
+			and ( id IN (#{regular_train},#{longterm_train})
+			or upid IN (#{regular_train},#{longterm_train})
+			)
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and id NOT IN
+			(#{regular_train},#{longterm_train})
+			and upid NOT IN
+			(#{regular_train},#{longterm_train})
+		</if>
+		<!-- 增加检修状态的判断 -->
+		<if test="bigStatus != null">
+			and bigStatus != #{bigStatus}
+		</if>
+	</select>
+	<!-- E查询分给给本单位的大修单位树 -->
+	<!--S根据单位ID跟大修ID查询单位信息 -->
+	<select id="getUintInfoByHaulIdAndUnitId" resultType="map">
+		SELECT
+		DISTINCT
+		unit.unitBigId,
+		unit.unitId,
+		unit.bigId,
+		unit.projectNames,
+		unit.manager,
+		unit.managerPhone,
+		unit.secure,
+		unit.securePhone,
+		(IFNULL((SELECT SUM(minusNum) FROM breakrules,
+		haulemployeeout WHERE
+		breakrules.BigEmployeeoutId =
+		haulemployeeout.BigEmployeeoutId
+		AND
+		haulemployeeout.unitid =unit.unitId
+		and breakTime LIKE
+		CONCAT(Year(CurDate()),'%')
+		),0)) AS unitMinisMum,
+		(SELECT
+		count(BigEmployeeoutId)
+		FROM haulemployeeout
+		WHERE unitid
+		=
+		unit.unitId
+		AND bigid = unit.bigId) AS perNum
+		FROM haulunit
+		unit,
+		haulemployeeout
+		WHERE unit.unitId = #{1}
+		AND unit.bigid = #{0}
+	</select>
+
+
+	<!--E根据单位ID跟大修ID查询单位信息 -->
+
+	<!--S 查询分配信息 -->
+	<sql id="query_fenpei_where">
+		<if test="1==1">
+			and
+			distr.bigid =haul.bigId
+			and distr.haulempid
+			=haulemp.BigEmployeeoutId
+			AND distr.unitid = unit.unitId
+			and distr.departmentId = #{departmentId}
+			AND distr.empOutIdCard =emp.idCode
+			AND haulempid IN (SELECT distinct
+			haulempid
+			from employeeoutdistribute
+			WHERE
+			departmentId=#{departmentId})
+		</if>
+		<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+		<!-- 内部培训 -->
+		<if test="markTrainType_In !=null">
+			and distr.bigid IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and distr.bigid NOT IN
+			(#{regular_train},#{longterm_train})
+		</if>
+		<!-- 增加检修状态的判断 -->
+		<if test="bigStatus != null">
+			and bigStatus != #{bigStatus}
+		</if>
+		<!-- 未参加本机培训 -->
+		<if test="distributeStatus != null and distributeStatus==0">
+			and empOutexamStatus = '0'
+		</if>
+		<!-- 待分配 -->
+		<if
+			test="distributeStatus != null and distributeStatus==1 and departmentId!='01002'">
+			and empOutexamStatus = '1' and haulempid not in (select
+			haulempid from employeeoutdistribute where departmentId like
+			'${departmentId}_%')
+		</if>
+		<if
+			test="distributeStatus != null and distributeStatus==1 and departmentId=='01002'">
+			and empOutexamStatus = '1' and haulempid not in (select
+			haulempid from employeeoutdistribute where departmentId like '01_%'
+			and departmentId!='01002')
+		</if>
+		<if
+			test="distributeStatus != null and distributeStatus==2 and departmentId!='01002'">
+			and haulemp.trainStatus = '0' and (select
+			count(distributeid)
+			from employeeoutdistribute where departmentId like
+			'${departmentId}_%' and haulempid=distr.haulempid)
+		</if>
+		<if
+			test="distributeStatus != null and distributeStatus==2 and departmentId=='01002'">
+			and haulemp.trainStatus = '0' and (select
+			count(distributeid)
+			from employeeoutdistribute where departmentId like
+			'01_%' and
+			departmentId!='01002' and haulempid=distr.haulempid)>0
+		</if>
+		<!-- 已合格 -->
+		<if test="distributeStatus != null and distributeStatus==3">
+			and haulemp.trainStatus ='1'
+		</if>
+		<!-- 已生成工作证 -->
+		<if test="distributeStatus != null and distributeStatus==4">
+			and haulemp.trainStatus ='2'
+		</if>
+		<!-- 已回收工作证 -->
+		<if test="distributeStatus != null and distributeStatus==5">
+			and haulemp.trainStatus ='3'
+		</if>
+		<if test="unitId!=null">
+			and distr.unitid=#{unitId}
+		</if>
+		<if test="bigId!=null">
+			and distr.bigid=#{bigId}
+		</if>
+		<if test="employeeOutName!=null">
+			and distr.outempname like '%${employeeOutName}%'
+		</if>
+		<if test="employeeOutIdCard!=null">
+			and distr.empOutIdCard like '%${employeeOutIdCard}%'
+		</if>
+		<if test="employeeOutSex!=null">
+			and emp.sex=#{employeeOutSex}
+		</if>
+	</sql>
+	<sql id="query_fenpei_limit">
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</sql>
+
+
+	<select id="getEmpoutDistributeInfoCountByCondition" resultType="_int"
+		parameterType="map">
+		SELECT
+		COUNT(*)
+		FROM
+		employeeoutdistribute distr,
+		employee_out emp,
+		haulinfo haul,
+		unit,
+		haulemployeeout haulemp
+		<where>
+			<include refid="query_fenpei_where"></include>
+		</where>
+	</select>
+	<select id="getEmpoutDistributeInfo" resultType="map"
+		parameterType="map">
+		SELECT
+		distr.distributeid,
+		distr.bigid,
+		distr.haulempid,
+		distr.unitid,
+		distr.departmentId,
+		distr.outempname,
+		distr.empOutIdCard,
+		distr.empOutexamStatus,
+		distr.empOutTrainGrade,
+		haul.bigName,
+		unit.name,
+		emp.sex,
+		emp.employeeid,
+		(SELECT
+		SUM(minusNum)
+		FROM breakrules
+		WHERE
+		employeeId = (SELECT
+		employeeId
+		FROM employee_out
+		WHERE
+		employee_out.idCode =
+		distr.empOutIdCard)) AS minusNum,
+		haulemp.empType,
+		haulemp.trainStatus,
+		IFNULL((SELECT
+		GROUP_CONCAT(departmentName SEPARATOR ';') FROM
+		department WHERE
+		departmentId IN(SELECT departmentId FROM
+		employeeoutdistribute WHERE
+		employeeoutdistribute.haulempid =
+		distr.haulempid AND departmentId !=
+		'01002' AND LENGTH(departmentId) =
+		5)),'-') AS fenpeibumen,
+		IFNULL((SELECT GROUP_CONCAT(departmentName
+		SEPARATOR ';') FROM
+		department WHERE departmentId IN(SELECT
+		departmentId FROM
+		employeeoutdistribute WHERE
+		employeeoutdistribute.haulempid =
+		distr.haulempid AND
+		LENGTH(departmentId) = 8)),'-') AS fenpeibanzu
+		FROM
+		employeeoutdistribute distr,
+		employee_out emp,
+		haulinfo haul,
+		unit,
+		haulemployeeout haulemp
+		<where>
+			<include refid="query_fenpei_where"></include>
+		</where>
+		ORDER BY CONVERT(outempname USING gbk)
+		<include refid="query_fenpei_limit"></include>
+
+	</select>
+	<!--E 查询分配信息 -->
+
+
+
+	<!-- S 查询分配数信树 -->
+	<select id="getDepartmentTreeForFenpei" resultType="map"
+		parameterType="string">
+		SELECT
+		departmentId,upDepartmentId,departmentName FROM department
+		<if test="value != null">
+			where departmentId like '${value}___' and
+			LENGTH(departmentId) &lt;= 8 and departmentType='0' and
+			departmentId!="01002"
+		</if>
+	</select>
+	<!-- E 查询分配数信树 -->
+
+	<!--S 批量添加分配信息 -->
+	<!--INSERT INTO `exam9`.`employeeoutdistribute`(`distributeid`,`bigid`,`haulempid`,`unitid`,`departmentId`,`outempname`,`empOutIdCard`,`empOutexamStatus`,`empOutTrainGrade`) 
+		VALUES ( NULL,'dad3d92c044f4ec8aae72c1780b4f371',NULL,NULL,NULL,NULL,NULL,NULL,NULL); -->
+	<insert id="addFenpeiInfoBatch" parameterType="java.util.List">
+		INSERT INTO
+		`employeeoutdistribute`(`distributeid`,`bigid`,`haulempid`,`unitid`,`departmentId`,`outempname`,`empOutIdCard`,`empOutexamStatus`,`empOutTrainGrade`)
+		VALUES
+		<foreach collection="list" item="employeeoutdistribute"
+			separator=",">
+			(#{employeeoutdistribute.distributeid},#{employeeoutdistribute.bigid},#{employeeoutdistribute.haulempid},
+			#{employeeoutdistribute.unitid},#{employeeoutdistribute.departmentid},#{employeeoutdistribute.outempname},
+			#{employeeoutdistribute.empoutidcard},#{employeeoutdistribute.empoutexamstatus},#{employeeoutdistribute.empouttraingrade})
+		</foreach>
+	</insert>
+	<!--E 批量添加分配信息 -->
+	<!--S 刪除分配信息 -->
+	<delete id="deleteFenpeiInfoByHaulempIdAndDepartmentLevel"
+		parameterType="map">
+		DELETE FROM employeeoutdistribute
+		<where>
+			<if test="haulempid != null">
+				and haulempid=#{haulempid}
+			</if>
+			<if test="deplevel != null and deplevel==2">
+				AND (empOutTrainGrade = '3' OR empOutTrainGrade = '2')
+			</if>
+			<if test="deplevel != null and deplevel==3">
+				AND empOutTrainGrade = '3' and departmentId like
+				'${departmentId}%'
+			</if>
+		</where>
+	</delete>
+	<!--E 刪除分配信息 -->
+
+
+
+</mapper>

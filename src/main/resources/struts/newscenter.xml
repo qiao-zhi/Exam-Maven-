@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+
+	<!-- 上传文件存放的目录 -->
+	<!-- <constant name="struts.multipart.saveDir" value="E:\a"></constant> -->
+
+	<package name="newsPackage" extends="json-default,struts-default" namespace="/">
+		<action name="news_*" class="newsAction" method="{1}">
+			<!-- 这个用于将map转成json -->
+			<result type="json">
+				<!-- 这里指定将被Struts2序列化的属性，该属性在action中必须有对应的getter方法 -->
+				<param name="root">map</param>
+			</result>
+			<result name="newsManage" type="redirect">/view/news/newsManage.jsp</result>
+			<result name="addNews">/view/news/addNews.jsp</result>
+			<result name="modifyNews">/view/news/modifyNews.jsp</result>
+		</action>
+
+		<action name="newsP_*" class="newsPictureAction" method="{1}">
+			<!-- 这个用于将map转成json -->
+			<result type="json">
+				<!-- 这里指定将被Struts2序列化的属性，该属性在action中必须有对应的getter方法 -->
+				<param name="root">map</param>
+			</result>
+		</action>
+
+		<action name="newsIP_*" class="indexNewsAction" method="{1}">
+			<!-- 这个用于将map转成json -->
+			<result type="json">
+				<!-- 这里指定将被Struts2序列化的属性，该属性在action中必须有对应的getter方法 -->
+				<param name="root">map</param>
+			</result>
+			<result name="newsPageSon">/view/index/newsPageSon.jsp
+			</result>
+		</action>
+	</package>
+
+</struts>

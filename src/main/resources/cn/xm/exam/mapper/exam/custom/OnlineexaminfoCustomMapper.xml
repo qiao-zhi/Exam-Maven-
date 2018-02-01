@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.exam.custom.OnlineexaminfoCustomMapper" >
+
+  <!-- 根据身份证号查询该员工所有未参加的考试信息 -->
+  <select id="getNotStartExamInfoByIdCard" parameterType="String" resultType="cn.xm.exam.vo.grade.OnlineExamEmployeeInfo">
+ 		SELECT * FROM online_exam_employee_info WHERE CASE `status`= "已结束" WHEN TRUE THEN 0 ELSE 1 END = 1
+		AND CASE AnswerStatus="已交卷" WHEN TRUE THEN 0 ELSE 1 END = 1 AND idCode=#{value}
+		ORDER BY startTime ASC
+  </select>
+  
+  <!-- 根据考试ID查询考试的相关信息 -->
+  <select id="findExamInfoByExamId" parameterType="String" resultType="map">
+  		SELECT  exam.examId,exam.examName,exam.startTime,exam.endTime,exam.paperId,exam.AnswerTime from exam WHERE examId = #{value}
+  </select>
+  
+  <!-- 根据试卷的id和员工的身份证号查询试卷的所有信息 -->
+  <select id="findExamPaperInfoByPaperId" parameterType="map" resultMap="paperAllInfoAndEmployAnswer">
+  		SELECT paper.*,big.*,ques.*,(select selectoption 
+		from onlineexamanswerinfor 
+		where onlineexamanswerinfor.paperId = paper.paperId 
+		and onlineexamanswerinfor.employeeId = #{idCard}
+		AND onlineAnswerExamid = #{examId}
+		AND onlineexamanswerinfor.questionId = ques.questionId) employeeanswer,opt.* FROM exampaper
+		paper,bigquestion big,exampaperquestion ques,exampaperoption opt WHERE
+		paper.paperId=#{paperId}
+		AND paper.paperId = big.paperId AND
+		ques.bigquertionid =
+		big.bigquertionid AND opt.questionId =
+		ques.questionId ORDER BY
+		big.bigquestionsequence
+		ASC,ques.questionsequence
+		ASC,opt.optionsequence ASC
+  </select>
+  
+  <!-- 批量插入在线考试员工的答题信息 -->
+  <insert id="saveOnlineExamAnswerInfo" parameterType="list">
+  		insert into onlineexamanswerinfor (answerInfoId, questionId, paperId, 
+	      questionType, employeeId, answer, 
+	      selectOption, questionScore, score,onlineAnswerExamid
+	      )
+	      values 
+	   <foreach collection="list" item="employeeAnswer" separator=",">
+	     (#{employeeAnswer.answerinfoid,jdbcType=VARCHAR}, #{employeeAnswer.questionid,jdbcType=VARCHAR}, #{employeeAnswer.paperid,jdbcType=VARCHAR}, 
+	      #{employeeAnswer.questiontype,jdbcType=VARCHAR}, #{employeeAnswer.employeeid,jdbcType=VARCHAR}, #{employeeAnswer.answer,jdbcType=VARCHAR}, 
+	      #{employeeAnswer.selectoption,jdbcType=VARCHAR}, #{employeeAnswer.questionscore,jdbcType=REAL}, #{employeeAnswer.score,jdbcType=REAL},
+	      #{employeeAnswer.onlineanswerexamid,jdbcType=VARCHAR}
+	      )
+	   </foreach>
+  </insert>
+  
+  <!-- 根据身份证号和试卷编号批量删除员工的答案信息 -->
+  <delete id="deleteOnlineExamAnswerInfoBatch" parameterType="map">
+  		DELETE FROM onlineexamanswerinfor WHERE employeeid =#{idCard} AND paperid=#{paperId} AND onlineAnswerExamid=#{onlineAnswerExamid}
+  </delete>
+  
+  <!-- 批量设置考生的得分 -->
+  <update id="updateEmployeeInScoreBatch" parameterType="map">
+  		UPDATE onlineexamanswerinfor 
+		SET score = (CASE answer=selectOption WHEN TRUE THEN questionScore ELSE 0 END)
+		WHERE paperId=#{paperId} AND employeeId=#{idCard} AND onlineanswerexamid=#{examId}
+  </update>
+  <!-- 组合条件查询在线考试信息的总数 -->
+  <select id="findOnlineExamInfoCountWithCondition" parameterType="map" resultType="int">
+  		select count(*) from online_exam_employee_info 
+  		<where>
+  			<include refid="query_onlineExamInfo_where"></include>
+  		</where>
+  </select>
+  <!-- 组合条件查询满足条件的考试信息 -->
+  <select id="findOnlineExamInfoWithCondition" parameterType="map" resultType="cn.xm.exam.vo.grade.OnlineExamEmployeeInfo">
+  		select * from online_exam_employee_info 
+  		<where>
+  			<include refid="query_onlineExamInfo_where"></include>
+  		</where>
+  		ORDER BY startTime DESC
+	  	<include refid="query_page_limit"></include>
+  </select>
+	  <!-- 试卷映射的map -->
+	  <resultMap type="cn.xm.exam.bean.exam.Exampaper" id="paperAllInfoAndEmployAnswer">
+			<!-- 试卷基本信息 -->
+			<id column="paperId" property="paperid" />
+			<result column="paperScore" property="paperscore" />
+			<result column="maketime" property="maketime" />
+			<result column="level" property="level" />
+			<result column="employeename" property="employeename" />
+			<result column="title" property="title" />
+			<result column="usetimes" property="usetimes" />
+			<result column="description" property="description" />
+			<!-- 大题 -->
+			<collection property="bigQuestions" ofType="cn.xm.exam.bean.exam.Bigquestion">
+				<id column="bigquertionid" property="bigquertionid" />
+				<result column="paperid" property="paperid" />
+				<result column="bigquestionname" property="bigquestionname" />
+				<result column="bigquestionsequence" property="bigquestionsequence" />
+				<!-- 题 -->
+				<collection property="questions"
+					ofType="cn.xm.exam.bean.exam.Exampaperquestion">
+					<id column="questionid" property="questionid" />
+					<result column="paperid" property="paperid"></result>
+					<result column="bigquertionid" property="bigquertionid"></result>
+					<result column="questioncontent" property="questioncontent"></result>
+					<result column="questionsequence" property="questionsequence"></result>
+					<result column="type" property="type"></result>
+					<result column="answer" property="answer"></result>
+					<result column="analysis" property="analysis"></result>
+					<result column="score" property="score"></result>
+					<result column="questionsource" property="questionsource"></result>
+					<result column="employeeanswer" property="employeeanswer"/>
+					<!-- 选项 -->
+					<collection property="options"
+						ofType="cn.xm.exam.bean.exam.Exampaperoption">
+						<id column="optionid" property="optionid" />
+						<result column="questionid" property="questionid" />
+						<result column="optioncontent" property="optioncontent" />
+						<result column="optionsequence" property="optionsequence" />
+						<result column="description" property="description" />
+						<result column="isanswer" property="isanswer" />
+					</collection>
+				</collection>
+			</collection>
+		</resultMap>
+		
+	<!-- 查询在线考试信息的条件 -->
+	<sql id="query_onlineExamInfo_where">
+		<!-- 考试名称 -->
+	  	<if test="examName != null">
+	  		and examName  like '%${examName}%'
+	  	</if>
+	  	<!-- 考试级别 -->
+	  	<if test="examLevel != null">
+	  		and level = #{examLevel}
+	  	</if>
+	  	<!-- 考试状态 -->
+	  	<if test="examStatus != null">
+	  		and status = #{examStatus}
+	  	</if>
+	  	<!-- 考试时间 -->
+	  	<if test="examTime != null">
+	  		and startTime like '${examTime}%'
+	  	</if>
+	  	<!-- 身份证号 -->
+	  	<if test="idCard != null">
+	  		and idCode = #{idCard}
+	  	</if>
+	</sql>
+	 <!-- 查询分页 -->
+	<sql id="query_page_limit">
+		<!-- 分页索引 -->
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>	
+		
+</mapper>

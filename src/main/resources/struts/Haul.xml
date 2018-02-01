@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+	<package name="haul" namespace="/" extends="json-default,struts-default">
+		<!-- 全局结果集，将response转换为json传到前台 -->
+		<global-results>
+			<result name="success" type="json">
+				<param name="root">response</param>
+			</result>
+		</global-results>
+		<!-- 添加大修 -->
+		<action name="addHaul" class="addHaulAction"></action>
+		<!-- 修改大修基本信息 -->
+		<action name="updateHaul" class="updateHaulAction"></action>
+		<action name="upHaul_*" class="updateHaulAction" method="{1}"></action>
+		<!-- 查询大修信息 -->
+		<action name="haul_*" class="findHaulAction" method="{1}"></action>
+		<!-- 查询大修信息 -->
+		<action name="deleteHaul" class="deleteHaulAction"></action>
+	</package>
+</struts>

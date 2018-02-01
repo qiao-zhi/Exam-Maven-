@@ -1,0 +1,61 @@
+/*<!--批量操作-->*/
+
+#el_allOption {
+	width: 150px;
+}
+
+#setCheckState {
+	position: relative;
+	left: 170px;
+	bottom: 25px;
+	width:450px;
+}
+#el_questionInfo .panel-body{
+	padding-left:20px;
+}
+#setCheckState label {
+	margin-right: 10px;
+}
+
+#setCheckState .btn {
+	margin-left: 20px;
+}
+
+/*批量操作模态框设计*/
+/*审核状态改变*/
+.el_CheckChooseTitle {
+	display: inline-block;
+	width: 80px;
+}
+
+/*批量移动*/
+/*批量移动成员的提交按钮*/
+#el_setAllMove {
+	width: 400px;
+	height: 30px;
+	position: relative;
+	left: 170px;
+	bottom: 25px;
+}
+#el_setAllMove #el_chooseDepart {
+	width: 200px;
+	background-color: white;
+	height: 25px;
+	border: 1px solid #ccc;
+	border-radius: 0 3px 3px 0;
+	padding-left: 10px;
+	padding-top: 2px;
+	box-shadow: 0 1px 1px #eee inset;
+}
+
+#el_setAllMove .el_smallTriangle {
+	position: absolute;
+	left: 275px;
+}
+#el_setAllMoveSubmit {
+	display: block;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+

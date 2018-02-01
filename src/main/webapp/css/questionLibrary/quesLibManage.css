@@ -1,0 +1,62 @@
+/*<!--瀵煎嚭鍜岃瘯棰樼粺璁�-->*/
+/*瀵煎嚭*/
+.el_qlmQueryRadio{
+	width:340px !important;
+}
+.el_ExportSelect {
+    margin: 10px;
+}
+.el_qlmQuery{
+	float:left;
+}
+ #treeDemo{
+ 	overflow:auto;
+ }
+/*瀵煎嚭鏍囬*/
+.el_exportTitle {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 10px;
+    padding-left: 10px;
+}
+
+/*璇曞嵎淇℃伅*/
+.el_parperInfo {
+    width: 80%;
+    font-size: 14px;
+    text-align: center;
+}
+
+.el_parperInfo table {
+    width: 100%;
+}
+
+.el_parperInfo table caption {
+    font-size: 20px;
+    width: 100%;
+    font-weight: 500;
+    margin: 5px;
+    letter-spacing: 5px;
+}
+
+.el_parperInfo table tr {
+    height: 35px;
+    line-height: 35px;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.el_parperInfo table tr td:first-child {
+    border-right: 1px solid #eee;
+    width: 150px;
+}
+
+/*绱㈠紩鏍�*/
+#log li {
+    top:0;
+    height:20px;
+    line-height:20px;
+}
+
+.log,#departmentTree_QLM2{
+	width:250px !important;	
+}	

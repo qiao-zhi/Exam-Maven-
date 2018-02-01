@@ -1,0 +1,57 @@
+#create_title{
+	margin:10px;
+	margin-bottom:0;
+	font-size:17px;
+}
+
+.el_modellist{
+	width:600px;
+}
+/*提示信息*/
+.el_tipInfo {
+    color: #999;
+    margin-left: 10px;
+}
+/*查询区域*/
+.el_queryBox{
+    bottom:10px;
+    padding-bottom:10px;
+    margin-bottom:0;
+}
+
+/*模态*/
+.el_paperInfo {
+    margin: 10px;
+    margin-bottom: 15px;
+    width: 500px;
+    font-size: 14px;
+    position: relative;
+}
+.el_paperInfo .el_spans {
+    padding: 6px 12px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 4px;
+    display: table-cell;
+    width: 50px;
+}
+.el_paperInfo .form-control {
+    width: 300px;
+    position: absolute;
+    top: 0;
+    left: 80px;
+}
+
+/*导航按钮区*/
+.el_navButton {
+    margin: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+}
+.el_navButton a {
+    text-decoration: none;
+}

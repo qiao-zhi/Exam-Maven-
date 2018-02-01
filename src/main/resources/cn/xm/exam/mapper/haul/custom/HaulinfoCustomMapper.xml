@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.custom.HaulinfoCustomMapper">
+
+	<!--S 查询分页总数 -->
+	<select id="getHaulinfoTotalByCondition" parameterType="hashmap"
+		resultType="_int">
+		SELECT
+		COUNT(bigId) FROM haulinfo
+		<where>
+			<include refid="queryHaulWhere"></include>
+		</where>
+	</select>
+	<!--E 查询分页总数 -->
+	<!--S 分页查询大修 -->
+	<select id="getHaulinfoslByCondition" resultType="map"
+		parameterType="hashmap">
+		SELECT haulinfo.*,(select count(haulprojectid) from haulproject where
+		bigid=haulinfo.bigId) as biaoduan,
+		(select count(BigEmployeeoutId) from
+		haulemployeeout where bigid=haulinfo.bigId and trainstatus='2') as
+		perNum,
+		(select
+		count(unitBigId) from haulunit where
+		bigid=haulinfo.bigId) as unitNum
+		FROM haulinfo
+		<where>
+			<include refid="queryHaulWhere"></include>
+		</where>
+		ORDER BY bigCreateDate DESC
+		<include refid="queryHaulLimit"></include>
+	</select>
+	<!--E 分页查询大修 -->
+
+	<!--S 查询大修树与外来单位树 -->
+	<!-- 为大修部门树准备数据 -->
+	<select id="getOverHaulInfoTree" resultType="map">
+		SELECT bigid id,CASE
+		WHEN TRUE THEN NULL ELSE 1 END upid,bigName `name` from haulinfo ORDER
+		BY bigCreateDate DESC
+	</select>
+
+	<select id="getDepartInfoTree" resultType="map">
+		SELECT unitid id
+		,bigid upid,(SELECT unit.`name` FROM unit WHERE unitId =
+		haulunit.unitId) `name` FROM haulunit
+	</select>
+	<!--E 查询大修树与外来单位树 -->
+
+
+
+	<!--S 组装查询条件 -->
+	<sql id="queryHaulWhere">
+		<if test="1==1">
+			and bigId not in(#{regular_train},#{longterm_train})
+		</if>
+		<if test="bigName!=null">
+			and bigName LIKE '%${bigName}%'
+		</if>
+		<if test="bigStatus!=null">
+			and bigStatus=#{bigStatus}
+		</if>
+		<if test="startMonth!=null">
+			and DATE_FORMAT(bigCreateDate,'%Y-%m')=#{startMonth}
+		</if>
+		<if test="markTrainType_In !=null">
+			and bigid IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and bigid NOT IN
+			(#{regular_train},#{longterm_train})
+		</if>
+	</sql>
+	<!--E 组装查询条件 -->
+	<!--S 分页条件 -->
+	<sql id="queryHaulLimit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+	<!--E 组装分页条件 -->
+
+	<!--S 根据大修ID查询所有的大修部门ID -->
+	<select id="getHaulUnitByHaulid" parameterType="string"
+		resultType="string">
+		SELECT unitId FROM haulunit WHERE bigId=#{value}
+	</select>
+	<!--E 根据大修ID查询所有的大修部门ID -->
+
+	<!--S 查询大修的名字与ID集合 -->
+	<select id="getHaulNameAndIdsForExam" resultType="map">
+		SELECT
+		bigName,bigId,bigStatus FROM haulinfo WHERE bigStatus !='已结束' order by
+		bigCreateDate DESC
+	</select>
+	<!--E 查询大修的名字与ID集合 -->
+	<!-- S查询标段信息 -->
+	<select id="getCountProjectInfoByBigId" parameterType="string"
+		resultType="_int">
+		SELECT COUNT(haulprojectid) FROM haulproject WHERE
+		bigid=#{value}
+	</select>
+	<select id="getProjectInfoByBigId" parameterType="map"
+		resultType="map">
+		SELECT
+		project.*,
+		bigpro.*,
+		(SELECT
+		COUNT(BigEmployeeoutId)
+		FROM haulemployeeout
+		WHERE unitId IN(SELECT
+		unitid
+		FROM haulunitproject
+		WHERE haulunitproject.projectId = project.projectid) AND
+		trainStatus='2')
+		AS perNum
+		FROM project,
+		haulproject bigpro
+		WHERE
+		project.projectid = bigpro.projectid
+		AND bigpro.projectid IN(SELECT
+		haulproject.projectId
+		FROM haulproject
+		WHERE bigid = #{bigId})
+		limit
+		#{index},#{currentCount}
+	</select>
+	<!-- E查询标段信息 -->
+	<!-- S查询标段单位人数信息 -->
+	<select id="getCountProjectUnitPerNumInfoByBigId" parameterType="string"
+		resultType="int">
+		SELECT COUNT(unitBigId) FROM haulunit WHERE bigId =#{value}
+	</select>
+
+
+	<select id="getProjectUnitPerNumInfoByBigId" parameterType="map"
+		resultType="map">
+		SELECT
+		haulunitproject.*,
+		project.*,
+		unit.name,
+		(SELECT
+		COUNT(BigEmployeeoutId)
+		FROM haulemployeeout
+		WHERE
+		haulemployeeout.unitId = unit.unitId
+		AND haulemployeeout.bigId =
+		haulunitproject.bigid
+		AND trainStatus = '2') AS perNum
+		FROM
+		haulunitproject,
+		project,
+		unit
+		WHERE unit.unitId = haulunitproject.unitid
+		AND haulunitproject.projectId = project.projectid
+		AND
+		haulunitproject.bigid = #{bigId}
+		limit #{index},#{currentCount}
+	</select>
+	<!-- E查询标段单位人数信息 -->
+	<!--S 查询检修统计信息 -->
+	<select id="getAllHaulInfo" parameterType="map" resultType="map">
+		SELECT
+		COUNT(bigId) AS haulnum,
+		(SELECT
+		COUNT(unitBigId)
+		FROM haulunit,
+		haulinfo haul
+		WHERE haul.bigId = haulunit.bigId
+		AND haul.bigStatus = '进行中'
+		AND haulunit.bigId NOT
+		IN(#{regular_train},#{longterm_train}))
+		AS unitNnm,
+		(SELECT
+		COUNT(BigEmployeeoutId)
+		FROM haulemployeeout,
+		haulinfo haul
+		WHERE haul.bigId = haulemployeeout.bigId
+		AND haul.bigStatus = '进行中'
+		AND haul.bigId NOT
+		IN(#{regular_train},#{longterm_train})
+		AND haulemployeeout.trainStatus = '2') AS perNum,
+		(SELECT
+		COUNT(haulprojectid)
+		FROM haulproject,
+		haulinfo haul
+		WHERE haul.bigId = haulproject.bigId
+		AND haul.bigStatus = '进行中'
+		AND haul.bigId NOT
+		IN(#{regular_train},#{longterm_train}))
+		AS biaoduanNum
+		FROM haulinfo
+		WHERE haulinfo.bigStatus = '进行中'
+		AND haulinfo.bigId NOT
+		IN(#{regular_train},#{longterm_train})
+	</select>
+	<!--E 查询检修统计信息 -->
+</mapper>

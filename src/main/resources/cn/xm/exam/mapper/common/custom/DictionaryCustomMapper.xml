@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.common.custom.DictionaryCustomMapper">
+
+	<!-- lixianyuan 9.20 -->
+
+	<sql id="dictionaryColumns">dictionaryId, dictionaryName, upDictionaryId, isUse,
+		discription
+	</sql>
+
+	<!-- 查询字典树信息 -->
+	<select id="getDictionaryTree" resultType="Map">
+		select
+		dictionaryId,dictionaryName,upDictionaryId
+		from dictionary
+	</select>
+	<!-- 根据上级字典编号upDictinonaryId查询所有下级字典信息 -->
+	<select id="getDictionaryByUpDicId" parameterType="java.lang.String"
+		resultType="Dictionary">
+		select dictionaryId, dictionaryName, upDictionaryId, isUse,
+		discription
+		from dictionary
+		where upDictionaryId = #{upDictionaryId}
+		order by CONVERT(dictionaryName USING GBK) ASC
+	</select>
+
+	<!-- 根据上级字典编号upDictinonaryId curPage当前页页号 perCount每页显示的记录数 查询所有下级字典信息 --><!-- 这个要分页 -->
+	<select id="getDictionaryByUpDicIdFY" parameterType="map"
+		resultType="Dictionary">
+		select dictionaryId, dictionaryName, upDictionaryId, isUse,
+		discription
+		from dictionary
+		where upDictionaryId = #{upDictionaryId}
+		limit #{curPage},#{perCount}
+	</select>
+
+	<!-- 根据上级字典编号upDictinonaryId查询下级字典信息的总记录条数 -->
+	<select id="getDictionaryCountByUpDicId" parameterType="java.lang.String"
+		resultType="int">
+		select count(*) from dictionary
+		where upDictionaryId =
+		#{upDictionaryId}
+	</select>
+
+	<!-- 根据条件查询字典信息 -->
+	<select id="getDictionaryByCondition" parameterType="map"
+		resultType="Dictionary">
+		select
+		<include refid="dictionaryColumns" />
+		from dictionary
+		<where>
+			<if test="dictionaryId!=null &amp;&amp; dictionaryId!='' ">
+				and dictionaryId=#{dictionaryId}
+			</if>
+			<if test="dictionaryName!=null &amp;&amp; dictionaryName!='' ">
+				and dictionaryName like
+				concat(concat('%',#{dictionaryName}),'%'))
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 根据上级字典Id查询下一个要插入的下一级字典的编号 -->
+	<select id="getMaxDictionaryId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select max(dictionaryId)
+		from dictionary
+		where upDictionaryId
+		= #{upDictionaryId}
+	</select>
+
+	<!-- 查询字典表的总记录数 (字典编号，字典名称) -->
+	<select id="getCountDictionary" resultType="java.lang.Integer">
+		select count(*)
+		from
+		dictionary
+		where dictionaryId=#{dictionaryId} and
+		dictionaryName=#{dictionaryName}
+	</select>
+
+	<!-- 根据字典名称、字典状态 每页显示的记录数 当前页页号 进行模糊的分页查询 -->
+	<select id="selectDictionaryByFY" parameterType="map"
+		resultType="Dictionary">
+		select * from dictionary
+		<where>
+			<if test="dictionaryName!=null &amp;&amp; dictionaryName!='' ">
+				and dictionaryName like
+				concat(concat('%',#{dictionaryName}),'%')
+			</if>
+
+			<if test="isUse!=null &amp;&amp; isUse!='' ">
+				and isUse like concat(concat('%',#{isUse}),'%')
+			</if>
+		</where>
+		limit #{curPage},#{pageSize}
+	</select>
+
+	<!-- 统计 (根据字典名称、字典状态 每页显示的记录数 当前页页号 进行模糊的分页查询) 获取到的总记录数 -->
+	<select id="selectDictionaryCountByFY" parameterType="map"
+		resultType="int">
+		select count(*) from dictionary
+		<where>
+			<if test="dictionaryName!=null &amp;&amp; dictionaryName!='' ">
+				and dictionaryName like
+				concat(concat('%',#{dictionaryName}),'%')
+			</if>
+
+			<if test="isUse!=null &amp;&amp; isUse!='' ">
+				and isUse like concat(concat('%',#{isUse}),'%')
+			</if>
+		</where>
+	</select>
+
+	<!-- -->
+
+	<!-- 根据字典名称获取字典编号 -->
+	<select id="getDictionaryIdByDictionaryName" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select dictionaryId
+		from dictionary
+		where dictionaryName =
+		#{dictionaryName}
+	</select>
+
+	<!-- 根据字典编号获取字典名称 -->
+	<select id="getDictionaryNameByDictionaryId" parameterType="java.lang.String"
+		resultType="java.lang.String">
+		select dictionaryName
+		from dictionary
+		where dictionaryId =
+		#{dictionaryId}
+	</select>
+
+	<!-- lixianyuan 9.20 -->
+
+	<!-- S QLQ 11.30 -->
+	<select id="getDictionaryIdAndNamesByUpId" parameterType="string"
+		resultType="map">
+		SELECT dictionaryId,dictionaryName FROM dictionary WHERE
+		upDictionaryId=#{value}
+	</select>
+	<!--E QLQ 11.30 -->
+
+
+</mapper>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.system.UserMapper">
+
+	<resultMap id="userWithRole" type="cn.xm.exam.bean.system.User">
+		<id column="userid" property="userid" jdbcType="VARCHAR" />
+		<result column="userIDCard" property="useridcard" jdbcType="VARCHAR" />
+		<result column="password" property="password" jdbcType="VARCHAR" />
+		<result column="username" property="username" jdbcType="VARCHAR" />
+		<result column="departmentname" property="departmentname"
+			jdbcType="VARCHAR" />
+		<result column="employeeid" property="employeeid" jdbcType="DATE" />
+		<result column="userphoto" property="userphoto" jdbcType="VARCHAR" />
+		<result column="isuse" property="isuse" jdbcType="VARCHAR" />
+		<result column="departmentid" property="departmentid" jdbcType="VARCHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<collection property="roles" column="userid" javaType="list"
+			ofType="cn.xm.exam.bean.system.Role" select="cn.xm.exam.mapper.system.RoleMapper.getRoleByUserId"></collection>
+		<collection property="permissions" column="userid"
+			javaType="list" ofType="string"
+			select="cn.xm.exam.mapper.system.UserMapper.getPermissionByUseridlist"></collection>
+	</resultMap>
+
+	<resultMap id="employeeinWithDepartmentName" type="cn.xm.exam.bean.employee.in.EmployeeIn">
+		<id column="employeeId" property="employeeid" jdbcType="VARCHAR" />
+		<result column="name" property="name" jdbcType="VARCHAR" />
+		<result column="idCode" property="idcode" jdbcType="CHAR" />
+		<result column="phone" property="phone" jdbcType="VARCHAR" />
+		<result column="photo" property="photo" jdbcType="VARCHAR" />
+		<result column="departmentId" property="departmentid" jdbcType="VARCHAR" />
+		<result column="finger" property="finger" jdbcType="VARCHAR" />
+		<association property="departmentname" column="departmentId"
+			javaType="String"
+			select="cn.xm.exam.mapper.system.UserMapper.selectDepartNameByDepartId"></association>
+	</resultMap>
+	<!-- 根据部门id获取部门名字 -->
+	<select id="selectDepartNameByDepartId" parameterType="string"
+		resultType="string">
+		select departmentName from department where departmentId=#{departmentid}
+	</select>
+
+	<sql id="userInfo">
+		userid,userIDCard,password,username,departmentname,employeeid,userphoto,isuse,departmentid,phone
+	</sql>
+
+	<sql id="permissioninfo">
+		permissionId, name, status, type, url, permissionCode, parentId, parentsId, sortNo,
+		description
+	</sql>
+
+	<sql id="pageinfo">
+		<if test="rowBegin != null and currentCount != null">LIMIT #{rowBegin},#{currentCount}</if>
+	</sql>
+
+	<!-- 根据用户名查询用户信息极其所属部门及其部门信息及其角色信息 -->
+	<select id="getUserByUseridcard" parameterType="String"
+		resultMap="userWithRole">
+		SELECT * from user WHERE `useridcard`=#{useridcard} and isuse='1'
+	</select>
+
+	<!-- 根据用户ID查询角色 -->
+	<select id="getRoleByUserid" parameterType="String" resultType="String">
+		SELECT r.roleId
+		from user LEFT JOIN userrole ur USING (userid)
+		LEFT JOIN
+		role r USING(roleId)
+		WHERE user.`userid`=#{userid}
+	</select>
+
+	<!-- 根据用户名查询权限 -->
+	<select id="getPermissionByUserid" parameterType="String"
+		resultType="String">
+		SELECT DISTINCT p.permissionCode
+		from user LEFT JOIN userrole ur USING (userid)
+		LEFT JOIN role r USING(roleId)
+		LEFT JOIN rolepermission rp USING(roleId)
+		LEFT JOIN permission p USING(permissionId)
+		WHERE user.`userid`=#{userid} and r.rolestatus='1' and p.status='1'
+		ORDER BY -sortNo DESC
+	</select>
+
+	<!-- 根据用户名查询权限 -->
+	<select id="getPermissionByUseridlist" parameterType="String"
+		resultType="String">
+		SELECT DISTINCT p.permissionCode
+		from user LEFT JOIN userrole ur USING (userid)
+		LEFT JOIN role r USING(roleId)
+		LEFT JOIN rolepermission rp USING(roleId)
+		LEFT JOIN permission p USING(permissionId)
+		WHERE user.`userid`=#{userid} and r.rolestatus='1' and p.status='1'
+	</select>
+
+	<!-- 删除用户 -->
+	<delete id="deleteUserById" parameterType="list">
+		DELETE FROM user WHERE
+		<foreach collection="userids" item="userid" separator="or">
+			userid=#{userid}
+		</foreach>
+	</delete>
+
+	<!-- 根据用户编号 删除用户的所有角色 -->
+	<delete id="deleteAllRoleFromUserByUserId" parameterType="list">
+		delete from userrole where userid in(
+		<foreach collection="userids" item="userid" separator=",">
+			#{userid}
+		</foreach>
+		)
+
+	</delete>
+
+
+	<!-- 给用户分配角色 -->
+	<insert id="addRoleForUser">
+		insert into userrole (userid,roleId) values
+		<foreach collection="roleids" item="item" separator=",">
+			(#{userid},#{item})
+		</foreach>
+	</insert>
+
+	<!-- 撤销分配给用户的角色 -->
+	<delete id="deleteRoleFromUser" parameterType="map">
+		DELETE FROM userrole WHERE userid=#{userid} AND
+		<if test="roleids != null">
+			<foreach collection="roleids" item="item" separator="or">
+				roleId=#{item}
+			</foreach>
+		</if>
+	</delete>
+
+	<!-- 根据用户ID获取用户登录密码 -->
+	<select id="getPasswordByUseridcard" parameterType="String"
+		resultType="String">
+		select password from user where useridcard=#{useridcard}
+	</select>
+
+	<!-- 关闭/开启用户 -->
+	<update id="updateUserStatus">
+		update user
+		<set>
+			isuse=#{status}
+		</set>
+		where
+		<foreach collection="userids" item="item" separator="or">
+			userid=#{item}
+		</foreach>
+	</update>
+
+	<!-- 根据用户名获取权限的对象集合 -->
+	<select id="getObjectPermissionByUserid" parameterType="String"
+		resultType="cn.xm.exam.bean.system.Permission">
+		SELECT * from permission where permissionId in(
+		SELECT DISTINCT(permissionid)
+		from user LEFT JOIN userrole ur USING (userid)
+		LEFT JOIN role r USING(roleId)
+		LEFT JOIN rolepermission rp USING(roleId)
+		LEFT JOIN permission p USING(permissionId)
+		WHERE user.`userid`=#{userid} and r.rolestatus='1' and p.status='1'
+		)
+		ORDER BY -sortNo DESC,permissionid
+	</select>
+
+	<!-- 批量添加账号 -->
+	<insert id="addUser" parameterType="list">
+		insert into
+		user(userid,userIDCard,password,username,departmentname,employeeid,isuse,departmentid,phone,time)
+		values
+		<foreach collection="list" item="user" separator=",">
+			<trim prefix="(" suffix=")" suffixOverrides=",">
+				<if test="user.userid != null and user.userid !=''">#{user.userid},
+				</if>
+				<if test="user.useridcard != null and user.useridcard !=''">#{user.useridcard},
+				</if>
+				<if test="user.password != null and user.password !=''">
+					#{user.password}, </if>
+				<if test="user.username != null and user.username !=''">#{user.username},
+				</if>
+				<if test="user.departmentname !=null and user.departmentname !=''">#{user.departmentname},</if>
+				<if test="user.employeeid != null and user.employeeid !=''">
+					#{user.employeeid}, </if>
+				<!-- <if test="user.userphoto != null and user.userphoto !=''" > #{user.userphoto}, 
+					</if> -->
+				<if test="user.isuse != null and user.isuse !=''"> #{user.isuse},
+				</if>
+				<if test="user.departmentid != null and user.departmentid !=''">
+					#{user.departmentid}, </if>
+				<if test="user.phone != null and user.phone !=''"> #{user.phone},
+				</if>
+				<if test="user.datatime != null and user.datatime !=''">
+					#{user.datatime}</if>
+			</trim>
+		</foreach>
+
+	</insert>
+
+	<!-- 根据部门编号获取该部门下的所有未注册系统账号的员工 -->
+	<select id="getEmployeeInWithoutUserByDepartId" parameterType="string"
+		resultType="cn.xm.exam.bean.employee.in.EmployeeIn">
+		select * from employee_in where
+		departmentid like '${departmentid}%'
+		and employeeId not in (SELECT employee_in.employeeid from
+		user,employee_in where employee_in.employeeId=user.employeeId)
+	</select>
+
+	<!-- 根据部门编号获取该部门下的所有系统用户,带分页 -->
+	<select id="getUserByDepartId" resultMap="userWithRole">
+		select * from user where departmentid=#{departmentid}
+		order by time desc
+		<include refid="pageinfo"></include>
+
+	</select>
+
+	<!-- 组合查询记录条数 departmentid:部门编号 username:用户姓名 useridcard：用户身份证号码 roleid:角色编号 -->
+	<select id="getCountByCondition" parameterType="map" resultType="int">
+		SELECT COUNT(DISTINCT userid) from (select * from user left join
+		userrole using(userid)
+		<where>
+			<if test="departmentid !=null and departmentid !=''">user.departmentid=#{departmentid}</if>
+			<if test="username !=null and username !=''">and username = #{condition.username}</if>
+			<if test="useridcard !=null and useridcard !=''">and useridcard = #{useridcard}</if>
+			<if test="roleid !=null and roleid !=''">and roleid=#{roleid}</if>
+		</where>
+		) as total
+	</select>
+
+	<!-- 组合查询用户 -->
+	<select id="getUserByCondition" resultMap="userWithRole">
+		SELECT `user`.* from user where `user`.userid
+		in(select DISTINCT userid from `user` LEFT JOIN userrole USING(userid)
+		<where>
+			user.departmentid like concat(#{condition.departmentid},'%')
+			<if test="condition !=null">
+				<if test="condition.username !=null and condition.username !=''">and username like '%${condition.username}%'</if>
+				<if test="condition.useridcard !=null and condition.useridcard !=''">and useridcard like '%${condition.useridcard}%'</if>
+				<if test="condition.roleid !=null and condition.roleid !=''">and roleid=#{condition.roleid}</if>
+			</if>
+		</where>
+		)
+		order by time desc
+		<include refid="pageinfo"></include>
+	</select>
+
+	<!-- 组合查询用户 -->
+	<select id="getLikeCountByCondition" parameterType="map"
+		resultType="int">
+		SELECT count(DISTINCT user.userid) from user where `user`.userid
+		in(select DISTINCT userid from `user` LEFT JOIN userrole USING(userid)
+		<where>
+			user.departmentid like concat(#{condition.departmentid},'%')
+			<if test="condition.username !=null and condition.username !=''">and username like '%${condition.username}%'</if>
+			<if test="condition.useridcard !=null and condition.useridcard !=''">and useridcard like '%${condition.useridcard}%'</if>
+			<if test="condition.roleid !=null and condition.roleid !=''">and roleid=#{condition.roleid}</if>
+		</where>
+		)
+	</select>
+
+	<!-- 根据部门编号获取本部门及其所属部门的部门树 -->
+	<select id="getDepartTreeByDepartId" parameterType="string"
+		resultType="map">
+		select departmentid,updepartmentid,departmentname from
+		department where departmentid like concat(#{departmentid},'%')
+	</select>
+
+	<!-- 修改用户密码 -->
+	<update id="updatePassword">
+		update user
+		<set>
+			password=#{password}
+		</set>
+		where useridcard=#{useridcard}
+	</update>
+
+
+	<!-- 根据员工编号，批量获取员工信息 -->
+	<select id="getEmployeeinsById" resultMap="employeeinWithDepartmentName">
+		select * from employee_in where employeeid in(
+		<foreach collection="employeeids" item="employeeid" separator=",">
+			#{employeeid}
+		</foreach>
+		)
+	</select>
+
+	<select id="getEmployeeBynameAnddepartmentid" resultType="cn.xm.exam.bean.employee.in.EmployeeIn">
+		select * from employee_in where departmentid=#{departmentid}
+		and employeeId not in (SELECT employee_in.employeeid from
+		user,employee_in where employee_in.employeeId=user.employeeId)
+		<if test="name !=null and name!=''"> and name=#{name} </if>
+	</select>
+
+	<!-- 根据身份证号获取员工信息 -->
+	<select id="getEmployeeByEmployeeid" parameterType="string"
+		resultMap="employeeinWithDepartmentName">
+		select * from employee_in where employeeid=#{employeeid}
+	</select>
+
+	<!-- 更新用户信息 -->
+	<update id="updateUserInfo" parameterType="cn.xm.exam.bean.system.User">
+		update user
+		<set>
+			<if test="username !=null and username !=''">username=#{username},</if>
+			<if test="departmentname !=null and departmentname !=''">departmentname=#{departmentname},</if>
+			<if test="userphoto !=null and userphoto !=''">userphoto=#{userphoto},</if>
+			<if test="isuse !=null and isuse !=''">isuse=#{isuse},</if>
+			<if test="departmentid !=null and departmentid !=''">departmentid=#{departmentid},</if>
+			<if test="phone !=null and phone !=''">phone=#{phone}</if>
+		</set>
+		<where>userid=#{userid}</where>
+	</update>
+
+	<!-- 根据身份证号获取员工编号 -->
+	<select id="getEmployeeidByIdcard" parameterType="string"
+		resultType="string">
+		select employeeid from user where useridcard=#{useridcard}
+	</select>
+
+	<!-- 根据身份证号码获取用户ID -->
+	<select id="getUseridByIdcard" parameterType="string"
+		resultType="string">
+		select userid from user where
+		useridcard=#{useridcard}
+	</select>
+</mapper>
+

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.custom.BlackUnitCustomMapper">
+
+
+	<!-- 查询黑名单单位信息分页显示 -->
+	<select id="getBlackUnitPage" parameterType="map" resultType="cn.xm.exam.bean.employee.out.BlackUnit">
+		SELECT * from black_unit 
+		ORDER BY addTime DESC
+		<include refid="query_blackunit_limit"></include>		
+	</select>
+	<sql id="query_blackunit_limit">
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</sql>
+	
+
+
+
+
+
+
+</mapper>

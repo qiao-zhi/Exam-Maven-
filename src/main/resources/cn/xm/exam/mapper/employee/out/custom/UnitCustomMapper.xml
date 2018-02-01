@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.custom.UnitCustomMapper">
+
+
+	<!-- S qlq -->
+	<!-- S 查询部门树 -->
+	<select id="getUnitTreeForExam" resultType="map">
+		SELECT
+		unitId,upUnitId,name FROM `exam`.`unit`
+	</select>
+	<!-- E 查询部门树 -->
+	<!--S 模糊查询部门名称 -->
+	<select id="getUnitsName" resultType="string">
+		SELECT NAME FROM unit
+		<where>
+			<if test="value != null">
+				NAME LIKE '%${value}%' LIMIT 0,5
+			</if>
+		</where>
+	</select>
+	<!--E 模糊查询部门名称 -->
+
+	<!--S 查询大修单位信息 -->
+	<select id="getHaulunitTotalByCondition" resultType="_int"
+		parameterType="hashmap">
+		SELECT
+		COUNT(haulunit.unitBigId) FROM haulunit,haulinfo,unit
+		<where>
+			<include refid="query_haulunit_where"></include>
+		</where>
+	</select>
+
+	<select id="getHaulunitByCondition" parameterType="hashmap"
+		resultType="map">
+		SELECT
+		haulunit.unitId,
+		haulunit.unitBigId,
+		haulunit.bigId,
+		(select
+		group_concat(projectname) from project where projectid in (select projectId from
+		haulunitproject where bigId =haulunit.bigId and unitId=
+		haulunit.unitId)) as
+		projectNames,
+		haulunit.manager,
+		haulunit.managerPhone,
+		haulunit.secure,
+		haulunit.securePhone,
+		@b:=
+		(IFNULL((SELECT SUM(minusNum) FROM breakrules,
+		haulemployeeout WHERE
+		breakrules.BigEmployeeoutId =
+		haulemployeeout.BigEmployeeoutId <!-- AND haulemployeeout.bigId 
+			= haulinfo.bigId -->
+		AND haulemployeeout.unitid =
+		haulunit.unitId
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		and breakTime LIKE CONCAT(Year(CurDate()),'%')
+		),0)) AS unitMinisMum,
+		haulinfo.bigName,
+		haulinfo.bigStatus,
+		haulinfo.bigCreateDate,
+		unit.name,
+		unit.address,
+		unit.contact,
+		unit.phone,
+		@a:= (SELECT
+		COUNT(BigEmployeeoutId)
+		FROM haulemployeeout
+		WHERE
+		haulemployeeout.bigId
+		= haulunit.bigId
+		AND haulemployeeout.unitId =
+		haulunit.unitId and trainstatus='2') AS
+		personNum,
+		TRUNCATE(IFNULL(@b/@a,0),3) AS jiaquan
+		FROM haulunit,
+		haulinfo,
+		unit
+		<where>
+			<include refid="query_haulunit_where"></include>
+		</where>
+
+		ORDER BY jiaquan desc
+		<!-- <if test="fstarttime != null or fendtime != null"> unitMinisMum desc 
+			</if> <if test="fstarttime == null and fendtime == null"> haulinfo.bigCreateDate 
+			DESC,CONVERT(unit.name USING gbk) </if> -->
+		<include refid="query_haulunit_limit"></include>
+	</select>
+	<!--组合查询条件 -->
+	<sql id="query_haulunit_where">
+		<if test="1 == 1">
+			haulunit.bigId=haulinfo.bigId AND
+			haulunit.unitId=unit.unitId
+		</if>
+		<if test="unitName != null">
+			<bind name="unit_name" value="'%'+unitName+'%'"></bind>
+			and unit.name like #{unit_name}
+		</if>
+		<if test="minMinus != null">
+			and haulunit.unitMinisMum &gt;= #{minMinus}
+		</if>
+		<if test="projectName != null">
+			and haulunit.projectNames like '%${projectName}%'
+		</if>
+		<if test="maxMinus != null">
+			and haulunit.unitMinisMum &lt;= #{maxMinus}
+		</if>
+		<if test="bigId != null">
+			and haulunit.bigId = #{bigId}
+		</if>
+		<!-- 增加标记条件判断应该显示的检修及员工信息 -->
+		<!-- 内部培训 -->
+		<if test="markTrainType_In !=null">
+			and haulunit.bigId IN (#{regular_train},#{longterm_train})
+		</if>
+		<!-- 外部培训 -->
+		<if test="markTrainType_Out !=null">
+			and haulunit.bigId NOT IN
+			(#{regular_train},#{longterm_train})
+		</if>
+	</sql>
+	<sql id="query_haulunit_limit">
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</sql>
+	<!--E 查询大修单位信息 -->
+	<!-- S 查询大修单位员工总数 -->
+	<select id="getEmployeeOutsTotalByUaulIdAndUnitId" resultType="_int"
+		parameterType="map">
+		select count(BigEmployeeoutId) from haulemployeeout
+		where unitId=#{unitId}
+		AND
+		bigId=#{bigId}
+	</select>
+	<!-- E 查询大修单位员工总数 -->
+	<!--S 根据大修ID与单位ID查询员工信息 -->
+	<select id="getEmployeeOutsByUaulIdAndUnitId" parameterType="map"
+		resultType="hashmap">
+		select
+		emp.name,emp.idCode,emp.sex,emp.address,emplhaul.empType,emplhaul.empOutPhone,(SELECT
+		sum(minusNum) FROM breakrules WHERE BigEmployeeoutId =
+		emplhaul.BigEmployeeoutId ) as minusNum from employee_out
+		emp,haulemployeeout emplhaul where emp.idCode in (SELECT empoutIdcard
+		FROM haulemployeeout WHERE unitId=#{unitId}
+		AND
+		bigId=#{bigId}) and
+		emp.idCode =
+		emplhaul.empoutIdcard
+		AND bigId = #{bigId}
+		and
+		emplhaul.unitId=#{unitId}
+		and emplhaul.trainstatus='2'
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</select>
+	<!-- 查询总数 -->
+	<select id="getEmployeeOutsBreakrulesTotal" parameterType="map"
+		resultType="_int">
+		SELECT count(breakId) from breakrules break,
+		employee_out empl
+		WHERE
+		break.employeeId = empl.employeeId
+		AND BigEmployeeoutId IN(SELECT
+		BigEmployeeoutId
+		FROM haulemployeeout
+		WHERE unitId = #{unitId}
+		AND bigId=
+		#{bigId})
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+	</select>
+	<select id="getEmployeeOutsBreakrulesByUaulIdAndUnitId"
+		parameterType="map" resultType="hashmap">
+		SELECT
+		break.employeeId,
+		break.BigEmployeeoutId,
+		break.breakContent,
+		break.breakTime,
+		break.minusNum,
+		empl.name,
+		empl.idCode,
+		empl.sex,
+		empl.address,
+		empl.birthday
+		FROM breakrules break,
+		employee_out empl
+		WHERE
+		break.employeeId = empl.employeeId
+		AND BigEmployeeoutId IN(SELECT
+		BigEmployeeoutId
+		FROM haulemployeeout
+		WHERE unitId = #{unitId})
+		<!-- AND bigId= #{bigId} -->
+		<if test="fstarttime != null">
+			and breakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and breakTime &lt;= #{fendtime}
+		</if>
+		order by break.breaktime desc
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+
+	</select>
+	<!--E 根据大修ID与单位ID查询员工信息 -->
+
+	<!-- 根据单位ID查询大修的ID与名字子 -->
+	<select id="getUnitidsAndNamesByUnitids" resultType="map"
+		parameterType="list">
+		select unit.name,unit.unitId from unit where unitID in
+		<foreach collection="list" item="id" separator="," open="("
+			close=")">
+			#{id}
+		</foreach>
+	</select>
+
+
+	<!-- E qlq -->
+
+
+
+
+
+
+
+
+</mapper>

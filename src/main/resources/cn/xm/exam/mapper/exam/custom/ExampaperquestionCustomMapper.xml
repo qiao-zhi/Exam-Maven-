@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.exam.custom.ExampaperquestionCustomMapper">
+
+	<!-- 题与选项结果映射 -->
+	<resultMap type="cn.xm.exam.bean.exam.Exampaperquestion" id="QuestionsAndOptions">
+		<id column="questionid" property="questionid" />
+		<result column="paperid" property="paperid" />
+		<result column="bigquertionid" property="bigquertionid" />
+		<result column="questioncontent" property="questioncontent" />
+		<result column="questionsequence" property="questionsequence" />
+		<result column="type" property="type" />
+		<result column="answer" property="answer" />
+		<result column="analysis" property="analysis" />
+		<result column="score" property="score" />
+		<result column="questionsource" property="questionsource" />
+		<collection property="examPaperOptions" ofType="cn.xm.exam.bean.exam.Exampaperoption">
+			<id column="optionid" property="optionid" />
+			<result column="optioncontent" property="optioncontent" />
+			<result column="optionsequence" property="optionsequence" />
+			<result column="description" property="description" />
+			<result column="isanswer" property="isanswer" />
+		</collection>
+	</resultMap>
+
+
+	<!-- 查询题与选项集合 -->
+	<select id="getExampaperquestionsByCondition" resultMap="QuestionsAndOptions"
+		parameterType="hashmap">
+		SELECT * FROM exampaperquestion q,exampaperoption o
+		<where>
+			<include refid="query_where"></include>
+		</where>
+	</select>
+
+
+
+
+
+	<!-- 查询分页 条件 -->
+	<sql id="query_page_limit">
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+
+
+	<!-- 查询试题的条件 -->
+	<sql id="query_where">
+		<if test="1==1">
+			q.questionId=o.questionId
+		</if>
+		<if test="type!=null">
+			and type=#{type}
+		</if>
+		<if test="paperid!=null">
+			and paperid=#{paperid}
+		</if>
+	</sql>
+
+
+	<!-- S 根据试卷ID删除试卷 -->
+	<delete id="deleteQuestionsBypaperId" parameterType="string">
+		DELETE FROM
+		exampaperquestion WHERE paperId = #{value}
+	</delete>
+	<!-- E 根据试卷ID删除试卷 -->
+
+	<!-- S 根据考试试卷ID查询试卷答案和分值 -->
+	<select id="getPaperAnswerAndScoreByPaerId" resultType="map"
+		parameterType="string">
+		select ques.answer,ques.score from exampaperquestion
+		ques,bigquestion
+		big where
+		big.paperId=#{value} and big.bigQuertionId =
+		ques.bigQuertionId order by big.bigQuestionSequence
+		asc,ques.questionSequence asc
+	</select>
+	<!-- S 根据考试试卷ID查询试卷答案 -->
+
+
+</mapper>

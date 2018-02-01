@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.in.custom.EmplyinBreakrulesCustomMapper">
+<!-- *********************************************** -->
+
+
+	<!-- lixianyuan start -->
+	<!-- 查询部门表的所有信息，用于初始化左侧的部门树 -->
+	<select id="initLeftDepartmentTree" resultType="map">
+		SELECT
+		department.departmentId,department.upDepartmentId,department.departmentName
+		FROM department
+		<if test="value != null">
+			where departmentId like '${value}%'
+		</if>
+	</select>
+
+
+	<!-- 根据部门id获取该部门下的所有员工及其违章信息 分页 -->
+	<select id="getEmpInMsgByDepIdLeft" parameterType="map"
+		resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+	<!-- zwy在这里添加了 employee_in.birthday,employee_in.photo,,-->
+		employee_in.phone,employee_in.birthday,employee_in.photo,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId),0) as
+		"sumBreakScore",
+		department.departmentId,
+		department.departmentName
+
+		from employee_in,department
+
+		where
+		<!-- 根据部门id来获取 -->
+		
+		employee_in.departmentId = department.departmentId
+		
+		<!-- zwy start -->
+		<if test="isManager!=null and isManager=='true'">
+			and employee_in.departmentid = #{departmentid}
+		</if>
+		<if test="departmentid!=null and isManager!=null and isManager=='false'">
+			and employee_in.departmentid like '${departmentid}%'
+		</if>
+		<if test="departmentId != null and isManager!=null and isManager=='false'">
+			AND employee_in.departmentId like '${departmentId}%'
+		</if>
+		<!-- zwy end -->
+		
+		<!-- and
+		employee_in.departmentId = #{departmentid}
+ -->
+		order by sumBreakScore
+		desc,department.departmentName desc
+		LIMIT
+		#{curPage},#{curTotal}
+
+	</select>
+
+	<!-- 根据部门id获取该部门下的所有员工及其违章信息 的总条数 -->
+	<select id="getEmpInMsgByDepIdLeftCount" parameterType="map"
+		resultType="int">
+		select count(*)
+
+		from employee_in,department
+
+		<!-- <where>
+		<include refid="query_isOnlyManage_where"></include>
+		</where> -->
+		where 
+		<!-- zwy start -->
+		<if test="isManager!=null and isManager=='true'">
+			and employee_in.departmentid = #{departmentid}
+		</if>
+		<if test="departmentid!=null and isManager!=null and isManager=='false'">
+			and employee_in.departmentid like '${departmentid}%'
+		</if>
+		<if test="departmentId != null and isManager!=null and isManager=='false'">
+			AND employee_in.departmentId like '${departmentId}%'
+		</if>
+		<!-- zwy end -->
+		<!-- and
+		employee_in.departmentId = #{departmentid}
+ -->
+ 	
+
+	</select>
+
+
+	<!-- 页面加载的时候把所有部门下的所有员工及其违章信息显示出来,用于页面初始化 -->
+	<select id="initPageDate" parameterType="map" resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+		<!-- zwy添加的employee_in.birthday,employee_in.photo, -->
+		employee_in.phone,employee_in.birthday,employee_in.photo,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId),0) as
+		"sumBreakScore",
+		IFNULL((select
+		blacklist.temporaryInStatus from
+		blacklist where
+		blacklist.employeestatus='0' and blacklist.employeeId
+		=
+		employee_in.employeeId),'否') as 'status',
+		department.departmentId,
+		department.departmentName
+
+		from employee_in,department
+
+		where
+		employee_in.departmentId = department.departmentId
+		<!-- 根据部门id 得到获取-->
+		<!-- <if test="departmentId != null and departmentId != ''">
+			and employee_in.departmentId like '${departmentId}%'
+		</if> -->
+		
+		<!-- zwy start -->
+		<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+		<if test="isManager!=null and isManager=='true'">
+			and employee_in.departmentid = #{departmentid}
+		</if>
+		<if test="departmentid!=null and isManager!=null and isManager=='false'">
+			and employee_in.departmentid like '${departmentid}%'
+		</if>
+		<if test="departmentId != null and isManager!=null and isManager=='false'">
+			AND employee_in.departmentId like '${departmentId}%'
+		</if>
+		
+		
+		
+		<!-- zwy end -->
+		
+		
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		
+		
+		
+		order by
+		sumBreakScore desc,department.departmentName desc
+		LIMIT
+		#{curPage},#{curTotal}
+	</select>
+
+	<!-- 页面加载的时候把所有部门下的所有员工及其违章信息的 总记录数 -->
+	<select id="initPageDateCount" resultType="int">
+		select count(*)
+
+		from
+		employee_in,department
+
+		where
+		employee_in.departmentId =
+		department.departmentId
+		<!-- <if test="value != null">
+			and employee_in.departmentId like '${value}%'
+		</if> -->
+		
+		
+		
+		<!-- zwy start -->
+		<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+		<if test="isManager!=null and isManager=='true'">
+			and employee_in.departmentid = #{departmentid}
+		</if>
+		<if test="departmentid!=null and isManager!=null and isManager=='false'">
+			and employee_in.departmentid like '${departmentid}%'
+		</if>
+		<if test="departmentId != null and isManager!=null and isManager=='false'">
+			AND employee_in.departmentId like '${departmentId}%'
+		</if>
+		
+		<!-- zwy end -->
+		
+		
+		
+		
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND empInBreakTime between #{history_Year} AND NOW()
+		</if>
+	</select>
+
+	<!-- #根据职工id去违章记录表中查询该内部员工的违章总积分 employeeid -->
+	<select id="selSumBreakScoreByEmpId" parameterType="String"
+		resultType="Integer">
+		select IFNULL(SUM(emplyin_breakrules.empInMinusNum),0)
+		from
+		emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		#{employeeid}
+		and empInBreakTime LIKE CONCAT(Year(CurDate()),'%')
+	</select>
+	<!-- S QLQ -->
+	<!-- #根据职工id去违章记录表中查询该内部员工的违章总积分 employeeid -->
+	<select id="selSumBreakScoreByEmpId1" parameterType="map"
+		resultType="Integer">
+		select IFNULL(SUM(emplyin_breakrules.empInMinusNum),0)
+		from
+		emplyin_breakrules
+		where 
+		
+		emplyin_breakrules.empInEmployeeId =#{employeeid}
+		
+		
+		
+		<if test="fstarttime!=null">
+			and empInBreakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime!=null">
+			and empInBreakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+	</select>
+	<!-- E QLQ -->
+
+	<!-- 根据职工id获取职工信息 -->
+	<select id="selEmployeeInByEmpId" parameterType="String"
+		resultType="cn.xm.exam.bean.employee.in.EmployeeIn">
+		select * from employee_in where employee_in.employeeId =
+		#{employeeid}
+	</select>
+
+	<!-- 根据职工id获取该职工的所有违章信息 -->
+	<select id="selEmpInBreakrulesByEmpId" parameterType="String"
+		resultType="cn.xm.exam.bean.employee.in.EmplyinBreakrules">
+		select * from emplyin_breakrules where
+		emplyin_breakrules.empInEmployeeId =
+		#{employeeid}
+	</select>
+	<!-- 根据职工id获取该职工的所有违章信息 -->
+	<select id="selEmpInBreakrulesByEmpId1" parameterType="map"
+		resultType="cn.xm.exam.bean.employee.in.EmplyinBreakrules">
+		select * from emplyin_breakrules where
+		emplyin_breakrules.empInEmployeeId =
+		#{employeeid}
+		<if test="fstarttime!=null">
+			and empInBreakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime!=null">
+			and empInBreakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		ORDER BY empInBreakTime DESC
+	</select>
+
+	<!-- 根据职工id从黑名单中删除该职工id的信息 只删除内部员工 -->
+	<delete id="delBlacklistByEmpId" parameterType="String">
+		delete from
+		blacklist where blacklist.employeeId = #{employeeid} and
+		blacklist.employeestatus='0'
+	</delete>
+
+	<!-- 根据职工id获取黑名单信息 -->
+	<select id="getBlacklistByEmpInId" parameterType="String"
+		resultType="cn.xm.exam.bean.employee.out.Blacklist">
+		select * from blacklist where blacklist.employeeId =
+		#{employeeid}
+	</select>
+
+
+	<!-- 点击左侧的部门树的时候，将该部门及该部门下的所有子部门下的内部员工的信息及其违章信息显示出来 -->
+	<select id="clickLeftShowEmpInMsg" parameterType="map"
+		resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+		<!-- zwy添加的employee_in.birthday,employee_in.photo, -->
+		employee_in.phone,employee_in.birthday,employee_in.photo,employee_in.address,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		),0) as
+		"sumBreakScore",
+		IFNULL((select
+		blacklist.temporaryInStatus from blacklist where
+		blacklist.employeestatus='0' and blacklist.employeeId =
+		employee_in.employeeId),'否') as 'status',
+		department.departmentId,
+		department.departmentName,
+		department.departmentType
+		
+		from employee_in,department
+
+		where
+		employee_in.departmentId = department.departmentId
+
+		and
+		department.departmentId IN(select department.departmentId from
+		department
+		where department.upDepartmentId like '${departmentid}%' or
+		department.departmentId = '${departmentid}')
+		<!-- 家庭住址 -->
+		<if test="address !=null">
+			and employee_in.address like '%${address}%'
+		</if>
+		<!-- 年龄段左侧参数 -->
+		<if test="age_left != null">
+			and TIMESTAMPDIFF(YEAR, employee_in.birthday, CURDATE()) >= #{age_left}
+		</if>
+		<!-- 年龄段右侧参数 -->
+		<if test="age_right != null">
+			and TIMESTAMPDIFF(YEAR, employee_in.birthday, CURDATE()) &lt;= #{age_right}
+		</if>	
+		
+		order by sumBreakScore
+		desc,department.departmentName desc
+		LIMIT #{curPage},#{curTotal}
+
+	</select>
+
+	<!-- 点击左侧的部门树的时候，查询该部门及该部门下的所有子部门下的内部员工的信息及其违章信息 的总记录数 -->
+	<select id="clickLeftShowEmpInMsgCount" parameterType="map"
+		resultType="int">
+		select count(*)
+
+		from employee_in,department
+
+		where
+		employee_in.departmentId = department.departmentId
+
+		and
+		department.departmentId IN(select department.departmentId from
+		department
+		where department.upDepartmentId like '${departmentid}%' or
+		department.departmentId = '${departmentid}')
+
+	</select>
+
+
+	<!-- 左侧的树和条件绑定之后 "未选择黑名单状态的" 的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 -->
+	<select id="leftTreeAndConditionMsg" parameterType="map" resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+		<!-- zwy添加的employee_in.birthday,employee_in.photo, -->
+		employee_in.phone,employee_in.birthday,employee_in.photo,employee_in.address,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId
+		<if test="fstarttime != null">
+			and emplyin_breakrules.empInBreakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null">
+			and emplyin_breakrules.empInBreakTime &lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		
+		
+		group by emplyin_breakrules.empInEmployeeId
+		),0) as
+		"sumBreakScore",
+		department.departmentId,
+		department.departmentName,
+		department.departmentType,
+		IFNULL((select
+		blacklist.temporaryInStatus
+		from blacklist where
+		blacklist.employeestatus='0' and
+		blacklist.employeeId =
+		employee_in.employeeId),'否') as 'status'
+		
+
+		from
+		employee_in,department
+
+		<where>								
+			employee_in.departmentId = department.departmentId					
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+
+
+			and IFNULL((select
+			SUM(emplyin_breakrules.empInMinusNum) from
+			emplyin_breakrules
+			where
+			emplyin_breakrules.empInEmployeeId = employee_in.employeeId),0)
+			between #{minumsStart} and #{minumsEnd}
+			<!-- <if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if> -->
+			
+			<!-- zwy start -->
+			<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+			<if test="isManager!=null and isManager=='true'">
+				and employee_in.departmentid = #{departmentid}
+			</if>
+			<if test="departmentid!=null and isManager!=null and isManager=='false'">
+				and employee_in.departmentid like '${departmentid}%'
+			</if>
+			<if test="departmentId != null and isManager!=null and isManager=='false'">
+				AND employee_in.departmentId like '${departmentId}%'
+			</if>
+			
+			<!-- zwy end -->
+
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+		order by sumBreakScore desc,department.departmentName desc
+		LIMIT
+		#{curPage},#{curTotal}
+	</select>
+
+
+	<!-- 左侧的树和条件绑定之后 “未选择黑名单状态的”的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 的总记录数 -->
+	<select id="leftTreeAndConditionMsgCount" parameterType="map"
+		resultType="int">
+		select count(*)
+
+		from employee_in,department
+
+		<where>
+			employee_in.departmentId = department.departmentId
+
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+
+
+			and IFNULL((select
+			SUM(emplyin_breakrules.empInMinusNum) from
+			emplyin_breakrules
+			where
+			emplyin_breakrules.empInEmployeeId = employee_in.employeeId
+			<if test="fstarttime != null">
+				and emplyin_breakrules.empInBreakTime &gt;= #{fstarttime}
+			</if>
+			<if test="fendtime != null"> and emplyin_breakrules.empInBreakTime
+				&lt;= #{fendtime}
+			</if>
+			<!-- 当前年 -->
+			<if test="current_Year != null and current_Year != ''">
+				and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+			</if>
+			<!-- 历史年 -->
+			<if test="history_Year != null and history_Year != ''">
+				AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+			</if>
+			group by emplyin_breakrules.empInEmployeeId
+			),0)
+			between #{minumsStart}
+			and #{minumsEnd}
+			<!-- <if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if> -->
+			
+			<!-- zwy start -->
+			<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+			<if test="isManager!=null and isManager=='true'">
+				and employee_in.departmentid = #{departmentid}
+			</if>
+			<if test="departmentid!=null and isManager!=null and isManager=='false'">
+				and employee_in.departmentid like '${departmentid}%'
+			</if>
+			<if test="departmentId != null and isManager!=null and isManager=='false'">
+				AND employee_in.departmentId like '${departmentId}%'
+			</if>
+			
+			<!-- zwy end -->
+			
+			
+
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+	</select>
+
+	<!-- 选中黑名单状态为是的情况 -->
+	<!-- 左侧的树和条件绑定之后 选中黑名单状态为"是"的情况 的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 -->
+	<select id="leftTreeAndConditionIsBlacklistMsg" parameterType="map"
+		resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+		<!-- zwy添加的employee_in.birthday, employee_in.photo,-->
+		employee_in.phone,employee_in.birthday,employee_in.photo,employee_in.address,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId
+		<if test="fstarttime != null">
+			and emplyin_breakrules.empInBreakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null"> and emplyin_breakrules.empInBreakTime
+			&lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		group by emplyin_breakrules.empInEmployeeId
+		),0) as
+		"sumBreakScore",
+		department.departmentId,
+		department.departmentName,
+		department.departmentType,
+		IFNULL((select
+		blacklist.temporaryInStatus
+		from blacklist where
+		blacklist.employeestatus='0' and
+		blacklist.employeeId =
+		employee_in.employeeId),'否') as 'status'
+
+
+		from
+		employee_in,department
+
+		<where>
+			employee_in.departmentId = department.departmentId
+
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+
+			<!-- 黑名单状态为是的情况 -->
+			<if test="blackstatus !=null &amp;&amp; blackstatus !='' ">
+				and IFNULL((select blacklist.temporaryInStatus from
+				blacklist where
+				blacklist.employeestatus='0' and blacklist.employeeId
+				=
+				employee_in.employeeId),'否')=#{blackstatus}
+			</if>
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			<if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if>
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+		order by sumBreakScore desc,department.departmentName desc
+		LIMIT
+		#{curPage},#{curTotal}
+	</select>
+
+
+	<!-- 左侧的树和条件绑定之后 选中黑名单状态为"是" 的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 的总记录数 -->
+	<select id="leftTreeAndConditionIsBlacklistMsgCount"
+		parameterType="map" resultType="int">
+		select count(*)
+
+		from employee_in,department
+
+		<where>
+			employee_in.departmentId = department.departmentId
+
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+			<!-- 黑名单状态为是的情况 -->
+			<if test="blackstatus !=null &amp;&amp; blackstatus !='' ">
+				and IFNULL((select blacklist.temporaryInStatus from
+				blacklist where
+				blacklist.employeestatus='0' and blacklist.employeeId
+				=
+				employee_in.employeeId),'否')=#{blackstatus}
+			</if>
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			<if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if>
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+	</select>
+
+
+
+
+
+
+	<!-- 选中黑名单状态为否的情况 -->
+	<!-- 左侧的树和条件绑定之后 "黑名单状态为 否 的情况" 的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 -->
+	<select id="leftTreeAndConditionNoBlacklistMsg" parameterType="map"
+		resultType="map">
+		select
+		employee_in.employeeId,employee_in.name,employee_in.sex,employee_in.idCode,employee_in.duty,
+		<!-- zwy添加的employee_in.birthday, employee_in.photo,-->
+		employee_in.phone,employee_in.birthday,employee_in.photo,employee_in.address,
+		IFNULL((select SUM(emplyin_breakrules.empInMinusNum)
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId =
+		employee_in.employeeId
+		<if test="fstarttime != null">
+			and emplyin_breakrules.empInBreakTime &gt;= #{fstarttime}
+		</if>
+		<if test="fendtime != null"> and emplyin_breakrules.empInBreakTime
+			&lt;= #{fendtime}
+		</if>
+		<!-- 当前年 -->
+		<if test="current_Year != null and current_Year != ''">
+			and emplyin_breakrules.empInBreakTime LIKE  '${current_Year}%'
+		</if>
+		<!-- 历史年 -->
+		<if test="history_Year != null and history_Year != ''">
+			AND emplyin_breakrules.empInBreakTime between #{history_Year} AND NOW()
+		</if>
+		group by emplyin_breakrules.empInEmployeeId),0) as
+		"sumBreakScore",
+		department.departmentId,
+		department.departmentName,
+		department.departmentType,
+		IFNULL((select
+		blacklist.temporaryInStatus
+		from blacklist where
+		blacklist.employeestatus='0' and
+		blacklist.employeeId =
+		employee_in.employeeId),'否') as 'status'
+
+
+		from
+		employee_in,department
+
+		<where>
+			employee_in.departmentId = department.departmentId
+
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+
+			and IFNULL((select
+			SUM(emplyin_breakrules.empInMinusNum) from
+			emplyin_breakrules
+			where
+			emplyin_breakrules.empInEmployeeId = employee_in.employeeId),0)
+			between 0 and 1000
+
+			<!-- 黑名单状态为否的情况 -->
+			<if test="blackstatus !=null &amp;&amp; blackstatus !=''  ">
+				and IFNULL((select blacklist.temporaryInStatus from
+				blacklist where
+				blacklist.employeestatus='0' and blacklist.employeeId
+				=
+				employee_in.employeeId),'否')!=#{blackstatus}
+			</if>
+			<!-- <if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if> -->
+			
+			
+			<!-- zwy start -->
+			<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+			<if test="isManager!=null and isManager=='true'">
+				and employee_in.departmentid = #{departmentid}
+			</if>
+			<if test="departmentid!=null and isManager!=null and isManager=='false'">
+				and employee_in.departmentid like '${departmentid}%'
+			</if>
+			<if test="departmentId != null and isManager!=null and isManager=='false'">
+				AND employee_in.departmentId like '${departmentId}%'
+			</if>
+			
+			<!-- zwy end -->
+			
+			
+			
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+		order by sumBreakScore desc,department.departmentName desc
+		LIMIT
+		#{curPage},#{curTotal}
+	</select>
+
+
+	<!-- 左侧的树和条件绑定之后 黑名单状态为"否"的查询，显示该部门及旗下所有子孙部门下的内部员工的信息及其违章信息 的总记录数 -->
+	<select id="leftTreeAndConditionNoBlacklistMsgCount"
+		parameterType="map" resultType="int">
+		select count(*)
+
+		from employee_in,department
+
+		<where>
+			employee_in.departmentId = department.departmentId
+
+			and
+			employee_in.name like '%${name}%'
+			and employee_in.idCode like
+			'%${idcode}%'
+			and employee_in.sex like '%${sex}%'
+
+			and IFNULL((select
+			SUM(emplyin_breakrules.empInMinusNum) from
+			emplyin_breakrules
+			where
+			emplyin_breakrules.empInEmployeeId = employee_in.employeeId
+			),0)
+			between 0 and 1000
+
+			<!-- 黑名单状态为否的情况 -->
+			<if test="blackstatus !=null &amp;&amp; blackstatus !=''  ">
+				and IFNULL((select blacklist.temporaryInStatus from
+				blacklist where
+				blacklist.employeestatus='0' and blacklist.employeeId
+				=
+				employee_in.employeeId),'否')!=#{blackstatus}
+			</if>
+
+			<!-- <if test="departmentId != null">
+				and employee_in.departmentId like '${departmentId}%'
+			</if> -->
+			
+			
+			
+			<!-- zwy start -->
+			<!-- 如果isManager是true则只查询管理员  否则查询所有用户 -->
+			<if test="isManager!=null and isManager=='true'">
+				and employee_in.departmentid = #{departmentid}
+			</if>
+			<if test="departmentid!=null and isManager!=null and isManager=='false'">
+				and employee_in.departmentid like '${departmentid}%'
+			</if>
+			<if test="departmentId != null and isManager!=null and isManager=='false'">
+				AND employee_in.departmentId like '${departmentId}%'
+			</if>
+			
+			<!-- zwy end -->
+
+			<if test="departmentid !=null &amp;&amp; departmentid !='' ">
+				and department.departmentId IN(select
+				department.departmentId from
+				department
+				where
+				department.upDepartmentId like '${departmentid}%' or
+				department.departmentId = '${departmentid}')
+			</if>
+			<!-- 家庭住址和年龄段 -->
+			<include refid="query_employeeInfo_where"></include>
+		</where>
+	</select>
+
+
+	<!-- 根据内部员工id 获取黑名单状态 -->
+	<select id="getBlackStatusByEmpInId" parameterType="String"
+		resultType="String">
+		select blacklist.temporaryInStatus from blacklist where
+		blacklist.employeestatus = '0' and blacklist.employeeId =
+		#{employeeid}
+	</select>
+	
+		<!-- 根据内部员工id获取当前年 该员工的违章总积分 -->
+	<select id="getSingleEmplyInBreakScoreSum" parameterType="map" resultType="int">
+		select IFNULL(SUM(emplyin_breakrules.empInMinusNum),0) as "perInBreakSum"
+		from emplyin_breakrules
+		where emplyin_breakrules.empInEmployeeId = #{empinemployeeid}
+			and emplyin_breakrules.empInBreakTime >= (SELECT DATE_FORMAT(NOW(), '%Y') FROM DUAL )
+	</select>
+	<!-- lixianyuan end -->
+
+	
+	
+	<sql id="query_employeeInfo_where">
+		<!-- 家庭住址 -->
+		<if test="address !=null">
+			and employee_in.address like '%${address}%'
+		</if>
+		<!-- 年龄段左侧参数 -->
+		<if test="age_left != null">
+			and TIMESTAMPDIFF(YEAR, employee_in.birthday, CURDATE()) >= #{age_left}
+		</if>
+		<!-- 年龄段右侧参数 -->
+		<if test="age_right != null">
+			and TIMESTAMPDIFF(YEAR, employee_in.birthday, CURDATE()) &lt;= #{age_right}
+		</if>
+	</sql>
+
+</mapper>

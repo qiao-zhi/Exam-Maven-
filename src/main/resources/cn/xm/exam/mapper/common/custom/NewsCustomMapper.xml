@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.common.custom.NewsCustomMapper">
+	<!-- 查询总条数 -->
+	<select id="getNewsTotal" resultType="int" parameterType="hashmap">
+		SELECT COUNT(*) FROM news
+		<where>
+			<if test="newsTitle!=null  &amp;&amp; newsTitle!=''">
+				and newsTitle = #{newsTitle}
+			</if>
+			<if
+				test="newsType!=null &amp;&amp; newsType!='' &amp;&amp; newsType!='--请选择--' ">
+				and newsType = #{newsType}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 根据新闻标题 新闻类型 当前页页号 每页显示的记录数进行分页查询 -->
+	<select id="selectNewsConditions" parameterType="hashmap"
+		resultType="map">
+		select * from news
+		<where>
+			<if test="newsTitle!=null &amp;&amp; newsTitle!=''">
+				and newsTitle = #{newsTitle}
+			</if>
+			<if test="newsType!=null &amp;&amp; newsType!=''">
+				and newsType = #{newsType}
+			</if>
+		</where>
+		order by newsTime desc
+		limit #{index},#{currentCount}
+	</select>
+
+	<select id="selectNewsContentById" parameterType="String"
+		resultType="cn.xm.exam.bean.news.News">
+		select newsContent from news where newsId = #{newsId}
+	</select>
+
+	<select id="selectNewsById" parameterType="String"
+		resultType="cn.xm.exam.bean.news.News">
+		select * from news where newsId = #{newsId}
+	</select>
+
+	<insert id="insertNews" parameterType="cn.xm.exam.bean.news.News">
+		insert into news
+		(newsTitle,newsType,newsTime,newsPerson,newsContent) values
+		(#{newsTitle},#{newsType},#{newsTime},#{newsPerson},#{newsContent})
+	</insert>
+
+	<update id="updateNews" parameterType="cn.xm.exam.bean.news.News">
+		update news SET
+		newsTitle=#{newsTitle},newsType=#{newsType},newsPerson=#{newsPerson},newsTime
+		= #{newsTime},newsContent = #{newsContent}
+		where newsId = #{newsId}
+	</update>
+
+	<delete id="deleteNews" parameterType="string">
+		delete from news where
+		newsId = #{newsId}
+	</delete>
+
+	<delete id="deleteAllNews" parameterType="string">
+		delete from news where newsId in
+		<foreach item="empnoItem" collection="array" separator=","
+			open="(" close=")">
+			#{empnoItem}
+		</foreach>
+	</delete>
+
+</mapper>

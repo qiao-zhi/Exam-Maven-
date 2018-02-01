@@ -1,0 +1,51 @@
+@CHARSET "UTF-8";
+#el_departType{
+	font-size:13px;
+}
+#el_departType option{
+	background-color:white;
+	color:black;
+}
+#el_breakTimeIndex input{
+	width:30% !important;
+	margin-right:10px;
+}
+#el_breakTimeIndex{
+	margin-top:10px;
+	margin-left:15px;
+}
+
+.el_leftTree{
+	overflow-x:auto;
+}
+.el_dp a{
+	display:block;
+	width:100% !important;
+	height:30px !important;
+	line-height:30px !important;
+	text-align:center;
+	color:blue;
+	font-weight:bolder;
+}
+.el_dp {
+	padding:0 !important;	
+}
+.el_chooseAdmin{
+	position:relative;
+	right:50px;
+}
+#el_chooseUpdateDepart{
+	border-color:rgb(204,204,204);
+	padding-right:12px;
+	background-color:white;
+	height:25px;" 
+	margin-right:0;
+}
+
+#el_chooseUpdateDepart li{
+	background-color:white;
+}
+
+table a:hover{
+	cursor:pointer;
+}

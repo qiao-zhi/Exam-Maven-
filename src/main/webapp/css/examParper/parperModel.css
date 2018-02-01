@@ -1,0 +1,220 @@
+/*试卷名称*/
+#el_examTitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.dropdown-menu li{
+	list-style:none;
+}
+/*类型大题标*/
+.elquesTitle {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: rgb(245, 245, 245);
+    padding-left: 20px;
+    font-weight: 500;
+    font-size: 17px;
+    color:black !important;
+}
+.elquesTitle input{
+	border:none;
+	height:30px;
+}
+.elquesTitle .el_modifiedGrade{
+	width:40px;
+	text-align:center;
+}
+
+
+/*试题主要样式*/
+.el_questionMain {
+    width: 90%;
+    height: auto;
+    margin: 10px auto;
+    color:black !important;
+}
+
+/*试题标题*/
+.el_questionTitle {
+    font-size: 15px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    text-decoration: none;
+    color:black !important;
+    margin-left:-40px;
+}
+
+/*试题选项*/
+.el_qusSelect {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    padding-left: 30px;
+    font-size: 14px;
+    color:black !important;
+}
+
+.el_qusSelect li {
+    list-style: none;
+    margin: 5px 60px 5px 0;
+    color:black !important;
+}
+
+.el_qusSelect li label {
+    font-weight: 500;
+    color:black !important;
+}
+
+/*答案，解析*/
+.el_answerAnaly{
+    clear:both;
+    margin-top:10px;
+}
+
+/*回到顶部*/
+#el_returnTop {
+    width: 30px;
+    height: 90px;
+    text-align: center;
+    line-height: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 60px;
+    padding: 3px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: none;
+}
+#el_returnTop:hover{
+	text-decoration:none;
+}
+
+#el_returnTop img {
+    width: 23px;
+    position: absolute;
+    top: -5px;
+    right: 3px;
+}
+
+#el_returnTop:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+/*试卷信息*/
+.el_parperInfo{
+    width:80%;
+    height:300px;
+    margin:10px auto;
+    font-size:14px;
+    border-top:2px solid #eee;
+    border-bottom:2px solid #eee;
+    padding:10px;
+    text-align: center;
+    margin-bottom:40px;
+}
+.el_parperInfo table{
+    width:100%;
+}
+.el_parperInfo table caption{
+    font-size:20px;
+    width:100%;
+    font-weight:500;
+    margin:5px;
+    letter-spacing: 5px;
+}
+.el_parperInfo table tr{
+    height:35px;
+    line-height:35px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+}
+.el_parperInfo table tr td:first-child{
+    border-right:1px solid #eee;
+    width:150px;
+}
+
+
+
+
+
+
+      /*<!--导航-->*/
+.el_statistic{
+	margin:0 20px;
+}      
+.dropdown:hover,.el_statistic:hover {
+    background-color: rgb(231, 231, 231)
+}
+
+#el_return {
+    margin-top:8px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+/*提交试卷内容*/
+.el_Inputlulli {
+    text-align: left;
+    margin-left: 25%;
+    color: black;
+}
+
+/*全选*/
+.el_Inputlulli1 {
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    margin-left: 0;
+    padding-left: 25%;
+}
+
+.el_Inputlulli input {
+    margin-right: 5px;
+}
+
+.el_Inputlulli2 {
+    position: relative;
+    float: right;
+    right: 10px;
+}
+
+/*统计*/
+.el_ulParent{
+    height:230px;
+}
+
+.el_lul {
+    width: 80%;
+    height: 50px;
+    margin:0 auto;
+    border:1px solid #ccc;
+    padding-left:0;
+}
+.el_lul li{
+    float:left;
+    line-height:48px;
+    list-style:none;
+}
+
+.el_lulli {
+    color: black;
+    width: 80px;
+    height:48px;
+    background-color:#eee;
+    font-size: 15px;
+    text-align: center;
+    margin-right:10px;
+}
+
+.el_lulli2 {
+    color: black;
+    margin-left:20px;
+}
+
+.el_zongfen {
+    position: absolute;
+    right: 0;
+    color: black;
+    margin-right: 35px;
+    margin-top:25px;
+}

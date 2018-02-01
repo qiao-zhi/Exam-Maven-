@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.grade.custom.EmployeeexamCustomMapper">
+
+	<!-- 组合条件查询考试的成绩信息 -->
+	<select id="getExamGradesInfoWithCondition" parameterType="hashmap"
+		resultType="cn.xm.exam.vo.grade.ExamEmployeeexamExampaper">
+		select * from exam_employeeexam_exampaper
+		<where>
+			and CASE examType="内部考试" WHEN TRUE THEN 1=1 ELSE `status`="已结束" END
+			AND CASE bigStatus="已结束" WHEN TRUE THEN 1 ELSE 0 END
+			= 0
+			<include refid="query_ExamGradesInfo_where"></include>
+		</where>
+		ORDER BY startTime DESC
+		<include refid="query_page_limit"></include>
+	</select>
+	<!-- 根据条件查询满足条件的考试数量 -->
+	<select id="getExamGradesInfoCountWithCondition" parameterType="hashmap"
+		resultType="Integer">
+		select count(examId) from exam_employeeexam_exampaper
+		<where>
+			and CASE examType="内部考试" WHEN TRUE THEN 1=1 ELSE `status`="已结束" END
+			AND CASE bigStatus="已结束" WHEN TRUE THEN 1 ELSE 0 END
+			= 0
+			<include refid="query_ExamGradesInfo_where"></include>
+		</where>
+	</select>
+
+	<!-- 组合条件查询员工的成绩信息 -->
+	<select id="getEmployeeGradesInfoWithCondition" parameterType="hashmap"
+		resultType="cn.xm.exam.vo.grade.EmployeeExamGrade">
+		select * from employee_exam_grade
+		<where>
+			and CASE examMethod="线上" WHEN TRUE THEN 1=1 ELSE `status`="已结束" END
+			AND CASE bigStatus="已结束" WHEN TRUE THEN 1 ELSE 0 END
+			= 0
+			and
+			answerstatus = "已交卷"
+			<include refid="query_ExamGradesInfo_where"></include>
+		</where>
+		ORDER BY startTime DESC , grade DESC
+		<include refid="query_page_limit"></include>
+	</select>
+	<!-- 组合条件查询满足条件的员工成绩记录总数 -->
+	<select id="getEmployeeGradesInfoCountWithCondition"
+		parameterType="hashmap" resultType="Integer">
+		select count(*) from employee_exam_grade
+		<where>
+			and CASE examMethod="线上" WHEN TRUE THEN 1=1 ELSE `status`="已结束" END
+			AND CASE bigStatus="已结束" WHEN TRUE THEN 1 ELSE 0 END
+			= 0
+			and
+			answerstatus = "已交卷"
+			<include refid="query_ExamGradesInfo_where"></include>
+		</where>
+	</select>
+
+	<!-- 组合条件查询员工的成绩信息，用于员工成绩的导出 -->
+	<select id="findEmployeeGradesInfoByCondition" parameterType="hashmap"
+		resultType="cn.xm.exam.vo.grade.EmployeeExamGrade">
+		select * from employee_exam_grade
+		<where>
+			and CASE examMethod="线上" WHEN TRUE THEN 1=1 ELSE `status`="已结束" END
+			AND CASE bigStatus="已结束" WHEN TRUE THEN 1 ELSE 0 END
+			= 0
+			and
+			answerstatus = "已交卷"
+			<include refid="query_ExamGradesInfo_where"></include>
+		</where>
+		ORDER BY startTime DESC , grade DESC
+	</select>
+
+	<!-- 根据条件查询考试的优良差的人数 -->
+	<select id="getExamAnalyseInfoByCondition" parameterType="hashmap"
+		resultType="map">
+		select count(employeeId) sumPerson,
+		SUM(CASE grade &lt; #{passGrade} WHEN TRUE THEN 1 ELSE 0 END) countFailedPerson,
+		SUM(CASE grade >= #{excellentGrade} WHEN TRUE THEN 1 ELSE 0 END) countExcellentPerson,
+		SUM(CASE grade &lt; #{excellentGrade} &amp;&amp; grade >= #{passGrade} WHEN TRUE THEN 1 ELSE 0 END) countGoodPerson
+		from employeeexam 
+		<where>
+			<!-- 考试ID -->
+			<if test="examId != null">
+				and examId=#{examId} 
+			</if>
+			<!-- 单位ID -->
+			<if test="unitId != null">
+				and unitid = #{unitId}
+			</if>
+		</where>
+	</select>
+
+	<!-- 批量插入员工的成绩信息 -->
+	<insert id="insertEmployeeGradeBantch" parameterType="list">
+		insert into employeeexam ( examId, employeeId,
+		employeeName, grade,
+		examMethod,
+		employeeType)
+		values
+		<foreach collection="list" item="garde" separator=",">
+			(
+			#{garde.examid,jdbcType=VARCHAR},
+			#{garde.employeeid,jdbcType=VARCHAR},
+			#{garde.employeename,jdbcType=VARCHAR}, #{garde.grade,jdbcType=REAL},
+			#{garde.exammethod,jdbcType=VARCHAR},
+			#{garde.employeetype,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+
+	<!-- 根据考试ID批量删除外部员工成绩 -->
+	<delete id="deleteEmployeeOutGradeBantch" parameterType="String">
+		delete
+		from employeeexam where examId = #{value} and employeeType="1" and
+		examMethod = "线下"
+	</delete>
+
+	<!-- 根据考试ID查询员工的考试成绩信息，用于导出成绩单 -->
+	<select id="getEmployeeGradeByExamId" parameterType="String"
+		resultType="cn.xm.exam.vo.grade.EmployeeExamGrade">
+		select * from employee_exam_grade where examid = #{value}
+		ORDER BY grade DESC
+	</select>
+
+	<!-- 设置在线考试的员工成绩 -->
+	<update id="updateEmployeeInScoreByIdCard" parameterType="map">
+		UPDATE
+		employeeexam SET grade=
+		(SELECT SUM(score) FROM onlineexamanswerinfor
+		WHERE employeeId=#{idCard} AND paperId=#{paperId} AND
+		onlineanswerexamid=#{examId})
+		WHERE
+		examId=#{examId} AND
+		employeeId=#{idCard}
+	</update>
+
+	<!-- 根据考试编号和身份证号查询员工的成绩 -->
+	<select id="getExamGardeByEmployeeIdAndExamId" parameterType="map"
+		resultType="cn.xm.exam.vo.grade.OnlineExamEmployeeInfo">
+		SELECT * FROM online_exam_employee_info WHERE
+		examId=#{examId} AND
+		employeeId=#{idCard}
+	</select>
+
+	<!-- 根据考试编号查询导入成绩中通过考试的员工身份证号集合以及大修ID -->
+	<select id="getEmployeeIdCardsAndBigIdByExamId" parameterType="String"
+		resultType="cn.xm.exam.vo.grade.EmployeeExamGrade">
+		select * from employee_exam_grade where examid = #{value}
+		AND isPass="是"
+	</select>
+
+	<!-- 根据大修ID和身份证集合批量设置线下考试员工的培训情况 -->
+	<update id="updateEmployeeOutTrainStatus" parameterType="map">
+		UPDATE haulemployeeout SET trainStatus = #{examLevel}
+		<where>
+			<!-- 大修ID -->
+			<if test="bigId !=null">
+				and bigid = #{bigId}
+			</if>
+			<if
+				test="employeeOutExamInfoList !=null and employeeOutExamInfoList.size()>0">
+				<foreach collection="employeeOutExamInfoList" item="employeeOutExamInfo"
+					open="and empoutIdcard in (" close=")" separator=",">
+					<!--每个遍历需要拼接的串 -->
+					#{employeeOutExamInfo.idcode}
+				</foreach>
+			</if>
+		</where>
+	</update>
+
+	<!-- 根据考试编号和身份证号设置外来单位员工的考试成绩 -->
+	<update id="updateEmployeeOutGradeInfo" parameterType="map">
+		UPDATE
+		employeeexam SET grade = #{exam_grade} WHERE examId=#{exam_examId} AND
+		employeeId=#{exam_IdCard}
+	</update>
+
+	<!-- 根据考试编号查询通过线下考试的员工的分配员工表主键和外来单位大修员工ID -->
+	<select id="selectPassOutExamDistributeIds" parameterType="String"
+		resultType="map">
+		SELECT
+		employeeexam.distributeid,employeeexam.bigEmployeeOutId FROM
+		employeeexam,exam,exampaper WHERE employeeexam.examId = exam.examId
+		AND exam.paperId = exampaper.paperId AND employeeexam.grade >=
+		exampaper.paperScore*0.9 AND exam.examId = #{value}
+	</select>
+
+	<!-- 根据员工分配表的主键批量修改考试状态 -->
+	<update id="updateEmpDistributeExamStatusByIds" parameterType="list">
+		UPDATE employeeoutdistribute SET empOutexamStatus = "1"
+		<where>
+			<foreach collection="list" item="distributeId" open="and distributeid in ("
+				close=")" separator=",">
+				<!--每个遍历需要拼接的串 -->
+				#{distributeId}
+			</foreach>
+		</where>
+	</update>
+
+	<!-- 根据大修员工ID批量修改大修员工表中的培训状态 -->
+	<update id="updateHaulEmployeeOutTrainStatusByIds"
+		parameterType="list">
+		UPDATE haulemployeeout SET trainStatus = "1"
+		<where>
+			<foreach collection="list" item="haulEmpOutId" open="and BigEmployeeoutId in ("
+				close=")" separator=",">
+				<!--每个遍历需要拼接的串 -->
+				#{haulEmpOutId}
+			</foreach>
+		</where>
+	</update>
+	
+	<!-- 根据条件查询部门考试信息 -->
+	<select id="getUnitExamInfosByCondition" parameterType="map" resultType="map">
+		SELECT
+		exam.examname,
+		exam.starttime,
+		exam.endtime,
+		exam.examlevel,
+		exam.`status`,
+		(SELECT paperScore FROM exampaper WHERE paperId =
+		exam.paperId) AS paperscore,
+		employeeexam.examid,
+		employeeexam.unitid,
+		CASE employeeexam.employeeType
+		WHEN "0" THEN
+		(SELECT departmentName FROM department WHERE departmentId =
+		employeeexam.unitid)
+		ELSE
+		(SELECT `name` FROM unit WHERE unitid = employeeexam.unitid)
+		END AS unitname,
+		count(employeeId) AS joinexam,
+		(
+		SELECT
+		count(employeeId)
+		FROM
+		employeeexam emp
+		WHERE
+		grade >= 90
+		AND emp.examId = employeeexam.examId
+		AND emp.unitid =
+		employeeexam.unitid
+		) AS passexam
+		FROM
+		employeeexam,
+		exam
+		<where>
+			<include refid="query_UnitExamGradesInfo_where"></include>
+		</where>
+		GROUP BY
+		employeeexam.examId,
+		employeeexam.unitid
+		ORDER BY exam.createTime DESC,CONVERT(unitname USING gbk) ASC
+		<include refid="query_page_limit"></include>
+	</select>
+	
+	<!-- 根据条件统计部门成绩信息 -->
+	<select id="getUnitExamInfoCountByCondition" parameterType="map" resultType="int">
+		SELECT
+		COUNT(DISTINCT employeeexam.examId,
+			employeeexam.unitid)
+		FROM
+			employeeexam,
+			exam
+		<where>
+			<include refid="query_UnitExamGradesInfo_where"></include>
+		</where>
+	</select>
+	
+	<!-- 查询部门成绩信息条件 -->
+	<sql id="query_UnitExamGradesInfo_where">
+		<if test="1==1">
+			exam.examId = employeeexam.examId AND
+			exam.`status` = "已结束"
+		</if>
+		<!-- 考试名称 -->
+		<if test="exam_Name != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="exam_Names" value="'%'+exam_Name+'%'" />
+			and exam.examName like #{exam_Names}
+		</if>
+		<!-- 考试级别 -->
+		<if test="exam_level != null">
+			and exam.examLevel = #{exam_level}
+		</if>
+		<!-- 考试时间 -->
+		<if test="exam_startTime != null">
+			and exam.endTime &gt; #{exam_startTime}
+			and exam.endTime &lt;
+			#{exam_endTime}
+		</if>
+		<!-- 新增部门的判断 -->
+		<if test="department_Id !=null">
+			and exam.departmentId = #{department_Id}
+		</if>
+	</sql>
+	
+	<!-- 查询考试成绩信息的条件 -->
+	<sql id="query_ExamGradesInfo_where">
+
+		<!-- 考试名称 -->
+		<if test="exam_Name != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="exam_Names" value="'%'+exam_Name+'%'" />
+			and examName like #{exam_Names}
+		</if>
+		<!-- 考试级别 -->
+		<if test="exam_level != null">
+			and level = #{exam_level}
+		</if>
+		<!-- 考试时间 -->
+		<if test="exam_startTime != null">
+			and endTime &gt; #{exam_startTime}
+			and endTime &lt;
+			#{exam_endTime}
+		</if>
+		<!-- 员工姓名 -->
+		<if test="exam_EmployeeName != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="exam_EmployeeNames" value="'%'+exam_EmployeeName+'%'" />
+			and employeeName like #{exam_EmployeeNames}
+		</if>
+		<!-- 员工性别 -->
+		<if test="exam_EmployeeSex != null">
+			and sex = #{exam_EmployeeSex}
+		</if>
+		<!-- 身份证号 -->
+		<if test="exam_EmployeeIdCard != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="exam_EmployeeIdCards" value="'%'+exam_EmployeeIdCard+'%'" />
+			and idCode like #{exam_EmployeeIdCards}
+		</if>
+		<!-- 是否通过 -->
+		<if test="exam_isPass != null">
+			and isPass = #{exam_isPass}
+		</if>
+		<!-- 考试ID -->
+		<if test="examId != null">
+			and examid = #{examId}
+		</if>
+		<!-- 考试方式 -->
+		<if test="examMethod !=null">
+			and exammethod = #{examMethod}
+		</if>
+		<!-- 新增部门的判断 -->
+		<if test="department_Id !=null">
+			and departmentid = #{department_Id}
+		</if>
+	</sql>
+
+	<!-- 查询分页 -->
+	<sql id="query_page_limit">
+		<!-- 分页索引 -->
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+
+
+
+
+
+
+	<!-- S qlq -->
+	<!-- S 保存员工成绩信息(初始化成绩表) -->
+	<insert id="addEmployeeExam" parameterType="list">
+		INSERT INTO
+		employeeexam(`gradeId`,`examId`,`employeeId`,`employeeName`,`grade`,`examMethod`,`employeeType`,`unitid`,`distributeid`,`bigemployeeoutid`)
+		VALUES
+		<foreach collection="list" item="employeeExam" separator=",">
+			(#{employeeExam.gradeid},#{employeeExam.examid},#{employeeExam.employeeid},
+			#{employeeExam.employeename},#{employeeExam.grade},#{employeeExam.exammethod},
+			#{employeeExam.employeetype},#{employeeExam.unitid},#{employeeExam.distributeid}
+			,#{employeeExam.bigemployeeoutid})
+		</foreach>
+	</insert>
+	<!-- E 保存员工成绩信息(初始化成绩表) -->
+	<!-- S 根据考试ID查询考试参员工信息 -->
+	<!-- S 根据考试ID查询内部考试人员 -->
+	<select id="getEmployeeexamsInByExamId" resultType="map"
+		parameterType="string">
+		SELECT
+		emp.name,
+		emp.idCode,
+		emp.sex,
+		d.departmentName AS
+		unitName,
+		g.examMethod,
+		g.unitId,
+		g.employeeType
+		FROM department d,
+		employee_in emp,
+		employeeexam g,
+		exam
+		WHERE emp.departmentId = d.departmentId
+		AND
+		emp.idCode = g.employeeId
+		AND g.examId = exam.examId
+		AND exam.examId =
+		#{value}
+		order by CONVERT(unitName USING gbk),CONVERT(emp.name USING
+		gbk)
+	</select>
+	<!-- E 根据考试ID查询内部考试人员 -->
+	<!-- S 根据考试ID查询外部考试人员 -->
+	<select id="getEmployeeexamsOutByExamId" parameterType="string"
+		resultType="map">
+		SELECT
+		employee_out.name,
+		employee_out.idCode,
+		employee_out.sex,
+		u.name AS unitName,
+		employeeexam.examMethod,
+		employeeexam.employeeType,
+		employeeexam.distributeid,
+		employeeexam.unitid,
+		employeeexam.bigemployeeoutid,
+		haulemployeeout.empType
+
+		FROM
+		employee_out,
+		employeeexam,
+		exam,
+		haulemployeeout,
+		unit u
+		WHERE exam.examId =
+		employeeexam.examId
+		AND employeeexam.employeeId =
+		haulemployeeout.empoutIdcard
+		AND
+		haulemployeeout.empoutIdcard=employee_out.idCode
+		AND employeeexam.bigemployeeoutid = haulemployeeout.BigEmployeeoutId
+		and employeeexam.unitId=haulemployeeout.unitId
+		AND
+		haulemployeeout.bigId=exam.bigId
+		AND haulemployeeout.empoutIdcard =
+		employee_out.idCode
+		AND haulemployeeout.unitId = u.unitId
+		AND
+		exam.examId = #{value} order by CONVERT(unitName USING
+		gbk),CONVERT(employee_out.name USING gbk)
+	</select>
+
+	<!-- E 根据考试ID查询外部考试人员 -->
+
+
+
+	<!-- E qlq -->
+
+</mapper>

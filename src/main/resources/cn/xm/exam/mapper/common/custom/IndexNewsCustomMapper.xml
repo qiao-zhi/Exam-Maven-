@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.common.custom.IndexNewsCustomMapper">
+
+	<!-- 为主页分配不同类型的新闻 不查内容 -->
+	<select id="selectTypeNews" resultType="cn.xm.exam.bean.news.News"
+		parameterType="map">
+		SELECT newsId,newsTitle,newsType,newsTime FROM news
+		<where>
+			<if test="newsType!=null &amp;&amp; newsType!=''">
+				and newsType = #{newsType}
+			</if>
+		</where>
+		order by newsTime desc
+		<if test="newsNums!=null &amp;&amp; newsNums!=''">
+			limit 0,${newsNums}
+		</if>
+	</select>
+
+	<!-- 通过id 查询新闻 所有内容。 用于显示新闻文章 -->
+	<select id="selectNewsById" resultType="cn.xm.exam.bean.news.News"
+		parameterType="map">
+		select * from news where newsId = #{newsId} and newsType
+		= #{newsType}
+	</select>
+
+
+	<!--S 分页查询 -->
+	<!-- S 查询总条数 -->
+	<select id="getNewsPagePageTotal" resultType="_int"
+		parameterType="hashmap">
+		select count(newsId) from news
+		<where>
+			<if test="type != null">
+				and newsType = #{type}
+			</if>
+		</where>
+	</select>
+	<!-- E 查询总条数 -->
+	<select id="getNewsPagePage" resultType="cn.xm.exam.bean.news.News"
+		parameterType="hashmap">
+		select * from news
+		<where>
+			<if test="type != null">
+				and newsType = #{type}
+			</if>
+			<if test="index != null">
+				limit #{index},#{currentCount}
+			</if>
+		</where>
+	</select>
+	<!--E 分页查询 -->
+
+
+</mapper>

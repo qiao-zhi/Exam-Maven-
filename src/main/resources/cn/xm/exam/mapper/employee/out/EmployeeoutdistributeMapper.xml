@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.EmployeeoutdistributeMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.employee.out.Employeeoutdistribute" >
+    <id column="distributeid" property="distributeid" jdbcType="INTEGER" />
+    <result column="bigid" property="bigid" jdbcType="VARCHAR" />
+    <result column="haulempid" property="haulempid" jdbcType="VARCHAR" />
+    <result column="unitid" property="unitid" jdbcType="VARCHAR" />
+    <result column="departmentId" property="departmentid" jdbcType="VARCHAR" />
+    <result column="outempname" property="outempname" jdbcType="VARCHAR" />
+    <result column="empOutIdCard" property="empoutidcard" jdbcType="VARCHAR" />
+    <result column="empOutexamStatus" property="empoutexamstatus" jdbcType="VARCHAR" />
+    <result column="empOutTrainGrade" property="empouttraingrade" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    distributeid, bigid, haulempid, unitid, departmentId, outempname, empOutIdCard, empOutexamStatus, 
+    empOutTrainGrade
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.employee.out.EmployeeoutdistributeExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from employeeoutdistribute
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from employeeoutdistribute
+    where distributeid = #{distributeid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from employeeoutdistribute
+    where distributeid = #{distributeid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.employee.out.EmployeeoutdistributeExample" >
+    delete from employeeoutdistribute
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.employee.out.Employeeoutdistribute" >
+    insert into employeeoutdistribute (distributeid, bigid, haulempid, 
+      unitid, departmentId, outempname, 
+      empOutIdCard, empOutexamStatus, empOutTrainGrade
+      )
+    values (#{distributeid,jdbcType=INTEGER}, #{bigid,jdbcType=VARCHAR}, #{haulempid,jdbcType=VARCHAR}, 
+      #{unitid,jdbcType=VARCHAR}, #{departmentid,jdbcType=VARCHAR}, #{outempname,jdbcType=VARCHAR}, 
+      #{empoutidcard,jdbcType=VARCHAR}, #{empoutexamstatus,jdbcType=VARCHAR}, #{empouttraingrade,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.employee.out.Employeeoutdistribute" >
+    insert into employeeoutdistribute
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="distributeid != null" >
+        distributeid,
+      </if>
+      <if test="bigid != null" >
+        bigid,
+      </if>
+      <if test="haulempid != null" >
+        haulempid,
+      </if>
+      <if test="unitid != null" >
+        unitid,
+      </if>
+      <if test="departmentid != null" >
+        departmentId,
+      </if>
+      <if test="outempname != null" >
+        outempname,
+      </if>
+      <if test="empoutidcard != null" >
+        empOutIdCard,
+      </if>
+      <if test="empoutexamstatus != null" >
+        empOutexamStatus,
+      </if>
+      <if test="empouttraingrade != null" >
+        empOutTrainGrade,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="distributeid != null" >
+        #{distributeid,jdbcType=INTEGER},
+      </if>
+      <if test="bigid != null" >
+        #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="haulempid != null" >
+        #{haulempid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitid != null" >
+        #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=VARCHAR},
+      </if>
+      <if test="outempname != null" >
+        #{outempname,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutidcard != null" >
+        #{empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutexamstatus != null" >
+        #{empoutexamstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="empouttraingrade != null" >
+        #{empouttraingrade,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.employee.out.EmployeeoutdistributeExample" resultType="java.lang.Integer" >
+    select count(*) from employeeoutdistribute
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update employeeoutdistribute
+    <set >
+      <if test="record.distributeid != null" >
+        distributeid = #{record.distributeid,jdbcType=INTEGER},
+      </if>
+      <if test="record.bigid != null" >
+        bigid = #{record.bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.haulempid != null" >
+        haulempid = #{record.haulempid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitid != null" >
+        unitid = #{record.unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentid != null" >
+        departmentId = #{record.departmentid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outempname != null" >
+        outempname = #{record.outempname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empoutidcard != null" >
+        empOutIdCard = #{record.empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empoutexamstatus != null" >
+        empOutexamStatus = #{record.empoutexamstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="record.empouttraingrade != null" >
+        empOutTrainGrade = #{record.empouttraingrade,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update employeeoutdistribute
+    set distributeid = #{record.distributeid,jdbcType=INTEGER},
+      bigid = #{record.bigid,jdbcType=VARCHAR},
+      haulempid = #{record.haulempid,jdbcType=VARCHAR},
+      unitid = #{record.unitid,jdbcType=VARCHAR},
+      departmentId = #{record.departmentid,jdbcType=VARCHAR},
+      outempname = #{record.outempname,jdbcType=VARCHAR},
+      empOutIdCard = #{record.empoutidcard,jdbcType=VARCHAR},
+      empOutexamStatus = #{record.empoutexamstatus,jdbcType=VARCHAR},
+      empOutTrainGrade = #{record.empouttraingrade,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.employee.out.Employeeoutdistribute" >
+    update employeeoutdistribute
+    <set >
+      <if test="bigid != null" >
+        bigid = #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="haulempid != null" >
+        haulempid = #{haulempid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitid != null" >
+        unitid = #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        departmentId = #{departmentid,jdbcType=VARCHAR},
+      </if>
+      <if test="outempname != null" >
+        outempname = #{outempname,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutidcard != null" >
+        empOutIdCard = #{empoutidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="empoutexamstatus != null" >
+        empOutexamStatus = #{empoutexamstatus,jdbcType=VARCHAR},
+      </if>
+      <if test="empouttraingrade != null" >
+        empOutTrainGrade = #{empouttraingrade,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where distributeid = #{distributeid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.employee.out.Employeeoutdistribute" >
+    update employeeoutdistribute
+    set bigid = #{bigid,jdbcType=VARCHAR},
+      haulempid = #{haulempid,jdbcType=VARCHAR},
+      unitid = #{unitid,jdbcType=VARCHAR},
+      departmentId = #{departmentid,jdbcType=VARCHAR},
+      outempname = #{outempname,jdbcType=VARCHAR},
+      empOutIdCard = #{empoutidcard,jdbcType=VARCHAR},
+      empOutexamStatus = #{empoutexamstatus,jdbcType=VARCHAR},
+      empOutTrainGrade = #{empouttraingrade,jdbcType=VARCHAR}
+    where distributeid = #{distributeid,jdbcType=INTEGER}
+  </update>
+</mapper>

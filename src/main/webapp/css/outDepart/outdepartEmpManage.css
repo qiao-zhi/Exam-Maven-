@@ -1,0 +1,156 @@
+@CHARSET "UTF-8";
+   	/*违章*/
+#el_bRInfor .modal-dialog {
+	width: 60%;
+}
+.el_threeScoreListTable{
+	width:95%;
+	margin:0 auto;
+	font-size:13px;
+}
+.el_threeScoreList2{
+	margin-bottom:30px !important;
+}
+.el_spanDoc{
+	margin-left:30px;
+}
+#paginationID2{
+	margin-left:30px;
+	margin-top:10px;
+}
+
+/*违章情况表*/
+.el_BRCase {
+	width: 100%;
+}
+.el_BRCase caption {
+	font-size: 20px;
+	margin-top: 10px;
+}
+
+.el_BRCase tr {
+	height: 30px;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+}
+.el_BRCase tr th {
+	text-align: center;
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+}
+.el_BRCase tr td {
+	border-right: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	min-width: 80px;
+	padding: 5px;
+}
+.el_dp a{
+	display:block;
+	width:100% !important;
+	height:30px !important;
+	line-height:30px !important;
+	text-align:center;
+	color:blue;
+	font-weight:bolder;
+}
+.el_dp {
+	padding:0 !important;	
+}
+.success:hover{
+	cursor:pointer;
+}
+
+
+
+.big-photo{
+	position:absolute;
+	right:12%;
+	top:25px;
+	width:92px;
+	height:112px;
+}
+.el_modellist0 {
+    margin: 10px;
+    margin-bottom: 5px;
+    width: 90%;
+}
+.el_spans0{
+	text-align:right;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    display: table-cell;
+    width:100px;
+}
+.el_modellist01 {
+    margin: 10px;
+    margin-bottom: 5px;
+	width:70%;
+}
+/*单选按钮的字体大小*/
+.el_modellist0  label{
+    font-size:13px;
+}
+.el_modellist02{
+	margin:10px;
+}
+#el_addEmp {
+	font-size:13px;
+}
+
+.el_empPhoto{
+	position:absolute;
+	right:10%;
+	top:20px;
+}
+.el_parperInfo{
+	
+	margin-left:50px;
+}
+.el_parperInfo tr{
+	height:30px;
+	line-height:30px;
+	font-size:13px;
+}
+.el_parperInfo tr td:first-child{
+	font-weight:bolder;
+	text-align:right;
+	padding-right:10px;
+}
+.el_parperInfo tr td:last-child{
+	padding-left:30px;
+	text-align:center;
+}
+/* 树 */
+ #departmentAndOverHaulTree{
+ 	height:400px;
+ 	overflow-y:auto !important;
+ 	overflow-x:auto;
+ }
+ 
+ /****消息提示框***********/
+    #msg {
+        width:500px;
+        height:300px;
+        position:fixed;
+        right:15px;
+        bottom:-300px;
+        background-color:#D1EEEE;
+        transition:all 2s linear;
+        box-shadow: 10px 10px 5px grey;//阴影
+        filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;color:#000000 ;
+    }
+    #msg>a {
+        float:right;
+        padding:5px 10px;
+        color:#000000;
+        border:1px solid black;
+        cursor:pointer;
+    }
+ 

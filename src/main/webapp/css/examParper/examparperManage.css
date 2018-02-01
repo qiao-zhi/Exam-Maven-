@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+#paginationID{
+    color:black;
+    height:51px;
+    min-width:580px;
+    background-color:white;
+    border:2px solid #eee;
+    padding:8px;
+    float:right;
+}
+#paginationID table{
+    position:relative;
+    top:-10px;
+}
+#paginationID table tbody tr:first-child td:nth-child(2){
+    position:relative;
+    top:10px;
+}

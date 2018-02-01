@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="onlineExam" extends="json-default,struts-default" namespace="/">
+		<!-- 内部员工在线考试的action -->
+		<action name="onlineExam_*" class="onlineExamAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+			<result name="ok">ExamParper.jsp</result>
+			<result name="gradeInfo">scoreInterface.jsp</result>
+			<result name="paperAndAnswerInfo">parperAnaly.jsp</result>
+		</action>
+		
+		<!-- 内部员工个人中心的action -->
+		<action name="onlineEmployeeInfo_*" class="onlineExamEmployeeInAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,51 @@
+/*考试员工信息*/
+/*模态框样式*/
+#examPersons .modal-dialog {
+    width: 60%;
+}
+#examPersons .el_queryBox{
+    padding:0 20px;
+}
+
+/*添加考试人员的表格*/
+.el_AddPersonTable {
+    width: 95%;
+    margin: 5px auto;
+    font-size: 13px;
+}
+
+/*
+invigilatePersonCenter
+ */
+/*考试信息*/
+.el_examInfo ul{
+    height:40px;
+    line-height:40px;
+    box-shadow:0 1px 3px #ccc;
+    margin-bottom:20px;
+    padding-left:30px;
+    background-color:#94dafe;
+}
+.el_examInfo ul li{
+    list-style:none;
+    float:left;
+    margin-right:30px;
+}
+
+/*模态表格内容，违章信息*/
+.el_outParperTable{
+    border:1px solid #ccc;
+    width:100%;
+}
+
+.el_outParperTable tr{
+    height:30px;
+    border:1px solid #ccc;
+}
+.el_outParperTable tr td,.el_outParperTable tr th{
+    border:1px solid #ccc;
+    text-align:center;
+}
+.success:hover{
+    cursor:pointer;
+}

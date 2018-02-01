@@ -1,0 +1,177 @@
+ /*试卷名称*/
+#el_examTitle {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/*类型大题标*/
+.elquesTitle {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: rgb(245, 245, 245);
+    padding-left: 20px;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+/*试题主要样式*/
+.el_questionMain {
+    width: 90%;
+    height: auto;
+    margin: 10px auto;
+}
+
+/*试题标题*/
+.el_questionTitle {
+    font-size: 14px;
+    margin-top: 20px;
+    text-decoration: none;
+}
+
+/*试题选项*/
+.el_qusSelect {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    padding-left: 30px;
+    font-size: 12px;
+}
+
+.el_qusSelect li {
+    list-style: none;
+    margin: 5px 60px 5px 0;
+}
+
+.el_qusSelect li label {
+    font-weight: 500;
+}
+
+/*回到顶部*/
+#el_returnTop {
+    width: 30px;
+    height: 90px;
+    text-align: center;
+    line-height: 15px;
+    position: fixed;
+    right: 20px;
+    bottom: 60px;
+    padding: 3px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display:none;
+}
+
+#el_returnTop img {
+    width: 23px;
+    position: absolute;
+    top: -5px;
+    right: 3px;
+}
+
+#el_returnTop:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+/*试卷信息*/
+.el_parperInfo{
+    width:80%;
+    height:360px;
+    margin:10px auto;
+    font-size:14px;
+    border-top:2px solid #eee;
+    border-bottom:2px solid #eee;
+    padding:10px;
+    text-align: center;
+    margin-bottom:40px;
+}
+.el_parperInfo table{
+    width:100%;
+}
+.el_parperInfo table caption{
+    font-size:20px;
+    width:100%;
+    font-weight:500;
+    margin:5px;
+    letter-spacing: 5px;
+}
+.el_parperInfo table tr{
+    height:35px;
+    line-height:35px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+}
+.el_parperInfo table tr td:first-child{
+    border-right:1px solid #eee;
+    width:150px;
+}
+
+
+
+
+
+/*<!--返回-->*/
+    .el_returnButton{
+        position:fixed;
+        right:30px;
+        top:70px;
+    }
+.el_useButton{
+    position:fixed;
+    right:30px;
+    top:110px;
+}
+.el_returnButton a{
+    text-decoration: none;
+}
+
+
+
+
+      /*<!--模态，添加试卷基本信息-->*/
+    .el_modelinput {
+        width: 300px;
+    }
+/*文本面板*/
+.el_modelinput4 {
+    max-width: 300px;
+    font-size:12px;
+}
+
+.el_department3 {
+    padding: 0;
+    padding-left: 10px;
+}
+
+.el_department3 option {
+    font-size: 12px;
+}
+/*模态*/
+.el_paperInfo{
+    margin: 10px;
+    margin-bottom: 15px;
+    width: 500px;
+    height:auto;
+    font-size: 14px;
+    position:relative;
+}
+.el_paperInfo .el_spans{
+    padding: 6px 12px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 4px;
+    display: table-cell;
+    width:100px;
+}
+.el_paperInfo .form-control{
+    width:300px;
+    height:25px;
+    font-size:12px;
+    position:absolute;
+    top:0;
+    left:100px;
+}

@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+ #treeDemo{
+ 	overflow:auto;
+ }
+ .el_qlmQueryR{
+ 	width:260px !important;
+ }
+ 
+ #el_breakTimeIndex input{
+	width:30% !important;
+	margin-right:10px;
+}
+#el_breakTimeIndex{
+	position:relative;
+	right:5px;
+}
+ 

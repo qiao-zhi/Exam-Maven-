@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.custom.HaulemployeeoutCustomMapper">
+
+	<!--根据单位ID与大修ID查出满足条件的大修员工身份证集合 -->
+	<select id="getBigEmployeeoutIdcardsByBigidAndUnitid" resultType="map"
+		parameterType="hashmap">
+		SELECT
+		empoutIdcard,bigEmployeeoutId
+		FROM haulemployeeout
+		WHERE unitId =
+		#{unitId}
+		AND bigId = #{bigId}
+	</select>
+
+</mapper>

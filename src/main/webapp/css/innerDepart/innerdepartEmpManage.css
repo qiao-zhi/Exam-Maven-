@@ -1,0 +1,214 @@
+/*<!--闁告稒锚娴兼劗鎷犻敂鍓х煄濞ｅ洠鍓濇导鍛存晬鐏炵晫鍚欓悹渚囧幗閵嗗倸顩奸敓锟�-->*/
+#el_showManager{
+	font-size:13px;
+}
+#el_showManager option{
+	background-color:white;
+	color:black;
+}
+
+.success:hover{
+    cursor:pointer;
+}
+.el_parperInfo table {
+   width: 70%;
+   
+    margin-top: 30px;
+}
+
+.el_parperInfo table caption {
+    font-size: 20px;
+    width: 100%;
+    font-weight: 500;
+    margin: 5px;
+    letter-spacing: 5px;
+}
+
+.el_parperInfo table tr {
+    height: 35px;
+    border-bottom: 1px solid #eee;
+}
+
+.el_parperInfo table tr td:first-child {
+    /* width: 20%; */
+    width: 40%;
+}
+
+/*闁告稒锚娴兼劙鎮¤婢э拷*/
+.el_empPhoto {
+    float: right;
+    right: 10px;
+    width: 100px;
+    height: 130px;
+}
+
+/* 鏄剧ず鎵�鏈夐儴闂� */
+ #el_showAllUser{
+ 	height:32px !important;
+ }
+#el_showAllUser span{
+	position:relative;
+	top:-3px;
+} 
+
+/*<!--闁告稒锚娴兼劖绌遍埄鍐х礀濞戞柨顑嗛妴鍌氼浖閸埄鍚�闁荤儑鎷�-->*/
+.el_threeScoreList {
+    width: 500px;
+    margin: -10px auto;
+    margin-bottom: 20px;
+    height: 160px;
+    
+    margin-top: 10px;
+    margin-left: 70px;
+    margin-bottom: 0px;
+     
+}
+
+.el_threeScoreList table {
+    width: 100%;
+    font-size:13px;
+}
+
+.el_threeScoreList table caption {
+    font-size: 16px;
+    margin: 0;
+}
+
+.el_threeScoreList table tr {
+    border: 1px solid #ccc;
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+}
+#paginationIDU2{
+	margin-left:20px;
+	margin-top:15px;
+}
+.el_threeScoreList table tr td {
+    padding: 5px;
+}
+
+.el_threeScoreList table tr td:nth-child(odd) {
+    background-color: #eee;
+    width: 20%;
+    text-align: center;
+    border-left: 1px solid #ccc;
+}
+
+#el_empTrainDoc .modal-body {
+    height: 370px;
+    overflow: auto;
+}
+#el_empTrainDoc .modal-dialog{
+    width:70%;
+}
+
+/*閺夆晜绻勯悵閿嬬┍閳╁啩绱�*/
+#el_breakRulesCase .modal-body{
+    height: 300px;
+    overflow: auto;
+}
+#table2 tbody,#table2  tfoot,#table2  thead,#table2  tr,#table2  th,#table2  td{
+    font-size:13px;
+}
+
+
+
+
+.big-photo{
+	position:absolute;
+	right:12%;
+	top:25px;
+	width:90px;
+	height:110px;
+	border:3px inset #ccc;
+}
+.el_modellist0 {
+    margin: 10px;
+    margin-bottom: 5px;
+    width: 90%;
+}
+.el_spans0{
+	text-align:right;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    display: table-cell;
+    width:100px;
+}
+.el_modellist01 {
+    margin: 10px;
+    margin-bottom: 5px;
+	width:70%;
+}
+.el_modellist03 {
+	width:35%;
+    margin: 10px;
+    margin-bottom: 5px;
+}
+.el_modellist04{
+	width:34%;
+    margin: 10px;
+    margin-bottom: 5px;
+    margin-left:14px;
+	position:absolute;
+	top:120px !important;
+	left:35% !important;
+}
+/*闁告娲熼敓钘夘槹鐎垫粓鏌﹂鐐暠閻庢稒銇炵紞瀣緞瑜嶉惃锟�*/
+.el_modellist0  label{
+    font-size:13px;
+}
+.el_modellist02{
+	margin:10px 0 10px 20px;
+}
+#el_addEmp {
+	font-size:13px;
+}
+
+.el_empPhoto{
+	position:absolute;
+	right:10%;
+	top:20px;
+	box-shadow:none;
+}
+
+.el_parperInfo tr{
+	height:30px;
+	line-height:30px;
+	font-size:13px;
+}
+.el_parperInfo tr td:first-child{
+	font-weight:bolder;
+	text-align:right;
+	padding-right:10px;
+}
+.el_parperInfo tr td:last-child{
+	text-align:center;
+}
+
+
+/****消息提示框***********/
+    #msg {
+        width:500px;
+        height:300px;
+        position:fixed;
+        right:15px;
+        bottom:-300px;
+        background-color:#D1EEEE;
+        transition:all 2s linear;
+        box-shadow: 10px 10px 5px grey;//阴影
+        filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;color:#000000 ;
+    }
+    #msg>a {
+        float:right;
+        padding:5px 10px;
+        color:#000000;
+        border:1px solid black;
+        cursor:pointer;
+    }

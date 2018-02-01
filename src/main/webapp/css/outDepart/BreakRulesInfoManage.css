@@ -1,0 +1,62 @@
+/*<!--鍛樺伐璇︾粏淇℃伅锛屾坊鍔犺繚绔犱俊鎭�-->*/
+#el_breakTimeIndex{
+	margin-left:15px;
+	margin-top:5px;
+}
+#el_mT tr td:first-child{
+	font-weight:bolder;
+}
+#el_mT tr td:last-child{
+	text-align:center;
+}
+.el_parperInfo table {
+    font-size:13px;
+    width: 70%;
+    margin-top: 30px;
+}
+ #treeDemo{
+ 	overflow:auto;
+ }
+.el_parperInfo table caption {
+    font-size: 20px;
+    width: 100%;
+    font-weight: 500;
+    margin: 5px;
+    letter-spacing: 5px;
+}
+.el_parperInfo table tr {
+    height: 35px;
+    border-bottom: 1px solid #eee;
+}
+.el_parperInfo table tr td:first-child {
+    width: 20%;
+}
+/*鍛樺伐鐓х墖*/
+.el_empPhoto {
+    float: right;
+    right: 10px;
+    width: 100px;
+    height: 130px;
+}
+/*鍛樺伐璇︾粏淇℃伅涓殑杩濈珷鎯呭喌琛�*/
+.el_BRCase {
+    font-size:13px;
+    width: 100%;
+}
+.el_BRCase caption {
+    font-size: 16px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.el_BRCase tr {
+    height: 30px;
+    border-bottom: 1px solid #ccc;
+}
+
+/*娣诲姞杩濈珷淇℃伅*/
+.el_threeScoreList {
+    width: 500px;
+    margin:10px auto;
+    height: 80px;
+    font-size:13px;
+}

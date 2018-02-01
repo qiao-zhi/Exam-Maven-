@@ -1,0 +1,207 @@
+a:hover 
+{
+	text-decoration: none ;
+	background: rgb(220,220,220);
+    color: rgb(0,0,0);
+	}
+a{
+	text-decoration: none ;
+}
+.menuactive{
+	cursor: pointer;
+}
+ul.mtree {
+    opacity: 0;
+    margin-left: -6px
+    padding: 1.2em;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+ul.mtree ul {
+    margin-left: 1em;
+}
+
+ul.mtree li {
+    list-style: none;
+}
+
+ul.mtree a {
+    display: block;
+}
+
+ul.mtree li.mtree-node > a {
+    font-weight: bold;
+}
+
+ul.mtree a {
+	color:rgb(0,140,186);
+    -webkit-transition: all 30ms ease-out;
+    -moz-transition: all 30ms ease-out;
+    -ms-transition: all 30ms ease-out;
+    -o-transition: all 30ms ease-out;
+    transition: all 30ms ease-out;
+} 
+
+.secondDep{
+	font-size:13px !important;
+}
+ul.mtree.transit ul {
+    margin-left: 0;
+    
+}
+
+/* ul.mtree.transit ul li {
+    font-size: .9em;
+} */
+ul.mtree.transit ul > li {
+  font-size: .9em;
+  
+}
+
+ul.mtree.transit li > a {
+	font-size:16px;
+	font-family:Î¢ÈíÑÅºÚ;
+    font-weight: bold;
+    text-transform: upperCase;
+    color:#6B6B6B;
+}
+
+
+ul.mtree.transit > li {
+    border-bottom: 1px solid #DDD;
+}
+
+ul.mtree.transit > li:last-child {
+    border-bottom: none;
+}
+
+ul.mtree.transit li:last-child > a {
+    border: none;
+}
+
+ul.mtree.transit > li.mtree-open > a {
+    background: #DDD;
+}
+
+ul.mtree.transit li > a:hover {
+    background: #DDD;
+}
+
+ul.mtree.transit li.mtree-active > a {
+    background: #FFC000;
+    color: #FFF;
+}
+
+ul.mtree.transit a {
+    padding: 7px 0px 7px 1em;
+}
+
+
+ul.mtree.transit li li > a {
+	background:white;
+	font-size:14px;
+	font-family:Î¢ÈíÑÅºÚ;
+    padding-left: 2em;
+    color:black;
+}
+.mtree-level-2 li > a{
+	background:white;
+	font-size:13px !important;
+	font-family:Î¢ÈíÑÅºÚ;
+    padding-left: 4em !important;
+    color:black;
+}
+
+ul.mtree.transit li li li > a {
+    padding-left: 3em;
+}
+
+ul.mtree.transit li li li li > a {
+    padding-left: 4em;
+}
+
+ul.mtree.transit li li li li li > a {
+    padding-left: 5em;
+}
+
+ul.mtree.transit {
+    background: rgb(245,245,245);
+    color:rgb(0,0,0) !important;
+}
+
+ul.mtree.transit ul {
+    margin-left: 0;
+    color:rgb(0,0,0) !important;
+}
+
+ul.mtree.transit ul > li {
+    font-size: .9em;
+    color:rgb(0,0,0) !important;
+}
+
+ul.mtree.transit li.mtree-node {
+    position: relative;
+}
+
+ul.mtree.transit li.mtree-node > a:before {
+    color: black;
+    font-weight: normal;
+    position: absolute;
+    right: 20px;
+}
+
+ul.mtree.transit li.mtree-open > a:before {
+    content: '-';
+}
+
+ul.mtree.transit li.mtree-closed > a:before {
+    content: '+';
+}
+
+ul.mtree.transit ul > li:first-child {
+    margin-top: 1px;
+}
+
+ul.mtree.transit li.mtree-open > a {
+    background: rgb(245,245,245);
+}
+
+ul.mtree.transit li > a:hover, ul.mtree.transit li.mtree-active > a {
+    background: rgb(220,220,220);
+    color:rgb(0,0,0);
+}
+
+ul.mtree.transit li.mtree-node > ul > li:last-child {
+    margin-bottom: 0px;
+    padding-bottom:0px;
+    border-bottom: 0px;
+}
+
+ul.mtree.transit li.mtree-node:last-child > ul > li:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+ul.mtree.transit a {
+    padding: 5px 0px 5px 0.8em;
+    color: #CCC;
+}
+
+ul.mtree.transit li li > a {
+    padding-left: 1.6em;
+}
+
+ul.mtree.transit li li li > a {
+    padding-left: 2.8em;
+}
+
+ul.mtree.transit li li li li > a {
+    padding-left: 3.2em;
+}
+
+ul.mtree.transit li li li li li > a {
+    padding-left: 4em;
+}
+

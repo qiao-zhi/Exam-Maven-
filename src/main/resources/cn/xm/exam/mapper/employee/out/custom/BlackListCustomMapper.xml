@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.employee.out.custom.BlackListCustomMapper">
+
+
+	<!-- 查询黑名单员工信息分页显示 -->
+	<select id="getBlackEmployeeListInfo" parameterType="map" resultType="map">
+		SELECT
+				blacklist.*, CASE employeeStatus = '1'
+			WHEN TRUE THEN
+				(SELECT `name` FROM employee_out WHERE blackIdcard = idCode)
+			ELSE
+				(SELECT `name` FROM employee_in WHERE blackIdcard = idCode)
+			END AS `name`,
+			 CASE employeeStatus = '1'
+			WHEN TRUE THEN
+				(SELECT `sex` FROM employee_out WHERE blackIdcard = idCode)
+			ELSE
+				(SELECT `sex` FROM employee_in WHERE blackIdcard = idCode)
+			END AS `sex`,
+			 CASE employeeStatus = '1'
+			WHEN TRUE THEN
+				(
+					SELECT
+						SUM(minusnum)
+					FROM
+						breakrules
+					WHERE
+						employeeId = blacklist.employeeId
+					AND breaktime LIKE CONCAT(YEAR(CURDATE()), '%')
+				)
+			ELSE
+				(
+					SELECT
+						SUM(empInMinusNum)
+					FROM
+						emplyin_breakrules
+					WHERE
+						empInEmployeeId = blacklist.employeeId
+					AND empInBreakTime LIKE CONCAT(YEAR(CURDATE()), '%')
+				)
+			END AS minusnum
+			FROM
+				`blacklist`
+		<where>
+			<include refid="query_blackListInfo_where"></include>
+		</where>
+		ORDER BY time DESC
+		<include refid="query_blackList_limit"></include>		
+	</select>
+	
+	<!-- 查询条件 -->
+	<sql id="query_blackListInfo_where">
+		<if test="1==1">
+			and temporaryInStatus = 1
+		</if>
+	</sql>
+	<!-- 分页 -->
+	<sql id="query_blackList_limit">
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</sql>
+	
+	<!-- 短委员工 根据员工ID删除当前年的违章信息 -->
+	<delete id="deleteBreakRulesInfo" parameterType="String">
+		DELETE FROM breakrules WHERE employeeid= #{value} AND breaktime LIKE CONCAT(YEAR(CURDATE()),'%')
+	</delete>
+	
+	<!-- 长委员工  根据员工ID删除当前年的违章信息 -->
+	<delete id="deleteEmpInBreakRulesInfo" parameterType="String">
+		DELETE FROM emplyin_breakrules WHERE empInemployeeId = #{value} 
+			AND empinbreaktime LIKE CONCAT(YEAR(CURDATE()),'%')
+	</delete>
+	
+	<!-- 短委员工 查询违章记录 -->
+	<select id="getEmplyOutBreakrulesById" parameterType="String" resultType="cn.xm.exam.bean.employee.out.Breakrules">
+		SELECT * FROM breakrules where employeeId = #{value}
+			AND breakTime LIKE CONCAT(YEAR(CURDATE()),'%')
+			ORDER BY breakTime DESC
+	</select>
+	
+	<!-- 长委员工 查询违章记录 -->
+	<select id="getEmplyInBreakrulesById" parameterType="String" resultType="cn.xm.exam.bean.employee.in.EmplyinBreakrules">
+		SELECT * FROM emplyin_breakrules where empInEmployeeId = #{value}
+			AND empInBreakTime LIKE CONCAT(YEAR(CURDATE()),'%')
+			ORDER BY empInBreakTime DESC
+	</select>
+	
+</mapper>

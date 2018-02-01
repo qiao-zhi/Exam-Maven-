@@ -1,0 +1,214 @@
+.checkbox {
+    width: 100%;
+    margin:0;
+    margin-left: 30px;
+    height:auto;
+}
+
+.el_knowledgePointMainPanel ul li,.el_allStatisticPanelbody ul li{
+    list-style: none;
+    float: left;
+    margin: 0px;
+}
+
+.el_knowledgePointMainPanel ul,.el_allStatisticPanelbody ul {
+    clear: both;
+}
+
+.el_duoxuan {
+    margin-top: 10px;
+    margin-right: 30px;
+}
+
+.el_duoxuan:hover {
+    color: blue;
+}
+
+.el_danxuanH {
+    width: 130px;
+    height: 30px;
+    background-color: #EEE;
+    text-align: center;
+    line-height: 30px;
+    border-left: 1px solid #CCC;
+    border-top: 1px solid #CCC;
+}
+
+.el_knowledgePointMainPanel .panel-heading {
+    font-weight: 600;
+    margin-bottom:20px;
+    border:1px solid #ccc;
+    border-bottom:none;
+    border-right:none;
+}
+
+/*娣诲姞璇曢閲忛潰鏉�*/
+.el_zongfen {
+    font-weight: 600;
+    margin-left: 20px;
+}
+
+/*鏈�鍚庣殑*/
+.el_generateRow {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+    clear: both;
+    margin: 20px;
+}
+
+.el_bobt {
+    margin-left: 20px;
+}
+
+/*闈㈡澘*/
+
+.el_knowledgePointPanel {
+    width: 30%;
+    margin: 10px;
+    height: 200px;
+    float: left;
+}
+
+.el_knowledgePointPanel:nth-of-type(1),
+.el_knowledgePointPanel:nth-of-type(4),
+.el_knowledgePointPanel:nth-of-type(7),
+.el_knowledgePointPanel:nth-of-type(10) {
+    width: 30%;
+    margin: 10px;
+    margin-left: 3%;
+    height: 200px;
+}
+
+.el_knowledgePointPanel .el_section {
+    width: 100%;
+    position: relative;
+    margin-top:20px;
+}
+#el_generateButton a{
+    width: 90px;
+    display: block;
+    text-decoration: none !important;
+    background: none;
+}
+#el_generateButton:hover{
+    text-decoration: none !important;
+    border:none;
+}
+.el_knoeledgePointul ul {
+    height: 30px;
+    width: 100%;
+    padding-left: 10px;
+}
+
+.el_knoeledgePointul ul li {
+    height: 20px;
+    margin: 0;
+}
+
+.el_knoeledgePointul ul li input {
+    width: 30px;
+    margin-left: 20px;
+}
+
+/*鎬诲垎*/
+.el_allStatisticPanelbody {
+    padding: 0;
+}
+
+.el_knoeledgePointul1 {
+    height: 40px;
+    margin: 0;
+    margin-bottom: 20px;
+    margin-left: 40px !important;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    padding-right: 10px;
+}
+
+.el_knoeledgePointul1 ul {
+    padding: 0;
+    height: 100%;
+    float: left;
+}
+
+.el_knoeledgePointul1 ul li {
+    height: 20px;
+    margin: 0;
+    margin-top: 5px;
+}
+
+.el_knoeledgePointul1 ul li:first-child {
+    margin-top: 0;
+    width: 80px;
+    height: 100%;
+    border: 1px solid #ddd;
+    padding: 10px 5px 10px 15px;
+    background-color: #eee;
+    font-weight:bolder;
+}
+
+.el_knoeledgePointul1 ul li input {
+    text-align: center;
+    width: 40px;
+    margin-left: 20px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+}
+
+/*鎬荤粺璁�*/
+.el_knowledgePointMainPanel {
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 230px;
+}
+
+.el_knowledgePointMainPanel ul li span {
+    width: 50px;
+    margin-left: 30px;
+}
+
+/*鏈�椤堕儴鐨勯�夐」闈㈡澘*/
+.el_addSet {
+    position: absolute;
+    top: 17px;
+    z-index: 900;
+}
+
+#el_cancelButton {
+    position: absolute;
+    bottom: 20px;
+    right: 50px;
+}
+
+
+ .el_chooseOption {
+     position: fixed;
+     top: 60px;
+     width: 100%;
+     z-index: 88;
+     margin-bottom: 0;
+ }
+
+/*瀵艰埅鎸夐挳鍖�*/
+.el_navButton {
+    margin: 10px 20px 10px 0;
+}
+
+.el_navButton a {
+    margin: 0 20px 0 10px;
+}
+
+/*鑷姩娣诲姞闈㈡澘鏍峰紡*/
+.el_autoAddPanel {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+/* 鎻愮ず淇℃伅 */
+.el_tipInfo{
+	font-size:13px;
+	color:#666;
+	display:block;
+	margin-top:10px;
+	margin-bottom:10px;
+}

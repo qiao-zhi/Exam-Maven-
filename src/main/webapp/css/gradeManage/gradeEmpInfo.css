@@ -1,0 +1,71 @@
+#el_scoreAllContent .modal-content {
+    width: 900px;
+    min-height:290px;
+    max-height:550px;
+    position: relative;
+    right: 150px;
+    top: 20px;
+}
+#el_scoreAllContent2 .modal-content{
+    min-height:290px;
+    max-height:550px;
+    width: 900px;
+    position: relative;
+    right: 150px;
+    top: 20px;
+}
+#el_scoreAllContent td,
+#el_scoreAllContent th,
+#el_scoreAllContent2 th,
+#el_scoreAllContent2 td{
+	text-align:center;
+}
+
+.el_modelTitle {
+    width: 100%;
+    float: left;
+    font-size: 15px;
+    margin-left: 10px;
+    height: 30px;
+    margin-top: 10px;
+}
+
+/*<!--员工考试信息-->*/
+.el_examEmpInfo {
+    width: 860px;
+    margin-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #EEE;
+    font-size:12px;
+}
+
+.el_examEmpInfo2 {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.el_examEmpInfo table {
+    width: 100%;
+}
+
+.el_examEmpInfo table th, .el_examEmpInfo table td {
+    width: auto;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}
+
+/*<!--成绩试卷内容-->*/
+.el_examparperInfo {
+    width: 800px;
+    margin: 0 auto;
+}
+
+.el_examparperInfo table {
+    width: 100%;
+}
+
+.el_examparperInfo table th, .el_examparperInfo table td {
+    width: auto;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+}

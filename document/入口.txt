@@ -1,0 +1,1 @@
+http://localhost/Exam/view/examParper/examManage.jsp

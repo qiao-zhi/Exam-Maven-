@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.exam.ExampaperMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.exam.Exampaper" >
+    <id column="paperId" property="paperid" jdbcType="VARCHAR" />
+    <result column="paperScore" property="paperscore" jdbcType="REAL" />
+    <result column="makeTime" property="maketime" jdbcType="TIMESTAMP" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="employeeName" property="employeename" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="paperAnswer" property="paperanswer" jdbcType="VARCHAR" />
+    <result column="useTimes" property="usetimes" jdbcType="INTEGER" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="departmentId" property="departmentid" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    paperId, paperScore, makeTime, level, employeeName, title, paperAnswer, useTimes, 
+    description, departmentId
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.exam.ExampaperExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from exampaper
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from exampaper
+    where paperId = #{paperid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from exampaper
+    where paperId = #{paperid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.exam.ExampaperExample" >
+    delete from exampaper
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.exam.Exampaper" >
+    insert into exampaper (paperId, paperScore, makeTime, 
+      level, employeeName, title, 
+      paperAnswer, useTimes, description, 
+      departmentId)
+    values (#{paperid,jdbcType=VARCHAR}, #{paperscore,jdbcType=REAL}, #{maketime,jdbcType=TIMESTAMP}, 
+      #{level,jdbcType=VARCHAR}, #{employeename,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{paperanswer,jdbcType=VARCHAR}, #{usetimes,jdbcType=INTEGER}, #{description,jdbcType=VARCHAR}, 
+      #{departmentid,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.exam.Exampaper" >
+    insert into exampaper
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="paperid != null" >
+        paperId,
+      </if>
+      <if test="paperscore != null" >
+        paperScore,
+      </if>
+      <if test="maketime != null" >
+        makeTime,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="employeename != null" >
+        employeeName,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="paperanswer != null" >
+        paperAnswer,
+      </if>
+      <if test="usetimes != null" >
+        useTimes,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="departmentid != null" >
+        departmentId,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="paperid != null" >
+        #{paperid,jdbcType=VARCHAR},
+      </if>
+      <if test="paperscore != null" >
+        #{paperscore,jdbcType=REAL},
+      </if>
+      <if test="maketime != null" >
+        #{maketime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="employeename != null" >
+        #{employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="paperanswer != null" >
+        #{paperanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="usetimes != null" >
+        #{usetimes,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        #{departmentid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.exam.ExampaperExample" resultType="java.lang.Integer" >
+    select count(*) from exampaper
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update exampaper
+    <set >
+      <if test="record.paperid != null" >
+        paperId = #{record.paperid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paperscore != null" >
+        paperScore = #{record.paperscore,jdbcType=REAL},
+      </if>
+      <if test="record.maketime != null" >
+        makeTime = #{record.maketime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeename != null" >
+        employeeName = #{record.employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.title != null" >
+        title = #{record.title,jdbcType=VARCHAR},
+      </if>
+      <if test="record.paperanswer != null" >
+        paperAnswer = #{record.paperanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usetimes != null" >
+        useTimes = #{record.usetimes,jdbcType=INTEGER},
+      </if>
+      <if test="record.description != null" >
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentid != null" >
+        departmentId = #{record.departmentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update exampaper
+    set paperId = #{record.paperid,jdbcType=VARCHAR},
+      paperScore = #{record.paperscore,jdbcType=REAL},
+      makeTime = #{record.maketime,jdbcType=TIMESTAMP},
+      level = #{record.level,jdbcType=VARCHAR},
+      employeeName = #{record.employeename,jdbcType=VARCHAR},
+      title = #{record.title,jdbcType=VARCHAR},
+      paperAnswer = #{record.paperanswer,jdbcType=VARCHAR},
+      useTimes = #{record.usetimes,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=VARCHAR},
+      departmentId = #{record.departmentid,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.exam.Exampaper" >
+    update exampaper
+    <set >
+      <if test="paperscore != null" >
+        paperScore = #{paperscore,jdbcType=REAL},
+      </if>
+      <if test="maketime != null" >
+        makeTime = #{maketime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="employeename != null" >
+        employeeName = #{employeename,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="paperanswer != null" >
+        paperAnswer = #{paperanswer,jdbcType=VARCHAR},
+      </if>
+      <if test="usetimes != null" >
+        useTimes = #{usetimes,jdbcType=INTEGER},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentid != null" >
+        departmentId = #{departmentid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where paperId = #{paperid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.exam.Exampaper" >
+    update exampaper
+    set paperScore = #{paperscore,jdbcType=REAL},
+      makeTime = #{maketime,jdbcType=TIMESTAMP},
+      level = #{level,jdbcType=VARCHAR},
+      employeeName = #{employeename,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      paperAnswer = #{paperanswer,jdbcType=VARCHAR},
+      useTimes = #{usetimes,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      departmentId = #{departmentid,jdbcType=VARCHAR}
+    where paperId = #{paperid,jdbcType=VARCHAR}
+  </update>
+</mapper>

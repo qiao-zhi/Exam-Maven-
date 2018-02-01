@@ -1,0 +1,121 @@
+.col-md-12>.row{
+	margin:10px !important;
+}
+
+.el_queryBoxMainPage{
+	padding-bottom:0;
+	overflow:visible;
+}
+.el_chooseExamPanel{
+	padding-bottom:50px;
+}
+
+.el_modellist{
+	width:70%;
+}
+/*选择员工*/
+.el_modellist2 {
+	height: auto;
+}
+
+/*选择员工标题*/
+.el_examPersonLeft {
+	width: 11%;
+	height: 100%;
+	float: left;
+}
+/*添加部门员工按钮*/
+.el_chooseDepartButton{
+	margin-bottom:8px;
+}
+/*选择一套试卷，查询按钮*/
+.el_queryButton3 {
+	float: right;
+	margin-right: 50px;
+}
+
+/*模态框*/
+.modal-content{
+	max-height:500px;
+	overflow:auto;
+}
+
+/*
+添加考试基本内容
+*/
+.el_addContent {
+	width: 100%;
+	min-width: 700px;
+	margin: 10px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #eee;
+}
+
+/*参考人员*/
+.el_examPersons {
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+.el_examPersons label {
+	margin: 2px 20px;
+}
+.el_examPersons2 {
+	border: 1px solid #ccc;
+	width: 410px;
+	font-size: 13px;
+	padding-top: 10px;
+	float: left;
+}
+
+/*模态框样式*/
+.modal-dialog {
+	width: 80%;
+}
+
+/*添加考试人员的表格*/
+.el_AddPersonTable {
+	width: 95%;
+	margin: 5px auto;
+	font-size: 13px;
+}
+
+/*删除员工*/
+.el_empList {
+	display: inline-block;
+	padding: 2px 5px;
+	width: auto;
+}
+
+.el_empList img {
+	position: relative;
+	top: 3px;
+}
+
+.el_empDelete {
+	width: 15px;
+	position: relative;
+	bottom: 2px;
+	display: none;
+}
+
+.el_empList:hover {
+	outline: 1px solid #ccc;
+	box-shadow: 0 0 5px #aaa;
+	cursor: pointer;
+}
+
+
+/* 小三角 */
+.el_smallTriangle {
+    position: absolute;
+    right: 1%;
+    top: 10px;
+    z-index: 20;
+}
+
+
+#el_bt_bu{
+	position:absolute;
+	bottom:40px;
+	right:5%;
+}

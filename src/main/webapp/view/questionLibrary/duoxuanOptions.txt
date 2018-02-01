@@ -1,0 +1,33 @@
+
+       <div class='title_itram'>
+           <div class='kzjxx_iteam'>
+                <span class='el_chooseButton'><label>
+                <input name='question_answer' type='checkbox'/>设置为答案</label></span>
+                <input  type='text' class='input_wenbk'  placeholder='选项'>
+              
+            </div>
+        </div>
+        <div class='title_itram'>
+            <div class='kzjxx_iteam'>
+                <span class='el_chooseButton'><label>
+                <input name='question_answer' type='checkbox' />设置为答案</label></span>
+                <input  type='text' class='input_wenbk'  placeholder='选项'>
+             </div>
+        </div>
+        <div class='title_itram'>
+            <div class='kzjxx_iteam'>
+                <span class='el_chooseButton'><label>
+                <input name='question_answer' type='checkbox'/>设置为答案</label></span>
+                <input  type='text' class='input_wenbk'  placeholder='选项'>
+                
+             </div>
+        </div>
+        <div class='title_itram'>
+            <div class='kzjxx_iteam'>
+                <span class='el_chooseButton'><label>
+                <input name='question_answer' type='checkbox'/>设置为答案</label></span>
+                <input  type='text' class='input_wenbk'  placeholder='选项'>
+                
+			</div>
+        </div>
+        <a href='javascript:void(0)' class='zjxx'>增加选项</a>

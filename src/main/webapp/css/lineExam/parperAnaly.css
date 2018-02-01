@@ -1,0 +1,200 @@
+body {
+    background-color: #ccc;
+}
+
+.container {
+    margin-bottom: 50px;
+    width: 80%;
+    background-color: white;
+    margin-top: 30px;
+    box-shadow: 1px 1px 2px #999, -1px -1px 2px #999;
+    border-radius: 5px;
+}
+
+/*璇曞嵎鍚嶇О*/
+#el_examTitle {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/*绫诲瀷澶ч鏍�*/
+.elquesTitle {
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    background-color: rgb(245, 245, 245);
+    padding-left: 20px;
+    font-weight: 500;
+    font-size: 17px;
+    border-radius: 4px 4px 0 0;
+}
+
+/*璇曢涓昏鏍峰紡*/
+.el_questionMain {
+    width: 90%;
+    height: auto;
+    margin: 10px auto;
+    padding-left:0px;
+}
+
+/*璇曢鏍囬*/
+.el_questionTitle {
+    font-size: 15px;
+    margin:0 auto;
+    margin-top: 20px;
+    text-decoration: none;
+    background-color: #fed36c;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+/*璇曢閫夐」*/
+.el_qusSelect {
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    padding-left: 30px;
+    font-size: 14px;
+}
+
+.el_qusSelect li {
+    list-style: none;
+    margin: 5px 60px 5px 0;
+}
+
+.el_qusSelect li label {
+    font-weight: 500;
+}
+
+/*绛旀锛岃В鏋�*/
+.el_answerAnaly {
+    clear: both;
+    background-color: #f8efc0;
+    padding: 10px 0;
+}
+
+.el_answerAnaly ul {
+    padding-left: 10px;
+}
+
+.el_answerAnaly ul li {
+    display: block;
+    padding: 0;
+}
+
+/*鍥炲埌椤堕儴*/
+#el_returnTop {
+    width: 30px;
+    height: 90px;
+    text-align: center;
+    line-height: 15px;
+    position: fixed;
+    right: 11%;
+    bottom: 55px;
+    padding: 3px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    background-color:white;
+}
+
+#el_returnTop img {
+    width: 23px;
+    position: absolute;
+    top: -5px;
+    right: 3px;
+}
+
+#el_returnTop:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+
+
+/*缁熻鍒嗘瀽*/
+#el_staticAnaly {
+    position: relative;
+    background-color: #f8efc0;
+}
+
+#el_staticAnaly button {
+    height: 32px;
+    width: 150px;
+}
+
+/*2*/
+.el_staticAnalyPanel {
+    position: absolute;
+    right: 10px;
+    top: 31px;
+    width: 350px;
+    /*background-color:greenyellow;*/
+    background-color: white;
+    border: 1px solid green;
+    height: auto;
+    border-radius: 4px;
+    padding-bottom: 20px;
+}
+
+.el_staticAnalyPanel h4 {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    border-radius: 4px 4px 0 0;
+    background-color: rgb(92, 184, 92);
+    color: white;
+    padding-left: 20px;
+}
+
+.el_staticState {
+    width: 100%;
+    height: 30px;
+    text-align: center;
+    padding: 10px 0;
+}
+
+#el_redFalse {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+}
+
+#el_greenTrue {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: green;
+}
+
+/*3*/
+.el_staticAnalyPanel ul {
+    width: 100%;
+    padding: 0;
+    clear: both;
+    display: block;
+}
+
+.el_staticTitle {
+    width: 100%;
+    height: 25px;
+    padding-left: 10px;
+    margin-top: 10px;
+}
+
+.el_staticTitle span:first-child {
+    font-size: 16px;
+}
+
+.el_staticAnalyPanel ul li {
+    list-style: none;
+    float: left;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    color: white;
+    background-color: red;
+    margin: 5px;
+    text-align: center;
+}

@@ -1,0 +1,306 @@
+
+/*鍥炲埌椤堕儴*/
+#el_returnTop {
+    width: 30px;
+    height: 90px;
+    text-align: center;
+    line-height: 15px;
+    position: fixed;
+    left: 120px;
+    bottom: 60px;
+    padding: 3px;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    display: none;
+}
+#el_returnTop img {
+    width: 23px;
+    position: absolute;
+    top: -5px;
+    right: 3px;
+}
+
+#el_returnTop:hover {
+    background-color: #ddd;
+    border-radius: 4px;
+}
+
+/*璇句慨鏀圭殑鏍囬*/
+.el_modifiedTitle{
+    text-align:center;
+    padding:2px;
+    padding-left:5px;
+    border:0;
+    width:30%;
+}
+.el_modifiedTitle2{
+    width:120px;
+    background-color:rgb(240,242,242);
+    border:0;
+}
+.el_modifiedTitle:hover{
+    padding:2px;
+    padding-left:5px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102, 175, 233, .6);
+    outline:1px solid #66afe9;
+}
+.el_modifiedGrade{
+    width: 40px;
+}
+/*璇曞嵎鐨勫熀鏈俊鎭�*/
+.el_paperInfo{
+    margin-bottom:30px;
+    padding-bottom:10px;
+    border-bottom:1px solid #ddd;
+}
+
+a, a:hover, a:active, a:after, a:before, a:visited {
+    color: black;
+}
+
+/*绫诲瀷棰樺共*/
+.elquesTitle {
+    width: 100%;
+    height: 40px;
+    background-color: rgb(240, 242, 242);
+    border-radius:3px;
+    margin-bottom:10px;
+}
+.elaquesTitle_father{
+    width: 100%;
+    position:relative;
+    margin-top:20px;
+}
+.el_BigTitle{
+    padding:10px;
+    margin-top:10px;
+}
+.el_tiBoxMainDelBox{
+    position:absolute;
+    right:20px;
+    top:10px;
+}
+
+/*閫夐」鏍峰紡*/
+.movie_box {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.wjdc_list {
+    margin:0;
+}
+
+.tm_btitlt {
+    display: block;
+    padding-top:10px;
+    padding-bottom:10px;
+    color:#000;
+}
+.movie_box .wjdc_list li {
+    text-decoration: none;
+}
+.movie_box .wjdc_list li label{
+    font-weight:500;
+    color:#000;
+    margin-left:20px;
+}
+.wjdc_list li:last-child {
+    margin-bottom:10px;
+}
+h2 {
+    text-align: center;
+}
+
+/*璇曞嵎鍩烘湰淇℃伅*/
+.el_examInfo .input-group {
+    margin: 8px;
+}
+
+
+
+
+/*<!--!*span鏀瑰彉鏍峰紡鍚庣殑鏍峰瓙*!-->*/
+     /*妯℃�佹涓殑鍐呭*/
+ .el_modellist {
+     margin: 10px;
+     margin-bottom: 15px;
+     width: 500px;
+     font-size: 15px;
+ }
+
+.el_spans {
+    padding: 6px 12px;
+    font-weight: normal;
+    line-height: 1;
+    color: #555;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 4px;
+    width: 1%;
+    white-space: nowrap;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.el_modelinput {
+    width: 300px;
+}
+
+
+
+/*<!--瀵艰埅-->*/
+    #el_statistic:hover {
+        background-color: rgb(231, 231, 231)
+    }
+
+#el_saveModify {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/*鎻愪氦璇曞嵎鍐呭*/
+.el_Inputlulli {
+    text-align: left;
+    margin-left: 25%;
+    color: black;
+}
+
+/*鍏ㄩ��*/
+.el_Inputlulli1 {
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    margin-left: 0;
+    padding-left: 25%;
+    height:40px;
+    line-height:40px;
+}
+
+.el_Inputlulli input {
+    margin-right: 5px;
+}
+
+.el_Inputlulli2 {
+    position: relative;
+    float: right;
+    right: 10px;
+    margin: 10px;
+    margin-bottom: 5px;
+}
+
+
+/*缁熻*/
+.el_ulParent{
+    height:230px;
+}
+
+.el_lul {
+    width: 80%;
+    height: 50px;
+    margin:0 auto;
+    border:1px solid #ccc;
+}
+.el_lul li{
+    float:left;
+    line-height:48px;
+}
+
+.el_lulli {
+    color: black;
+    width: 80px;
+    height:48px;
+    background-color:#eee;
+    font-size: 15px;
+    text-align: center;
+    margin-right:10px;
+}
+
+.el_lulli2 {
+    color: black;
+    margin-left:20px;
+}
+
+.el_zongfen {
+    position: absolute;
+    right: 0;
+    color: black;
+    margin-right: 35px;
+    margin-top:25px;
+}
+
+
+
+
+/*<!--娣诲姞璇曢-->*/
+    .el_queryBox form {
+        margin-top: 20px;
+    }
+
+.form-control {
+    height: 30px;
+    font-size: 12px;
+    border-radius: 3px;
+    width: 350px;
+}
+
+#el_panduanChoose li {
+    list-style: none;
+    display: inline-block;
+    width: 170px;
+}
+
+#el_panduanChoose li label {
+    font-weight: 500;
+}
+
+#el_panduanChoose li label input {
+    position: relative;
+    top: 7px;
+}
+
+#el_panduanChoose li span:nth-child(2) {
+    font-weight: 700;
+}
+
+/*鍒嗗��*/
+.el_quesionScore{
+    width:200px;
+    height:50px;
+    position:relative;
+    line-height:50px;
+}
+.el_quesionScore .form-control{
+    position:absolute;
+    width:70px;
+    left:70px;
+    top:10px;
+}
+
+/*瑙ｆ瀽*/
+.el_quesionAnaly {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.el_quesionAnaly textarea {
+    width: 100%;
+}
+/*閫夐」*/
+.kzjxx_iteam{
+    padding-top:7px;
+    height:50px;
+    position:relative;
+}
+.kzqy_czbut{
+    position:absolute;
+    top:3px;
+    right:10px;
+    height:25px;
+    line-height:17px;
+}
+.kzqy_czbut a{
+    height:25px;
+    text-decoration:none;
+    font-size:12px;
+}

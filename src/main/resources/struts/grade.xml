@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<package name="grade" extends="json-default,struts-default" namespace="/">
+	
+		<action name="examGrade_*" class="employeeExamAction" method="{1}">
+			<result type="json">
+				<param name="root">result</param>
+			</result>
+		</action>
+		
+		<action name="exportGrade_*" class="exportExcelEmployeeGradeAction" method="{1}">	
+			<result type="stream">
+				<!-- 其他的参数在类中设置或者使用默认 -->
+				<param name="contentType">application/octet-stream</param>
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${downloadFileName}"</param>
+				<param name="bufferSize">8192</param>
+			</result>
+		</action>	
+	</package>
+</struts>

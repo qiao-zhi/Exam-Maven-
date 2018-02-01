@@ -1,0 +1,18 @@
+<div class="title_itram">
+    <div class="kzjxx_iteam">
+      <ul id="el_panduanChoose">
+            <li>
+            <span><label><input name="question.answer" type="radio" value="正确" checked/> 设置为答案</label></span>
+                <input name="options[0].optioncontent" type="hidden" value="正确"/>
+                <input name="options[0].optionsequence" type="hidden" value="1"/>
+                <span>&nbsp;&nbsp;正确</span>
+            </li>
+            <li>
+            <span><label><input name="question.answer" type="radio" value="错误"/> 设置为答案</label></span>
+                <input name="options[1].optioncontent" type="hidden" value="错误"/>
+                <input name="options[1].optionsequence" type="hidden" value="2"/>
+                <span>&nbsp;&nbsp;错误</span>
+            </li>
+        </ul>
+    </div>
+</div>

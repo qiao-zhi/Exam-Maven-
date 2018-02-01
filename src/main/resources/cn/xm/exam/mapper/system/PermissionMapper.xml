@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.system.PermissionMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.system.Permission" >
+    <id column="permissionId" property="permissionid" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="BIT" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="url" property="url" jdbcType="VARCHAR" />
+    <result column="permissionCode" property="permissioncode" jdbcType="VARCHAR" />
+    <result column="parentId" property="parentid" jdbcType="VARCHAR" />
+    <result column="parentsId" property="parentsid" jdbcType="VARCHAR" />
+    <result column="sortNo" property="sortno" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+  </resultMap>
+ <sql id="Base_Column_List" >
+    permissionId, name, status, type, url, permissionCode, parentId, parentsId, sortNo, 
+    description
+  </sql>
+  <sql id="pageinfo">
+  	<if test="rowBegin != null and currentCount != null">LIMIT #{rowBegin},#{currentCount}</if>
+  </sql>
+  
+   <!-- 查询所有的权限 -->
+  <select id="getAllPermission" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission 
+  </select>
+  
+     <!-- 查询所有已启用的的权限-->
+  <select id="getAllIsusePermission" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission where status='1'
+  </select>
+  
+  <!-- 查询启用的权限（不包括 厂级的权限）：部门级角色 -->
+  <select id="getDepartIsuserPermission" resultType="cn.xm.exam.bean.system.Permission">
+  	SELECT * FROM permission where type!='scope' and status='1'
+  </select>
+  
+   <!-- 更新权限：是否可用 -->
+  <update id="updatePermission" parameterType="cn.xm.exam.bean.system.Permission">
+  	update permission
+    <set>
+      <if test="status ==true" >
+        status = 1,
+      </if>
+      <if test="status ==false">
+      	status = 0
+      </if>
+      <if test="description != null and description!=''" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+    </set>
+	WHERE permissionId=#{permissionid}
+  </update>
+  
+  <!-- 根据permissionid查询权限信息 -->
+  <select id="getPermissionById" parameterType="String" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission where permissionId=#{permissionid}
+  </select>
+  
+  <!-- 根据permissionid查询下一级所有权限信息 -->
+  <select id="getNextPermissionById" parameterType="String" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission where parentId=#{permissionid}
+  	order by -sortno desc,permissionid
+  	<include refid="pageinfo"></include>
+  </select>
+  
+  <!-- 根据permissionid查询下一级所有功能信息的记录数 -->
+   <select id="getCountBymenutopid" parameterType="String" resultType="int">
+  	select count(permissionid) from permission where parentId=#{permissionid}
+  </select>
+  
+    <!-- 根据权限id查询下一级所有权限信息 不包括厂级范围权限 -->
+  <select id="getNextPermissionById_Without_ELSCOPE" parameterType="String" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission where parentId=#{permissionid} AND type!='scope' 
+  	order by -sortno desc,permissionid
+  	<include refid="pageinfo"></include>
+  </select>
+  
+     <!-- 根据权限id查询下一级所有权限信息 不包括厂级范围权限  的记录数-->
+  <select id="getCountById_Without_ELSCOPE" parameterType="String" resultType="int">
+  	select count(permissionid) from permission where parentId=#{permissionid} AND type!='scope' 
+  </select>
+  
+  <!-- 根据角色id 查询角色所拥有的权限 -->
+  <select id="getPermissionByRole" resultType="cn.xm.exam.bean.system.Permission" parameterType="String">
+  	SELECT * from rolepermission LEFT JOIN permission USING(permissionid)
+	where roleId=#{roleid} and name is not null
+  </select>
+  
+  <!-- 获取顶级菜单的id，name --> 
+  <select id="getMenutop" resultType="map">
+  	select permissionid,name,parentid,type from permission where type in('menutop','menutoptop','menu')
+  	ORDER BY -sortNo DESC
+  </select>
+  
+  <!-- 组合查询权限信息 -->
+  <select id="getPermissioninfoByCondition" resultType="cn.xm.exam.bean.system.Permission">
+  	select * from permission
+  	<where>
+  		<if test="condition.permissionname !=null and condition.permissionname !=''">name like '%${condition.permissionname}%'</if>
+  		<if test="condition.permissionstatus !=null and condition.permissionstatus !=''">and status=#{condition.permissionstatus}</if>
+  		<if test="condition.el_factory_system !=null and condition.el_factory_system !=''">and type!=#{condition.el_factory_system}</if>
+  		and type!='menutoptop'	
+  	</where>
+  	<include refid="pageinfo"></include>
+  </select>
+ 
+ <!-- 组合查询权限信息的 记录数 -->
+  <select id="getCountByCondition" resultType="int">
+  	select count(permissionid) from permission
+  	<where>
+  		<if test="permissionname !=null and permissionname !=''">name like '%${permissionname}%'</if>
+  		<if test="permissionstatus !=null and permissionstatus !=''">and status=#{permissionstatus}</if>
+  		<if test="el_factory_system !=null and el_factory_system !=''">and type!=#{el_factory_system}</if>
+  	</where>
+  </select>
+  
+  <!-- 更新权限的状态 -->
+  <update id="updatePermissionStatus" >
+  	update permission 
+  	<set>
+  		status=#{permissionstatus}
+  	</set>
+  	<where>
+  		permissionid=#{permissionid}
+  	</where>
+  </update>
+  
+  <!-- 更新子权限的状态 -->
+  <update id="updatePermissionStatusByParentid" >
+  	update permission 
+  	<set>
+  		status=#{permissionstatus}
+  	</set>
+  	<where>
+  		parentid=#{permissionid}
+  	</where>
+  </update>
+  
+  <!-- 获取权限树 -->
+	<select id="getPermissionTree" parameterType="string" resultType="map">
+		select permissionid,parentid,name from permission
+		<where>
+		status='1'
+		<if test="_parameter != 'factory' ">and type !='scope'</if>
+		</where>
+		ORDER BY -sortNo DESC
+	</select>
+	
+	<update id="updatePermissionsStatus">
+		update permission
+		<set>
+	  		status=#{status}
+	  	</set>
+	  	<where>
+	  		permissionid in (
+			<foreach collection="permissionids" item="permissionid" separator=",">
+				#{permissionid}
+			</foreach>
+			)
+	  	</where>
+	</update>
+</mapper>

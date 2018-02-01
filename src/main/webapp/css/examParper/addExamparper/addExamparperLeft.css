@@ -1,0 +1,124 @@
+/* 添加试题样式 */
+.input_wenbk{
+	width:300px;	
+}
+
+/*选项样式*/
+.movie_box {
+    width: 95%;
+    margin: 10px auto;
+    border-bottom: 1px solid #eee;
+}
+
+.wjdc_list {
+    margin:0;
+}
+
+.tm_btitlt {
+    display: block;
+    padding-top:10px;
+    padding-bottom:10px;
+    color:#000;
+    font-size: 14px;
+}
+.movie_box .wjdc_list li {
+    text-decoration: none;
+    line-height:20px;
+    font-size: 13px;
+}
+.movie_box .wjdc_list li label{
+    font-weight:500;
+    color:#000;
+    margin-left:20px;
+}
+.wjdc_list li:last-child {
+    margin-bottom:10px;
+}
+h2 {
+    text-align: center;
+}
+
+/*<!--添加试题-->*/
+.el_queryBox form {
+    margin-top: 20px;
+}
+
+.form-control {
+    height: 30px;
+    font-size: 12px;
+    border-radius: 3px;
+    width: 350px;
+}
+
+#el_panduanChoose li {
+    list-style: none;
+    display: inline-block;
+    width: 170px;
+}
+
+#el_panduanChoose li label {
+    font-weight: 500;
+}
+
+#el_panduanChoose li label input {
+    position: relative;
+    top: 7px;
+}
+
+#el_panduanChoose li span:nth-child(2) {
+    font-weight: 700;
+}
+
+/*分值*/
+.el_quesionScore{
+    width:200px;
+    height:50px;
+    position:relative;
+    line-height:50px;
+}
+.el_quesionScore .form-control{
+    position:absolute;
+    width:70px;
+    left:70px;
+    top:10px;
+}
+
+/*解析*/
+.el_quesionAnaly {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.el_quesionAnaly textarea {
+    width: 100%;
+}
+/*选项*/
+.kzjxx_iteam{
+    padding-top:7px;
+    height:50px;
+    position:relative;
+}
+.kzqy_czbut{
+    position:absolute;
+    top:3px;
+    right:10px;
+    height:25px;
+    line-height:17px;
+}
+.kzqy_czbut a{
+    height:25px;
+    text-decoration:none;
+    font-size:12px;
+}
+.kzqy_czbut .bianji {
+    height: 25px !important;
+    width:45px;
+    line-height: 25px;
+    text-align: center;
+    text-decoration: none !important;
+    font-size: 12px !important;
+    padding: 0 !important;
+    margin: 0;
+    margin-left: 5px;
+}
+

@@ -1,0 +1,436 @@
+/*涓汉涓績*/
+/*鎵�鏈夊唴瀹�*/
+ #el_breakTimeIndex input{
+	width:30% !important;
+	margin-right:10px;
+}
+#el_breakTimeIndex{
+	position:relative;
+	right:5px;
+}
+
+#el_queryOldExam:hover{
+	color:blue;
+}
+.el_stayExam{
+	margin-bottom:60px;
+}
+#el_modifyPersonInfo{
+	height:500px;
+}
+
+.input-group {
+	margin: 20px;
+}
+
+.el_queryBox form {
+	margin-top: 20px;
+}
+
+.el_modellist {
+	margin: 10px;
+	margin-bottom: 15px;
+	width: 500px;
+	font-size: 13px;
+}
+
+.form-control {
+	font-size: 12px;
+	width: 200px;
+}
+
+/*涓婁紶涓汉鐓х墖*/
+#preview {
+	height: 121px;
+	width: 91px;
+	padding: 0px;
+}
+
+.el_modelinput {
+	width: 300px;
+}
+
+/*1*/
+* {
+	padding: 0;
+	margin: 0;
+}
+
+body {
+	background-color: #ddd;
+}
+
+/*涓棿鍖哄煙*/
+.el_mainContent {
+	height: auto;
+	margin: 10px 50px;
+	position: relative;
+}
+
+/*涓棿鍙充晶鍖哄煙*/
+.tab-content {
+	width: 85%;
+	position: absolute;
+	right: 0;
+}
+
+.tab-content .panel-body {
+	border-radius: 5px 0 0 5px;
+	background-color: rgb(254, 254, 254);
+	border: none;
+	padding: 10px 30px;
+}
+
+.el_smallTitle {
+	border-bottom: 1px solid #eee;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	font-size:16px;
+	padding-top:10px;
+}
+
+.el_tipContent {
+	display: block;
+	color: #888;
+	font-size: 12px;
+	margin-left: 25px;
+	margin-bottom: 5px;
+}
+.el_tipContent a{
+	text-decoration:underline;
+}
+.el_tipContent a:hover{
+	color:blue;
+}
+
+/*寰呭弬鍔犺�冭瘯鏍峰紡*/
+.el_exam {
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	box-shadow: 0 1px 1px #777;
+	position: relative;
+	margin: 20px;
+	margin-top: 15px;
+}
+
+.el_exam ul {
+	margin: 0;
+	padding-top: 10px;
+	margin-top: 3px;
+}
+
+.el_exam li {
+	list-style: none;
+	line-height: 35px;
+	margin: 0 40px;
+	font-size: 13px;
+}
+
+.el_exam li span {
+	color: #c12e2a;
+}
+
+.el_exam li span:first-child {
+	margin-right: 50px;
+}
+
+.el_exam li:last-child p {
+	display: inline;
+	position: absolute;
+}
+
+.el_exam li:last-child span {
+	margin-left: 65px;
+	display: inline-block;
+	width: 90%;
+	line-height: 25px;
+	margin-top: 5px;
+}
+
+/*鑰冭瘯鍚嶇О*/
+.el_examName {
+	padding: 10px 20px;
+	font-size: 16px;
+	padding-left: 10px;
+	border-bottom: 1px solid #ccc;
+	position: relative;
+	margin-bottom: 0;
+	background: -moz-linear-gradient(right, #fff, rgb(51, 122, 183));
+	background: -webkit-linear-gradient(right, #fff, rgb(51, 122, 183));
+	border-radius: 8px 8px 0 0;
+	color: white;
+}
+
+.el_examInfoDiv {
+	background-color: #fcfce4;
+	padding-bottom: 60px;
+	border-radius: 0 0 8px 8px;
+}
+
+.el_examStartButton {
+	position: absolute;
+	right: 50px;
+	bottom: 15px;
+}
+
+.el_examTip {
+	margin-left: 20px;
+	font-size: 12px;
+	color: #000;
+	/*background:-webkit-linear-gradient(left,#fff,#000);
+            -webkit-background-clip:text;
+            -webkit-text-fill-color: transparent;*/
+	position: absolute;
+	right: 10px;
+	bottom: 5px;
+}
+
+/*鑰冭瘯瑙勮寖*/
+.el_examStandard {
+	padding: 10px 40px;
+}
+/*鏃犺�冭瘯*/
+.el_noExamTip {
+	margin: 30px;
+	margin-bottom: 70px;
+}
+
+.el_noExamTip span {
+	font-size: 25px;
+}
+
+.el_noExamTip a {
+	font-size: 15px;
+}
+
+/*宸︿晶鑿滃崟鏍�*/
+.el_leftMenu {
+	width: 14.5%;
+	height: 100%;
+	min-width: 170px;
+	min-height:350px;
+	background-color: rgb(254, 254, 254);
+	border-radius: 0 5px 5px 0;
+	position: absolute;
+	left: 0;
+}
+
+.el_Menu {
+	width: 90%;
+	margin: 0 auto;
+	text-align: left;
+	padding-left: 10px;
+}
+
+.el_MenuTitle {
+	font-size: 17px;
+	margin-top: 30px;
+	margin-bottom: 5px;
+}
+
+.el_MenuContent {
+	width: 100%;
+	border-bottom: 1px solid #ccc;
+	height: 40px;
+	line-height: 40px;
+	padding-left: 10px;
+}
+
+.el_MenuContent a {
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-decoration: none;
+	color: #777;
+	font-size: 14px;
+}
+
+.el_MenuContent a:hover {
+	color: rgb(59, 186, 223)
+}
+
+.el_MenuContent:hover {
+	/*
+                        box-shadow:inset 0 -1px 10px #ccc,inset 0 0,inset 0 0;*/
+	box-shadow: 0 1px 3px #ccc, 0 -1px 3px #ccc;
+}
+
+/*淇敼瀵嗙爜*/
+/*瀵煎叆*/
+ul.pass_set {
+	clear: both;
+	margin-top: 7px;
+	margin-bottom: 10px;
+	height: 18px;
+	line-height: 18px;
+	overflow: hidden;
+	width: 156px;
+	margin-left: 200px
+}
+
+ul.pass_set li {
+	float: left;
+	text-align: center;
+	width: 50px;
+	border-right: 2px solid #fff;
+	background: #ffd8b4;
+	color: #fff;
+	list-style-type: none;
+}
+
+dl.code_note dt {
+	clear: both;
+	font-size: 14px;
+	font-weight: bold;
+	line-height: 1.7em;
+}
+
+dl.code_note dt p {
+	clear: both;
+	font-weight: normal;
+	padding-top: 5px;
+}
+
+dl.code_note dd {
+	clear: both;
+	padding-top: 15px;
+}
+
+.el_modifyPasswordForm {
+	margin-top: 20px;
+}
+
+.el_modifyPassword {
+	width: 500px;/* 
+	height:46px; */
+	margin-left: 100px;
+	display: block;
+	margin-top: 10px;
+	poistion:relative;
+}
+/* 楠岃瘉鎻愮ず淇℃伅 */
+#isExistPassword,#isCheckNewPassword{
+	width:250px;
+} 
+/*  .el_modifyPassword .error{
+	position:absolute;
+	right:20px;
+	bottom:0px;
+} */
+.el_modifyPassword .form-control{
+	position:relative;
+	right:0px;
+	bottom:0px;
+}
+
+.el_modifyPassword2 {
+	margin-top: 10px;
+}
+
+.el_modifyPassword span {
+	font-size: 15px;
+	width: 80px;
+	display: inline-block;
+}
+
+.el_modifyPasswordTrueButton {
+	margin-left: 100px;
+}
+
+/*绱㈠紩*/
+.el_queryBox {
+	width: 100%;
+	height: auto;
+	border-bottom: 1px solid #ddd;
+	position: relative;
+	padding-bottom: 10px;
+	margin: 0 auto;
+}
+
+.el_queryBox form {
+	margin: 0;
+}
+
+.el_queryBoxrow {
+	height: 35px;
+	line-height: 35px;
+	padding-top: 0;
+	padding-bottom: 0;
+	clear: both;
+}
+.el_queryBoxrow:first-child{	
+	margin-top:10px;
+}
+
+/*鎼滅储杈规*/
+.el_queryBoxrow .el_qlmQuery {
+	min-width: 230px;
+	width: 25%;
+	float: left;
+	margin: 0 10px;
+	height: 35px;
+}
+
+.el_qlmQuery .input-group {
+	margin: 0;
+}
+
+/*span鏀瑰彉鏍峰紡鍚庣殑鏍峰瓙*/
+.el_spans {
+	padding: 6px 12px;
+	font-size: 13px;
+	font-weight: normal;
+	line-height: 1;
+	color: #555;
+	text-align: center;
+	width: 1%;
+	white-space: nowrap;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+.form-control {
+	height: 25px;
+	border-radius: 3px;
+	width: 350px;
+	font-size: 12px;
+	padding-top: 1px;
+	padding-bottom: 1px;
+}
+
+.el_queryButton {
+	position: absolute;
+	right: 70px;
+	bottom: 10px;
+}
+
+/*鍒嗛〉*/
+#paginationIDU {
+	color: black;
+	height: 51px;
+	min-width: 580px;
+	background-color: white;
+	border: 2px solid #eee;
+	padding: 8px;
+	float: right;
+}
+
+.pagination-link {
+	border: 1px solid #ccc;
+}
+
+/*鑿滃崟.鍥炬爣*/
+.el_ico1 {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	background: url("../../image/ico.jpg") -3px -43px no-repeat;
+	background-size:190px 169px;
+}
+
+.el_ico2 {
+	display: inline-block;
+	width: 22px;
+	height: 22px;
+	background: url("../../image/ico.jpg") -155px 6px no-repeat;
+}

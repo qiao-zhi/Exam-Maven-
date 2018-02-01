@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.xm.exam.mapper.question.custom.QuestionbankCustomMapper">
+	<!-- 查询根据题库名称查询题库ID -->
+	<select id="getQuestionBankIdByName" parameterType="String" resultType="String">
+		select questionBankId from questionbank where questionBankName = #{value}
+	</select>
+	
+	<!-- 根据题库的名称查询所属部门的id -->
+	 <select id="getDepartmentIdByName" parameterType="String" resultType="String">
+		select departmentId from questionbank where questionBankName = #{value}
+	</select> 
+	
+	<!-- 查询所有的题库名称和ID -->
+	<select id="getQuestionBankNameList" resultType="map">
+		select questionBankName,questionBankId from questionbank 
+	</select>
+	
+	<!-- 根据部门ID查询题库的名称和ID -->
+	<select id="getQuestionBankNameListByDeptId" parameterType="String" resultType="map">
+		select questionBankName,questionBankId from questionbank 
+		<if test="value != null">
+			where departmentId = #{value}
+		</if>
+	</select>
+	
+	<!-- 根据条件查询满足条件数 -->
+	<select	id="getQuestionBankCountByCondition" parameterType="hashmap" resultType="Integer">
+		select count(questionBankId) from questionbank_questions_department
+		<where>
+			<include refid="query_Questionbank_where"></include>
+		</where>
+	</select>
+	
+	<!-- 组合条件查询符合条件的题库信息 -->
+	<select id="findQuestionBankByCondition" parameterType="hashmap" resultType="cn.xm.exam.vo.question.QuestionbankQuestionsDepartment">
+		select * from questionbank_questions_department
+		<where>
+			<include refid="query_Questionbank_where"></include>
+		</where>
+		ORDER BY categoryNameId , createTime DESC
+		<!-- 分页 -->
+		<include refid="query_page_limit"></include>
+	</select>
+	
+	
+	<!-- 查询题库的条件 -->
+	<sql id="query_Questionbank_where">
+		<!-- 题库名称 -->
+		<if test="questionBank_Name != null">
+			<!-- 创建一个新的变量 -->
+	  		<bind name="questionBank_Names" value="'%'+questionBank_Name+'%'" />  	
+			and questionbankName like #{questionBank_Names}
+		</if>
+		<!-- 部门id -->
+		<if test="department_Id != null">
+			<!-- 创建一个新的变量 -->
+	  		<!-- <bind name="department_Ids" value="'%'+department_Id+'%'" />  	
+			and departmentId like #{department_Ids} -->
+			and departmentId = #{department_Id}
+		</if>
+		<!-- 题库类别ID -->
+		<if test="questionBackType_Id != null">
+			and uptypeid = #{questionBackType_Id}
+		</if>
+	</sql>
+	
+	<!-- 查询分页 -->
+	<sql id="query_page_limit">
+		<!-- 分页索引 -->
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+</mapper>

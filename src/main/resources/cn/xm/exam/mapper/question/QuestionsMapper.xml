@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.question.QuestionsMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.question.Questions" >
+    <id column="questionId" property="questionid" jdbcType="VARCHAR" />
+    <result column="questionBankId" property="questionbankid" jdbcType="VARCHAR" />
+    <result column="question" property="question" jdbcType="VARCHAR" />
+    <result column="questionWithTag" property="questionwithtag" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+    <result column="analysisWithTag" property="analysiswithtag" jdbcType="VARCHAR" />
+    <result column="analysis" property="analysis" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="level" property="level" jdbcType="VARCHAR" />
+    <result column="employeeId" property="employeeid" jdbcType="VARCHAR" />
+    <result column="emplloyeeName" property="emplloyeename" jdbcType="VARCHAR" />
+    <result column="uploadTime" property="uploadtime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="knowledgeType" property="knowledgetype" jdbcType="VARCHAR" />
+    <result column="hasPicture" property="haspicture" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    questionId, questionBankId, question, questionWithTag, answer, analysisWithTag, analysis, 
+    type, level, employeeId, emplloyeeName, uploadTime, status, knowledgeType, hasPicture
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.question.QuestionsExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from questions
+    where questionId = #{questionid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from questions
+    where questionId = #{questionid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.question.QuestionsExample" >
+    delete from questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.question.Questions" >
+    insert into questions (questionId, questionBankId, question, 
+      questionWithTag, answer, analysisWithTag, 
+      analysis, type, level, 
+      employeeId, emplloyeeName, uploadTime, 
+      status, knowledgeType, hasPicture
+      )
+    values (#{questionid,jdbcType=VARCHAR}, #{questionbankid,jdbcType=VARCHAR}, #{question,jdbcType=VARCHAR}, 
+      #{questionwithtag,jdbcType=VARCHAR}, #{answer,jdbcType=VARCHAR}, #{analysiswithtag,jdbcType=VARCHAR}, 
+      #{analysis,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{level,jdbcType=VARCHAR}, 
+      #{employeeid,jdbcType=VARCHAR}, #{emplloyeename,jdbcType=VARCHAR}, #{uploadtime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=VARCHAR}, #{knowledgetype,jdbcType=VARCHAR}, #{haspicture,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.question.Questions" >
+    insert into questions
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="questionid != null" >
+        questionId,
+      </if>
+      <if test="questionbankid != null" >
+        questionBankId,
+      </if>
+      <if test="question != null" >
+        question,
+      </if>
+      <if test="questionwithtag != null" >
+        questionWithTag,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="analysiswithtag != null" >
+        analysisWithTag,
+      </if>
+      <if test="analysis != null" >
+        analysis,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="level != null" >
+        level,
+      </if>
+      <if test="employeeid != null" >
+        employeeId,
+      </if>
+      <if test="emplloyeename != null" >
+        emplloyeeName,
+      </if>
+      <if test="uploadtime != null" >
+        uploadTime,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="knowledgetype != null" >
+        knowledgeType,
+      </if>
+      <if test="haspicture != null" >
+        hasPicture,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="questionid != null" >
+        #{questionid,jdbcType=VARCHAR},
+      </if>
+      <if test="questionbankid != null" >
+        #{questionbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="questionwithtag != null" >
+        #{questionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="analysiswithtag != null" >
+        #{analysiswithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null" >
+        #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="emplloyeename != null" >
+        #{emplloyeename,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="knowledgetype != null" >
+        #{knowledgetype,jdbcType=VARCHAR},
+      </if>
+      <if test="haspicture != null" >
+        #{haspicture,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.question.QuestionsExample" resultType="java.lang.Integer" >
+    select count(*) from questions
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update questions
+    <set >
+      <if test="record.questionid != null" >
+        questionId = #{record.questionid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionbankid != null" >
+        questionBankId = #{record.questionbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.question != null" >
+        question = #{record.question,jdbcType=VARCHAR},
+      </if>
+      <if test="record.questionwithtag != null" >
+        questionWithTag = #{record.questionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.answer != null" >
+        answer = #{record.answer,jdbcType=VARCHAR},
+      </if>
+      <if test="record.analysiswithtag != null" >
+        analysisWithTag = #{record.analysiswithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.analysis != null" >
+        analysis = #{record.analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="record.type != null" >
+        type = #{record.type,jdbcType=VARCHAR},
+      </if>
+      <if test="record.level != null" >
+        level = #{record.level,jdbcType=VARCHAR},
+      </if>
+      <if test="record.employeeid != null" >
+        employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.emplloyeename != null" >
+        emplloyeeName = #{record.emplloyeename,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uploadtime != null" >
+        uploadTime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.status != null" >
+        status = #{record.status,jdbcType=VARCHAR},
+      </if>
+      <if test="record.knowledgetype != null" >
+        knowledgeType = #{record.knowledgetype,jdbcType=VARCHAR},
+      </if>
+      <if test="record.haspicture != null" >
+        hasPicture = #{record.haspicture,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update questions
+    set questionId = #{record.questionid,jdbcType=VARCHAR},
+      questionBankId = #{record.questionbankid,jdbcType=VARCHAR},
+      question = #{record.question,jdbcType=VARCHAR},
+      questionWithTag = #{record.questionwithtag,jdbcType=VARCHAR},
+      answer = #{record.answer,jdbcType=VARCHAR},
+      analysisWithTag = #{record.analysiswithtag,jdbcType=VARCHAR},
+      analysis = #{record.analysis,jdbcType=VARCHAR},
+      type = #{record.type,jdbcType=VARCHAR},
+      level = #{record.level,jdbcType=VARCHAR},
+      employeeId = #{record.employeeid,jdbcType=VARCHAR},
+      emplloyeeName = #{record.emplloyeename,jdbcType=VARCHAR},
+      uploadTime = #{record.uploadtime,jdbcType=TIMESTAMP},
+      status = #{record.status,jdbcType=VARCHAR},
+      knowledgeType = #{record.knowledgetype,jdbcType=VARCHAR},
+      hasPicture = #{record.haspicture,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.question.Questions" >
+    update questions
+    <set >
+      <if test="questionbankid != null" >
+        questionBankId = #{questionbankid,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        question = #{question,jdbcType=VARCHAR},
+      </if>
+      <if test="questionwithtag != null" >
+        questionWithTag = #{questionwithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="analysiswithtag != null" >
+        analysisWithTag = #{analysiswithtag,jdbcType=VARCHAR},
+      </if>
+      <if test="analysis != null" >
+        analysis = #{analysis,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="level != null" >
+        level = #{level,jdbcType=VARCHAR},
+      </if>
+      <if test="employeeid != null" >
+        employeeId = #{employeeid,jdbcType=VARCHAR},
+      </if>
+      <if test="emplloyeename != null" >
+        emplloyeeName = #{emplloyeename,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadtime != null" >
+        uploadTime = #{uploadtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="knowledgetype != null" >
+        knowledgeType = #{knowledgetype,jdbcType=VARCHAR},
+      </if>
+      <if test="haspicture != null" >
+        hasPicture = #{haspicture,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where questionId = #{questionid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.question.Questions" >
+    update questions
+    set questionBankId = #{questionbankid,jdbcType=VARCHAR},
+      question = #{question,jdbcType=VARCHAR},
+      questionWithTag = #{questionwithtag,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      analysisWithTag = #{analysiswithtag,jdbcType=VARCHAR},
+      analysis = #{analysis,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      level = #{level,jdbcType=VARCHAR},
+      employeeId = #{employeeid,jdbcType=VARCHAR},
+      emplloyeeName = #{emplloyeename,jdbcType=VARCHAR},
+      uploadTime = #{uploadtime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      knowledgeType = #{knowledgetype,jdbcType=VARCHAR},
+      hasPicture = #{haspicture,jdbcType=VARCHAR}
+    where questionId = #{questionid,jdbcType=VARCHAR}
+  </update>
+</mapper>

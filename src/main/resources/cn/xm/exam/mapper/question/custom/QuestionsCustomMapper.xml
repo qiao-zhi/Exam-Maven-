@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.question.custom.QuestionsCustomMapper">
+	<!-- 插入每道题的选项 -->
+	<insert id="insertOptionsList" parameterType="java.util.List">
+		insert into options (optionId, questionId, optionContent,
+		optionWithTag, optionSequence, isAnswer,
+		description)
+		values
+		<foreach collection="list" item="option" separator=",">
+			(#{option.optionid,jdbcType=VARCHAR},
+			#{option.questionid,jdbcType=VARCHAR},
+			#{option.optioncontent,jdbcType=VARCHAR},
+			#{option.optionwithtag,jdbcType=VARCHAR},
+			#{option.optionsequence,jdbcType=VARCHAR},
+			#{option.isanswer,jdbcType=VARCHAR},
+			#{option.description,jdbcType=VARCHAR})
+		</foreach>
+
+	</insert>
+
+	<!-- 组合条件查询符合条件的试题信息 -->
+	<select id="findQuestionsByCondition" parameterType="hashmap"
+		resultType="cn.xm.exam.vo.question.QuestionsQueryVo">
+		select questions.* , questionbank.questionBankName from questions ,
+		questionbank
+		<where>
+			<include refid="query_Questions_where" />
+		</where>
+		ORDER BY uploadTime DESC
+		<!-- 分页 -->
+		<include refid="query_page_limit" />
+	</select>
+
+	<!-- 根据条件统计试题的数量 -->
+	<select id="getQuestionsCountByCondition" parameterType="hashmap"
+		resultType="Integer">
+		select count(questionId) from questions , questionbank
+		<where>
+			<include refid="query_Questions_where" />
+		</where>
+	</select>
+
+	<!-- 根据题库ID查询该题库的所有试题ID -->
+	<select id="findQuestionIdsByQuesionBankId" parameterType="String"
+		resultType="String">
+		select questionid from questions where questionBankId =
+		#{value}
+	</select>
+	<!-- 批量更新试题的题库ID -->
+	<update id="updateQuestionBatchMove" parameterType="map">
+		update questions SET questionBankId =
+		#{newQuestionBankId},`level`=#{newLevel}
+		<where>
+			<if test="questionIds != null">
+				<foreach collection="questionIds" item="questionId" open="and questionId in ("
+					close=")" separator=",">
+					#{questionId}
+				</foreach>
+			</if>
+		</where>
+	</update>
+
+	<!-- 根据试题ID查询试题和对应的选项信息 -->
+	<select id="getQuestionAndOptionsByQuesId" parameterType="String"
+		resultMap="questionAndOptions_resultMap">
+		select
+		questions.*,`options`.optionId,`options`.optionContent,`options`.optionSequence
+		from questions,`options`
+		where questions.questionId = #{value} and
+		questions.questionId = `options`.questionId
+		ORDER BY optionSequence
+	</select>
+
+	<!-- 根据考试ID查询试题和对应的选项信息的集合 -->
+	<select id="getQuestionAndOptionsByQuesLibId" parameterType="map"
+		resultMap="questionAndOptions_resultMap">
+		select
+		questions.*,`options`.optionId,`options`.optionContent,`options`.optionSequence
+		from questions,`options`
+		where questions.questionId =
+		`options`.questionId and questions.questionBankId = #{questionBankId}
+		<if test="questionTypeList != null">
+			<foreach collection="questionTypeList" item="type"
+				open="and questions.type IN (" close=")" separator=",">
+				#{type}
+			</foreach>
+		</if>
+		ORDER BY type,optionSequence
+	</select>
+
+	<!-- 试题和选项的resultMap -->
+	<resultMap type="cn.xm.exam.vo.question.QuestionsQueryVo" id="questionAndOptions_resultMap">
+		<!-- 配置映射的试题信息 -->
+		<id column="questionid" property="questionid" />
+		<result column="questionbankid" property="questionbankid" />
+		<result column="question" property="question" />
+		<result column="questionwithtag" property="questionwithtag" />
+		<result column="answer" property="answer" />
+		<result column="analysiswithtag" property="analysiswithtag" />
+		<result column="analysis" property="analysis" />
+		<result column="type" property="type" />
+		<result column="level" property="level" />
+		<result column="employeeid" property="employeeid" />
+		<result column="emplloyeename" property="emplloyeename" />
+		<result column="uploadtime" property="uploadtime" />
+		<result column="status" property="status" />
+		<result column="knowledgetype" property="knowledgetype" />
+		<result column="haspicture" property="haspicture" />
+		<!-- 配置对应的选项集合 -->
+		<collection property="options" ofType="cn.xm.exam.bean.question.Options">
+			<id column="optionid" property="optionid" />
+			<result column="optioncontent" property="optioncontent" />
+			<result column="optionsequence" property="optionsequence" />
+		</collection>
+	</resultMap>
+
+	<!-- 查询试题的条件 -->
+	<sql id="query_Questions_where">
+
+		<!-- 关键字 -->
+		<if test="question_Content != null">
+			<!-- 创建一个新的变量 -->
+			<bind name="question_Contents" value="'%'+question_Content+'%'" />
+			and question like #{question_Contents}
+		</if>
+		<!-- 题库id -->
+		<if test="questionBank_Id != null">
+			and questions.questionBankId = #{questionBank_Id}
+		</if>
+		<!-- 试题类型 -->
+		<if test="question_Type != null">
+			and type = #{question_Type}
+		</if>
+		<!-- 知识点 -->
+		<if test="question_knowledge != null">
+			and knowledgeType = #{question_knowledge}
+		</if>
+		<!-- 等值连接 -->
+		<if test="a==a">
+			and questions.questionBankId =
+			questionbank.questionBankId
+		</if>
+		<!-- 增加题库部门ID的判断 -->
+		<if test="department_Id != null">
+			and departmentid = #{department_Id}
+		</if>
+	</sql>
+
+	<!-- 查询分页 -->
+	<sql id="query_page_limit">
+		<!-- 分页索引 -->
+		<if test="index!=null">
+			LIMIT #{index},#{currentCount}
+		</if>
+	</sql>
+
+
+
+
+
+	<!-- S(Qlq)根据题类型与题数查询题库 -->
+
+	<!-- 根据条件查询满足条件的ID集合开始 -->
+	<select id="getQuestionsIdsForExamPaper" resultType="java.lang.String"
+		parameterType="hashmap">
+		select
+		questionId from questions
+		<where>
+			<include refid="query_questionIds_where"></include>
+		</where>
+	</select>
+
+	<!-- 查询试题ID的条件 -->
+	<sql id="query_questionIds_where">
+		<if test="type!=null">
+			and type=#{type}
+		</if>
+<!-- 		<if test="level=='1' and isManageChangji==null">
+			and level=#{level}
+		</if> -->
+		<!-- 题库(根据字典的ID查出题库的ID) -->
+		<if test="departmentId != null">
+			AND questionBankId IN(SELECT
+			questionBankId
+			FROM questionbank
+			<where>
+				<!-- departmentId in (SUBSTRING(#{departmentId},1,5),#{departmentId}) -->
+				<if test="dictionaryIds != null">
+					AND categoryNameId IN
+					<foreach collection="dictionaryIds" item="dictionaryId"
+						separator="," open="(" close=")">
+						#{dictionaryId}
+					</foreach>
+				</if>
+				<if test="1 == 1">
+					and 1=1
+				</if>
+				)
+			</where>
+		</if>
+		<if test="num!=null">
+			ORDER BY RAND() LIMIT #{num}
+		</if>
+	</sql>
+	<!-- 根据条件查询满足条件的ID集合结束 -->
+	<!--S 根据ID集合 查询题与选项 -->
+	<select id="getQuestionsForExamPaper" parameterType="java.util.List"
+		resultMap="questionAndOptionForPaper">
+		SELECT * FROM questions q,options o WHERE
+		q.questionId=o.questionId
+		and
+		q.questionId in
+		<foreach collection="list" item="id" separator="," open="("
+			close=")">
+			#{id}
+		</foreach>
+		ORDER BY optionSequence
+	</select>
+	<resultMap type="cn.xm.exam.bean.question.Questions" id="questionAndOptionForPaper">
+		<id column="questionid" property="questionid" />
+		<result column="questionbankid" property="questionbankid" />
+		<result column="question" property="question" />
+		<result column="questionwithtag" property="questionwithtag" />
+		<result column="answer" property="answer" />
+		<result column="analysiswithtag" property="analysiswithtag" />
+		<result column="answer" property="answer" />
+		<result column="analysis" property="analysis" />
+		<result column="type" property="type" />
+		<result column="level" property="level" />
+		<result column="employeeid" property="employeeid" />
+		<result column="emplloyeename" property="emplloyeename" />
+		<result column="uploadtime" property="uploadtime" />
+		<result column="status" property="status" />
+		<result column="knowledgetype" property="knowledgetype" />
+		<result column="haspicture" property="haspicture" />
+		<collection property="options" ofType="cn.xm.exam.bean.question.Options">
+			<id column="optionid" property="optionid" />
+			<result column="questionid" property="questionid" />
+			<result column="optioncontent" property="optioncontent" />
+			<result column="optionwithtag" property="optionwithtag" />
+			<result column="optionsequence" property="optionsequence" />
+			<result column="isanswer" property="isanswer" />
+			<result column="description" property="description" />
+		</collection>
+	</resultMap>
+	<!--E 查询题与选项结 -->
+
+	<!-- S 根据题等级，题库名字，类型，知识点等条件组合查询试题用于根据题库 产生试卷 -->
+	<select id="getQuestionsForBankGeneExamPaper" parameterType="hashmap"
+		resultMap="questionAndOptionForPaper">
+		SELECT * FROM questions q,options o
+		<where>
+			<include refid="bankGenePaper_where"></include>
+		</where>
+		ORDER BY o.optionSequence
+	</select>
+	<sql id="bankGenePaper_where">
+		<if test="type!=null">
+			and type=#{type}
+		</if>
+		<if test="1==1">
+			and q.questionId=o.questionId
+		</if>
+		<!-- 创建一级试卷需要一级权限，如果没有一级权限且抽一级题会抽不出来 -->
+<!-- 		<if test="level=='1' and isManageChangji==null">
+			and level=#{level}
+		</if> -->
+		<if test="departmentId != null">
+			AND questionbankid in (SELECT
+			questionBankId
+			FROM questionbank
+			WHERE 1=1
+			<!-- departmentId in (SUBSTRING(#{departmentId},1,5),#{departmentId}) -->
+			<if test="dictionaryId != null">
+				AND categoryNameId = #{dictionaryId}
+			</if>
+			)
+		</if>
+	</sql>
+	<!-- E 根据题等级，题库名字，类型，知识点等条件组合查询试题用于根据题库 产生试卷 -->
+
+	<!-- E(Qlq) -->
+
+
+
+
+
+
+</mapper>

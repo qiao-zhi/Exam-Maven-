@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.HaulinfoMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.haul.Haulinfo" >
+    <id column="bigId" property="bigid" jdbcType="VARCHAR" />
+    <result column="bigName" property="bigname" jdbcType="VARCHAR" />
+    <result column="bigdescription" property="bigdescription" jdbcType="VARCHAR" />
+    <result column="bigCreateDate" property="bigcreatedate" jdbcType="TIMESTAMP" />
+    <result column="bigBeginDate" property="bigbegindate" jdbcType="DATE" />
+    <result column="bigEndDate" property="bigenddate" jdbcType="DATE" />
+    <result column="bigStatus" property="bigstatus" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    bigId, bigName, bigdescription, bigCreateDate, bigBeginDate, bigEndDate, bigStatus
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.haul.HaulinfoExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from haulinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from haulinfo
+    where bigId = #{bigid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from haulinfo
+    where bigId = #{bigid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.haul.HaulinfoExample" >
+    delete from haulinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.haul.Haulinfo" >
+    insert into haulinfo (bigId, bigName, bigdescription, 
+      bigCreateDate, bigBeginDate, bigEndDate, 
+      bigStatus)
+    values (#{bigid,jdbcType=VARCHAR}, #{bigname,jdbcType=VARCHAR}, #{bigdescription,jdbcType=VARCHAR}, 
+      #{bigcreatedate,jdbcType=TIMESTAMP}, #{bigbegindate,jdbcType=DATE}, #{bigenddate,jdbcType=DATE}, 
+      #{bigstatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.haul.Haulinfo" >
+    insert into haulinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="bigid != null" >
+        bigId,
+      </if>
+      <if test="bigname != null" >
+        bigName,
+      </if>
+      <if test="bigdescription != null" >
+        bigdescription,
+      </if>
+      <if test="bigcreatedate != null" >
+        bigCreateDate,
+      </if>
+      <if test="bigbegindate != null" >
+        bigBeginDate,
+      </if>
+      <if test="bigenddate != null" >
+        bigEndDate,
+      </if>
+      <if test="bigstatus != null" >
+        bigStatus,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="bigid != null" >
+        #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="bigname != null" >
+        #{bigname,jdbcType=VARCHAR},
+      </if>
+      <if test="bigdescription != null" >
+        #{bigdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="bigcreatedate != null" >
+        #{bigcreatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bigbegindate != null" >
+        #{bigbegindate,jdbcType=DATE},
+      </if>
+      <if test="bigenddate != null" >
+        #{bigenddate,jdbcType=DATE},
+      </if>
+      <if test="bigstatus != null" >
+        #{bigstatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.haul.HaulinfoExample" resultType="java.lang.Integer" >
+    select count(*) from haulinfo
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update haulinfo
+    <set >
+      <if test="record.bigid != null" >
+        bigId = #{record.bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigname != null" >
+        bigName = #{record.bigname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigdescription != null" >
+        bigdescription = #{record.bigdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigcreatedate != null" >
+        bigCreateDate = #{record.bigcreatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bigbegindate != null" >
+        bigBeginDate = #{record.bigbegindate,jdbcType=DATE},
+      </if>
+      <if test="record.bigenddate != null" >
+        bigEndDate = #{record.bigenddate,jdbcType=DATE},
+      </if>
+      <if test="record.bigstatus != null" >
+        bigStatus = #{record.bigstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update haulinfo
+    set bigId = #{record.bigid,jdbcType=VARCHAR},
+      bigName = #{record.bigname,jdbcType=VARCHAR},
+      bigdescription = #{record.bigdescription,jdbcType=VARCHAR},
+      bigCreateDate = #{record.bigcreatedate,jdbcType=TIMESTAMP},
+      bigBeginDate = #{record.bigbegindate,jdbcType=DATE},
+      bigEndDate = #{record.bigenddate,jdbcType=DATE},
+      bigStatus = #{record.bigstatus,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.haul.Haulinfo" >
+    update haulinfo
+    <set >
+      <if test="bigname != null" >
+        bigName = #{bigname,jdbcType=VARCHAR},
+      </if>
+      <if test="bigdescription != null" >
+        bigdescription = #{bigdescription,jdbcType=VARCHAR},
+      </if>
+      <if test="bigcreatedate != null" >
+        bigCreateDate = #{bigcreatedate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bigbegindate != null" >
+        bigBeginDate = #{bigbegindate,jdbcType=DATE},
+      </if>
+      <if test="bigenddate != null" >
+        bigEndDate = #{bigenddate,jdbcType=DATE},
+      </if>
+      <if test="bigstatus != null" >
+        bigStatus = #{bigstatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bigId = #{bigid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.haul.Haulinfo" >
+    update haulinfo
+    set bigName = #{bigname,jdbcType=VARCHAR},
+      bigdescription = #{bigdescription,jdbcType=VARCHAR},
+      bigCreateDate = #{bigcreatedate,jdbcType=TIMESTAMP},
+      bigBeginDate = #{bigbegindate,jdbcType=DATE},
+      bigEndDate = #{bigenddate,jdbcType=DATE},
+      bigStatus = #{bigstatus,jdbcType=VARCHAR}
+    where bigId = #{bigid,jdbcType=VARCHAR}
+  </update>
+</mapper>

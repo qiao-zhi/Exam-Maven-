@@ -1,0 +1,249 @@
+/*楠岃瘉*/
+* {
+	font-family: "寰蒋闆呴粦"
+}
+
+.error {
+	color: red;
+}
+
+label.error {
+	padding-left: 16px;
+	padding-bottom: 2px;
+	font-weight: bold;
+	color: red;
+}
+
+span.error {
+	padding-left: 16px;
+	padding-bottom: 2px;
+	font-weight: bold;
+	color: red;
+}
+
+form input.error {
+	color: #F00;
+	border: 1px solid #CE7979;
+	background: #FFF7FA;
+}
+
+form label.error {
+	color: #F00;
+}
+
+/*<!--瀵艰埅-->*/
+* {
+	margin: 0;
+	padding: 0;
+}
+
+.el_section {
+	width: 85%;
+	height: 95%;
+	margin: 0 auto;
+	position: relative;
+}
+
+/*椤堕儴瀵艰埅鏍�*/
+.el_nav {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	height: 60px;
+	padding: 0 40px;
+	background:rgb(246,246,246);
+}
+
+.el_logoName {
+	position: absolute;
+	/* height: 60px;
+	width: 200px; */
+	text-align: center;
+	padding-top: 10px;
+	left: 10%;
+}
+
+/* .el_logoName a {
+	display: block;
+	height: 100%;
+	float: right; width : 150px;
+	text-decoration: none;
+	color: black;
+	width: 150px;
+} 
+
+ .el_logoName img {
+	width: 40px;
+	position: relative;
+	top: 3px;
+	left: 10px;
+	float: left;
+}
+ */
+ 
+.el_logoName a span {
+	font-size: 12px;
+}
+
+.el_logoName a p {
+	font-size: 18px;
+	font-weight: bolder;
+	margin: 0;
+}
+
+.el_navUL {
+	width:100%;
+	height: 40px;
+	position:absolute;
+	top:60px;
+	left:0;
+	background: -moz-linear-gradient(top, #fff, rgb(237, 237, 237));
+	background: -webkit-linear-gradient(top, #fff, rgb(237, 237, 237));
+	box-shadow:1px 1px 1px #ccc;
+}
+.el_navUL ul{
+	width:60%;
+	height:40px;
+	position:absolute;
+	left:14%;
+}
+.el_navUL ul li {
+	list-style: none;
+	float: left;
+	width: 120px;
+	font-size: 14px;
+	text-decoration: none;
+	color: black;
+	height: 30px;
+	line-height: 30px;
+	text-align: center;
+	margin-top:10px;
+	border-radius:2px;
+	font-weight:bolder;
+}
+
+.el_navUL li:hover {
+	background-color: #0992f7;
+	color: white;
+}
+
+.el_navUL li a {
+	text-decoration: none;
+	color: black;
+}
+
+/*鐧诲綍*/
+.el_navLogin {
+	width: 10%;
+	height: 60px;
+	position: absolute;
+	text-align: center;
+	right: 6%;
+	top: 0;
+	line-height: 60px;
+}
+.el_navLogin button{
+	margin-top:20px;
+	width:90px;
+	border-radius:5px;
+	color:#444;
+ 	/* color: transparent; */
+ 	font-weight:bolder;
+    /* -webkit-text-stroke: 0.7px #333; */
+}
+.el_navLogin img{
+	position:relative;
+	top:-1px;
+	right:3px;
+}
+
+#el_loginButton {
+	background-color:#eee !important;
+}
+
+#el_loginButton:hover {
+	background-color: hsl(0, 0%, 90%);
+}
+
+/*<!--鐧诲綍-->*/
+.modal-content {
+	width: 470px;
+	height: 471px;
+	text-align: center;
+}
+
+.modal-content ul {
+	width: 470px;
+	margin: 0 auto;
+}
+
+.modal-content ul li {
+	width: 80%;
+	margin: 15px auto;
+	list-style: none;
+}
+
+.modal-content ul li label {
+	display: inline-block;
+	float: left;
+}
+
+.modal-content ul li span {
+	height: 25px;
+	border: 1px solid #aaa;
+	padding: 3px 8px;
+	border-radius: 5px;
+	float: right;
+}
+
+/*楠岃瘉鐮�*/
+.el_validateCode {
+	width: 200px;
+	height: 50px;
+	float: right;
+}
+
+/*璁颁綇瀵嗙爜*/
+.el_TipPassword {
+	margin-left: 40px;
+	float: left;
+}
+
+.el_sub_btn {
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+}
+
+
+/* 模态框 */
+#myModal .modal-dialog{
+	margin:100px auto;
+}
+
+#myModal .modal-content{
+ 	width:80%;
+ 	height:420px;
+ 	position:relative;
+}
+#myModal .modal-header{
+	background-color:rgb(51,122,183);
+	color:white;
+}
+#my_button{
+	position:absolute;
+	width:200px;
+	left:30%;
+	bottom:20px;
+	background-color:rgb(51,122,183) !important;
+	color:white;
+}
+#myModal .close{
+	color:white;
+	width:30px;
+	font-size:30px;
+}
+#myModal .close:hover,
+#myModal .close:focus{
+	color:white;
+}

@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.haul.HaulunitMapper" >
+  <resultMap id="BaseResultMap" type="cn.xm.exam.bean.haul.Haulunit" >
+    <id column="unitBigId" property="unitbigid" jdbcType="VARCHAR" />
+    <result column="unitId" property="unitid" jdbcType="VARCHAR" />
+    <result column="bigId" property="bigid" jdbcType="VARCHAR" />
+    <result column="unitMinisMum" property="unitminismum" jdbcType="INTEGER" />
+    <result column="isNewBig" property="isnewbig" jdbcType="VARCHAR" />
+    <result column="projectNames" property="projectnames" jdbcType="VARCHAR" />
+    <result column="manager" property="manager" jdbcType="VARCHAR" />
+    <result column="managerPhone" property="managerphone" jdbcType="VARCHAR" />
+    <result column="secure" property="secure" jdbcType="VARCHAR" />
+    <result column="securePhone" property="securephone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    unitBigId, unitId, bigId, unitMinisMum, isNewBig, projectNames, manager, managerPhone, 
+    secure, securePhone
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="cn.xm.exam.bean.haul.HaulunitExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from haulunit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from haulunit
+    where unitBigId = #{unitbigid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from haulunit
+    where unitBigId = #{unitbigid,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="cn.xm.exam.bean.haul.HaulunitExample" >
+    delete from haulunit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="cn.xm.exam.bean.haul.Haulunit" >
+    insert into haulunit (unitBigId, unitId, bigId, 
+      unitMinisMum, isNewBig, projectNames, 
+      manager, managerPhone, secure, 
+      securePhone)
+    values (#{unitbigid,jdbcType=VARCHAR}, #{unitid,jdbcType=VARCHAR}, #{bigid,jdbcType=VARCHAR}, 
+      #{unitminismum,jdbcType=INTEGER}, #{isnewbig,jdbcType=VARCHAR}, #{projectnames,jdbcType=VARCHAR}, 
+      #{manager,jdbcType=VARCHAR}, #{managerphone,jdbcType=VARCHAR}, #{secure,jdbcType=VARCHAR}, 
+      #{securephone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.xm.exam.bean.haul.Haulunit" >
+    insert into haulunit
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="unitbigid != null" >
+        unitBigId,
+      </if>
+      <if test="unitid != null" >
+        unitId,
+      </if>
+      <if test="bigid != null" >
+        bigId,
+      </if>
+      <if test="unitminismum != null" >
+        unitMinisMum,
+      </if>
+      <if test="isnewbig != null" >
+        isNewBig,
+      </if>
+      <if test="projectnames != null" >
+        projectNames,
+      </if>
+      <if test="manager != null" >
+        manager,
+      </if>
+      <if test="managerphone != null" >
+        managerPhone,
+      </if>
+      <if test="secure != null" >
+        secure,
+      </if>
+      <if test="securephone != null" >
+        securePhone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="unitbigid != null" >
+        #{unitbigid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitid != null" >
+        #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="bigid != null" >
+        #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitminismum != null" >
+        #{unitminismum,jdbcType=INTEGER},
+      </if>
+      <if test="isnewbig != null" >
+        #{isnewbig,jdbcType=VARCHAR},
+      </if>
+      <if test="projectnames != null" >
+        #{projectnames,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null" >
+        #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="managerphone != null" >
+        #{managerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="secure != null" >
+        #{secure,jdbcType=VARCHAR},
+      </if>
+      <if test="securephone != null" >
+        #{securephone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="cn.xm.exam.bean.haul.HaulunitExample" resultType="java.lang.Integer" >
+    select count(*) from haulunit
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update haulunit
+    <set >
+      <if test="record.unitbigid != null" >
+        unitBigId = #{record.unitbigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitid != null" >
+        unitId = #{record.unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bigid != null" >
+        bigId = #{record.bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="record.unitminismum != null" >
+        unitMinisMum = #{record.unitminismum,jdbcType=INTEGER},
+      </if>
+      <if test="record.isnewbig != null" >
+        isNewBig = #{record.isnewbig,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectnames != null" >
+        projectNames = #{record.projectnames,jdbcType=VARCHAR},
+      </if>
+      <if test="record.manager != null" >
+        manager = #{record.manager,jdbcType=VARCHAR},
+      </if>
+      <if test="record.managerphone != null" >
+        managerPhone = #{record.managerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.secure != null" >
+        secure = #{record.secure,jdbcType=VARCHAR},
+      </if>
+      <if test="record.securephone != null" >
+        securePhone = #{record.securephone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update haulunit
+    set unitBigId = #{record.unitbigid,jdbcType=VARCHAR},
+      unitId = #{record.unitid,jdbcType=VARCHAR},
+      bigId = #{record.bigid,jdbcType=VARCHAR},
+      unitMinisMum = #{record.unitminismum,jdbcType=INTEGER},
+      isNewBig = #{record.isnewbig,jdbcType=VARCHAR},
+      projectNames = #{record.projectnames,jdbcType=VARCHAR},
+      manager = #{record.manager,jdbcType=VARCHAR},
+      managerPhone = #{record.managerphone,jdbcType=VARCHAR},
+      secure = #{record.secure,jdbcType=VARCHAR},
+      securePhone = #{record.securephone,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.xm.exam.bean.haul.Haulunit" >
+    update haulunit
+    <set >
+      <if test="unitid != null" >
+        unitId = #{unitid,jdbcType=VARCHAR},
+      </if>
+      <if test="bigid != null" >
+        bigId = #{bigid,jdbcType=VARCHAR},
+      </if>
+      <if test="unitminismum != null" >
+        unitMinisMum = #{unitminismum,jdbcType=INTEGER},
+      </if>
+      <if test="isnewbig != null" >
+        isNewBig = #{isnewbig,jdbcType=VARCHAR},
+      </if>
+      <if test="projectnames != null" >
+        projectNames = #{projectnames,jdbcType=VARCHAR},
+      </if>
+      <if test="manager != null" >
+        manager = #{manager,jdbcType=VARCHAR},
+      </if>
+      <if test="managerphone != null" >
+        managerPhone = #{managerphone,jdbcType=VARCHAR},
+      </if>
+      <if test="secure != null" >
+        secure = #{secure,jdbcType=VARCHAR},
+      </if>
+      <if test="securephone != null" >
+        securePhone = #{securephone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where unitBigId = #{unitbigid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.xm.exam.bean.haul.Haulunit" >
+    update haulunit
+    set unitId = #{unitid,jdbcType=VARCHAR},
+      bigId = #{bigid,jdbcType=VARCHAR},
+      unitMinisMum = #{unitminismum,jdbcType=INTEGER},
+      isNewBig = #{isnewbig,jdbcType=VARCHAR},
+      projectNames = #{projectnames,jdbcType=VARCHAR},
+      manager = #{manager,jdbcType=VARCHAR},
+      managerPhone = #{managerphone,jdbcType=VARCHAR},
+      secure = #{secure,jdbcType=VARCHAR},
+      securePhone = #{securephone,jdbcType=VARCHAR}
+    where unitBigId = #{unitbigid,jdbcType=VARCHAR}
+  </update>
+</mapper>

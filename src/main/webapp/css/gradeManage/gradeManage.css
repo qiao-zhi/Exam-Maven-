@@ -1,0 +1,48 @@
+/*<!--成绩统计，成绩导入，附加索引-->*/
+/*成绩统计*/
+/*图表*/
+.el_threePanelChart {
+    width: 500px;
+    margin-right: 30px;
+}
+.el_threeScoreList li {
+    list-style: none;
+    float: left;
+    width: auto;
+    height: 20px;
+    margin: 10px;
+    font-size: 14px;
+}
+
+/*成绩设置级别*/
+.el_setGrade {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+.el_setGrade input {
+    width: 30px;
+}
+.el_setGrade span {
+    width: 160px;
+    height: 20px;
+    margin: 10px;
+}
+/*统计按钮*/
+.el_btnStatic {
+    margin-left: 20px;
+}
+
+/*成绩导入*/
+.expScoreTitle{
+    margin:10px;
+    margin-top:0;
+}
+.expScoreTitle span{
+    height:30px;
+    font-size:16px;
+    font-weight:bold;
+}
+.container-fluid{
+    position:relative;
+}
