@@ -1,4 +1,3 @@
-
 package cn.xm.exam.action.employee.in;
 
 import java.awt.image.BufferedImage;

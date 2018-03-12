@@ -293,9 +293,9 @@ function addEmployeeOutInfo() {
 							// 若该员工没进入黑名单执行的操作
 							if (data.status == 3) {
 								alert("该员工已进入黑名单，不能添加！")
-							} else if (data.status == 4) {
+							} /*else if (data.status == 4) {
 								alert("该员工已经添加到这次大修的该单位中，不能添加！")
-							} else if (data.status == 5) {
+							}*/ else if (data.status == 5) {
 								alert("该员工违章已经累计超过12分，积分周期内不能添加！")
 							} else {
 								// 若尚未添加将员工信息保存到数组中

@@ -35,9 +35,9 @@ public class ExportPaperPdfUtil {
 			// bfChinese =
 			// BaseFont.createFont("STSong-Light","UniGB-UCS2-H",BaseFont.NOT_EMBEDDED);
 			bfChinese = BaseFont.createFont("STSong-Light", "UniGB-UCS2-H", BaseFont.NOT_EMBEDDED);
-			headfont = new Font(bfChinese, 10, Font.BOLD);// 设置字体大小
-			keyfont = new Font(bfChinese, 9, Font.BOLD);// 设置字体大小
-			textfont = new Font(bfChinese, 8, Font.NORMAL);// 设置字体大小
+			headfont = new Font(bfChinese, 12, Font.BOLD);// 设置字体大小
+			keyfont = new Font(bfChinese, 11, Font.BOLD);// 设置字体大小
+			textfont = new Font(bfChinese, 10, Font.NORMAL);// 设置字体大小
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

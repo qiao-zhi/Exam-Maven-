@@ -43,7 +43,6 @@
 
 		<!--放主界面内容-->
 		<div class="el_right">
-
 			<div class="container-fluid">
 				<div class="panel panel-default">
 					<!--菜单连接标题-->

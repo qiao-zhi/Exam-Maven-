@@ -6,6 +6,26 @@
 <!-- lixianyuan  -->
 <struts>
 	<package name="lxyPackage" extends="json-default" namespace="/">
+		
+		<!-- S   QLQ 增加的培训类别管理 -->
+		<global-results>
+			<result name="success" type="json">
+				<param name="root">response</param>
+			</result>
+		</global-results>
+		<action name="trainacontentType_*" method="{1}" class="traincontentTypeAction">
+			<param name="savePath">G:/images/videos/</param>
+			<result name="toAdd">/view/train/addTrainFile.jsp</result>
+		</action>
+		<!-- E   QLQ 增加的培训类别管理 -->
+		
+		
+		
+		
+		
+		
+		
+		
 
 		<action name="train_*" class="traincontentAction" method="{1}">
 			<!-- 这个用于将map转成json -->
@@ -43,7 +63,7 @@
 			</interceptor-ref>
 
 			<!-- 给setSavePath方法中的savePath属性注入值 -->
-			<param name="savePath">D:/images/videos/</param>
+			<param name="savePath">G:/images/videos/</param>
 			<result>/login.jsp</result>
 			<!-- 文件上传 end -->
 		</action>
@@ -52,7 +72,7 @@
 		<action name="down_*" class="cn.xm.exam.action.trainContent.DownAction"
 			method="{1}">
 			<!-- 为setServerPath方法中的serverPath属性注入值 也就是文件存放的地址/目录(文件应该从哪里下载) -->
-			<param name="serverPath">D:/images/videos/</param>
+			<param name="serverPath">G:/images/videos/</param>
 			<result name="list">/listFile.jsp</result>
 
 			<!-- 文件下载的关键：视图类型一定是stream -->

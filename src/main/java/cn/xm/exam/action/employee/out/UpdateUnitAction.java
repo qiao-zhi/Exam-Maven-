@@ -54,6 +54,27 @@ public class UpdateUnitAction extends ActionSupport implements ModelDriven<Unit>
 		response.put("updateResult", updateResult);
 		return SUCCESS;
 	}
+	
+	/**
+	 * 修改培训单位信息到数据库
+	 * 
+	 * @return
+	 */
+	public String updateUnitInfo() {
+		response = new HashMap();
+		String updateResult = null;
+		try {
+			if (unit != null && haulUnit !=null) {
+				updateResult = unitService.updateUnit(unit,haulUnit) ? "修改成功!" : "修改失败!";
+			}
+		} catch (Exception e) {
+			logger.error("修改单位信息失败!",e);
+			updateResult = "修改失败!";
+		}
+		// 传到Service进行保存
+		response.put("updateResult", updateResult);
+		return SUCCESS;
+	}
 
 	// get,set
 	public Map getResponse() {

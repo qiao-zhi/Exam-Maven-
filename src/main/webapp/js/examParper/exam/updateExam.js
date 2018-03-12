@@ -116,12 +116,12 @@ function geneDepartmentTree(departmentTrees) {
 		data : {
 			simpleData : {
 				enable : true,
-				idKey : "departmentId",
-				pIdKey : "upDepartmentId",
+				idKey : "departmentid",
+				pIdKey : "updepartmentid",
 				rootPId : null
 			},
 			key : {
-				name : "departmentName",
+				name : "departmentname",
 			}
 		},
 		callback : {
@@ -136,7 +136,7 @@ function geneDepartmentTree(departmentTrees) {
 }
 // 鼠标点击树事件(打印点击的id与名字)
 function zTreeOnClick(event, treeId, treeNode) {
-	// alert(treeNode.departmentId + ", " + treeNode.departmentName);
+	// alert(treeNode.departmentid + ", " + treeNode.departmentname);
 	// alert($("#el_chooseDepart1").text());
 }
 // 鼠标点击前面复选框d事件
@@ -147,26 +147,26 @@ var el_chooseDepart1, className10 = "dark", el_id;
 // 点击前面的复选框之前的事件
 function beforeCheck(treeId, treeNode) {
 	className10 = (className10 === "dark" ? "" : "dark");
-	el_id = treeNode.departmentName;
+	el_id = treeNode.departmentname;
 	// 判断点击的节点是否被选中，返回false 和 true
 	if (!treeNode.checked) {// 选中
-		departmentIds += treeNode.departmentId + ",";
-		showLog10(treeNode.departmentName + ',');
+		departmentIds += treeNode.departmentid + ",";
+		showLog10(treeNode.departmentname + ',');
 		$("#department_employee_in")
 				.append(
 						// 添加部门到下面的选择员工
 						'<div class="panel panel-default el_departPersons" id="'
-								+ treeNode.departmentName
+								+ treeNode.departmentname
 								+ '">'
 								+ '<div class="panel-heading"><span class="el_addDepart" >'
-								+ treeNode.departmentName
+								+ treeNode.departmentname
 								+ '</span>&nbsp;&nbsp;'
 								+ '(人数：<span class="employeeNum">0</span>)</div>'
 								+ '<div class="panel-body"></div>' + '</div>');
 	} else { // 点击选中，向让其未选中
-		departmentIds = departmentIds.replace(treeNode.departmentId + ",", "");
-		$("#" + treeNode.departmentName).remove();// 删除部门
-		noshowLog10(treeNode.departmentName + ',', treeNode);
+		departmentIds = departmentIds.replace(treeNode.departmentid + ",", "");
+		$("#" + treeNode.departmentname).remove();// 删除部门
+		noshowLog10(treeNode.departmentname + ',', treeNode);
 		var parentzTree = treeNode.getParentNode();
 	}
 	return (treeNode.doCheck !== false);
@@ -209,7 +209,8 @@ function searchPaper() {
 			'currentPage' : $("#currentPage").val(),
 			'currentCount' : $("#currentCount").val(),
 			'title' : $("#title").val(),
-			'level' : $("#level option:selected").val()
+			'level' : $("#level option:selected").val(),
+			'paperStatus' : $("#paperStatus option:selected").val()
 		},
 		type : 'POST',
 		async : true,

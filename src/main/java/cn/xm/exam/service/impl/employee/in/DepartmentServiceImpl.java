@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import cn.xm.exam.bean.employee.in.Department;
+import cn.xm.exam.bean.employee.in.DepartmentExample;
 import cn.xm.exam.bean.employee.in.EmployeeIn;
 import cn.xm.exam.bean.employee.in.EmplyinBreakrulesExample;
 import cn.xm.exam.bean.exam.OnlineexamanswerinforExample;
@@ -216,17 +217,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 			return "该部门还有下级部门，不能删除";
 		}
 
-		// 删除题库
-		/*QuestionbankExample questionbankExample = new QuestionbankExample();
-		QuestionbankExample.Criteria criteria_0 = questionbankExample.createCriteria();
-		criteria_0.andDepartmentidEqualTo(departmentId);
-		List<Questionbank> selectByExample = questionBankMapper.selectByExample(questionbankExample);
-		if (selectByExample != null && selectByExample.size() > 0) {
-			for (Questionbank bank : selectByExample) {
-				questionbankService.deleteQuestionBankById(bank.getQuestionbankid());
-			}
-		}
-		 */
 		int count = employeeInCustomMapper.getCountByDepartmentId(departmentId);
 		if (count != 0) {
 			// message="该部门还有员工，确定删除吗";
@@ -244,6 +234,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 					EmployeeexamExample employeeexamExample = new EmployeeexamExample();
 					EmployeeexamExample.Criteria criteria = employeeexamExample.createCriteria();
 					criteria.andEmployeeidEqualTo(idCode);
+					criteria.andEmployeetypeEqualTo("0");// 删除内部考试的信息，保留(短委培训时的信息)
 					employeeexamMapper.deleteByExample(employeeexamExample);
 					// 2 在线考试信息 在线考试详细信息表 在线答题信息
 					// 2.1删除在线答题信息
@@ -495,73 +486,160 @@ public class DepartmentServiceImpl implements DepartmentService {
 	/**** E zwy *****/
 	/**** S QLQ *****/
 
-	@Override
-	public List<Map<String, Object>> getDepartmentTreeForExam(String departmentId) throws SQLException {
-		return departmentCustomMapper.getDepartmentTreeForExam(departmentId);
-	}
+	/*
+	 * @Override public List<Map<String, Object>>
+	 * getDepartmentTreeForExam(String departmentId) throws SQLException {
+	 * return departmentCustomMapper.getDepartmentTreeForExam(departmentId); }
+	 */
 	/**** E QLQ *****/
-	
+
 	/** S ll *********/
 	/**
 	 * 统计内部正式单位的信息分页显示
+	 * 
 	 * @param condition
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public PageBean<Map<String, Object>> getDepartmentInFormalCountInfo(int currentPage, int currentCount,Map<String, Object> condition) throws Exception {
-		PageBean<Map<String,Object>> pageBean = new PageBean<Map<String,Object>>();
+	public PageBean<Map<String, Object>> getDepartmentInFormalCountInfo(int currentPage, int currentCount,
+			Map<String, Object> condition) throws Exception {
+		PageBean<Map<String, Object>> pageBean = new PageBean<Map<String, Object>>();
 		pageBean.setCurrentPage(currentPage);
 		pageBean.setCurrentCount(currentCount);
 		int totalCount = 0;
 		totalCount = departmentCustomMapper.getDepartmentInFormalCount(condition);
 		pageBean.setTotalCount(totalCount);
-		int totalPage = (int) Math.ceil(totalCount*1.0/currentCount);
+		int totalPage = (int) Math.ceil(totalCount * 1.0 / currentCount);
 		pageBean.setTotalPage(totalPage);
-		int index = (currentPage-1)*currentCount;		
+		int index = (currentPage - 1) * currentCount;
 		condition.put("index", index);
 		condition.put("currentCount", currentCount);
 		List<Map<String, Object>> list = departmentCustomMapper.getDepartmentInFormalCountInfo(condition);
-		pageBean.setProductList(list);		
+		pageBean.setProductList(list);
 		return pageBean;
 	}
-	
+
 	/**
 	 * 统计内部长委单位的信息分页显示
+	 * 
 	 * @param condition
 	 * @return
 	 * @throws Exception
 	 */
 	@Override
-	public PageBean<Map<String, Object>> getDepartmentInToDoCountInfo(int currentPage, int currentCount,Map<String, Object> condition) throws Exception {
-		
-		PageBean<Map<String,Object>> pageBean = new PageBean<Map<String,Object>>();
+	public PageBean<Map<String, Object>> getDepartmentInToDoCountInfo(int currentPage, int currentCount,
+			Map<String, Object> condition) throws Exception {
+
+		PageBean<Map<String, Object>> pageBean = new PageBean<Map<String, Object>>();
 		pageBean.setCurrentPage(currentPage);
 		pageBean.setCurrentCount(currentCount);
 		int totalCount = 0;
 		totalCount = departmentCustomMapper.getDepartmentInToDoCount(condition);
 		pageBean.setTotalCount(totalCount);
-		int totalPage = (int) Math.ceil(totalCount*1.0/currentCount);
+		int totalPage = (int) Math.ceil(totalCount * 1.0 / currentCount);
 		pageBean.setTotalPage(totalPage);
-		int index = (currentPage-1)*currentCount;		
+		int index = (currentPage - 1) * currentCount;
 		condition.put("index", index);
 		condition.put("currentCount", currentCount);
 		List<Map<String, Object>> list = departmentCustomMapper.getDepartmentInToDoCountInfo(condition);
-		pageBean.setProductList(list);		
+		pageBean.setProductList(list);
 		return pageBean;
 	}
+
+	/**
+	 * 公共树的查询
+	 * 
+	 * @param departmentId
+	 * @return
+	 * @throws Exception
+	 */
+	@Override
+	public List<Map<String, Object>> getDepartmentTreeCommon(String departmentId) throws SQLException {
+
+		return departmentCustomMapper.getDepartmentTreeCommon(departmentId);
+	}
+
 	/** E ll *********/
 
-		
 	@Override
 	public Map<String, Object> getFormalDepartmentAndEmpNum() throws Exception {
-	
+
 		return departmentCustomMapper.getFormalDepartmentAndEmpNum();
 	}
 
 	@Override
 	public Map<String, Object> getToDoDepartmentAndEmpNum() throws Exception {
-		
+
 		return departmentCustomMapper.getToDoDepartmentAndEmpNum();
 	}
+
+	@Override
+	public List<String> getChangWeiDepartment(String depNameWords) throws SQLException {
+		return departmentCustomMapper.getChangWeiDepartment(depNameWords);
+	}
+
+	@Override
+	public String deleteCWDepartmentById(String name) throws Exception {
+		String message = null;
+		int flag;
+		// Map<String,Object> mapMessage = new HashMap<String,Object>();
+		if (name == null) {
+			return "删除失败";
+		}
+		// 1.根据名称查出所有的单位编号(直属编号)
+		List<String> ids = departmentCustomMapper.getCWDepartmentIdsByName(name);
+		for (int i = 0; ids != null && ids.size() > 0 && i < ids.size(); i++) {
+			String departmentId = ids.get(i);// 获取到直属编号
+			// 1.删除人
+			List<String> employeeids = employeeInCustomMapper.getALLEmployeeInByDepartmentId2(departmentId);
+			for (int j = 0; employeeids != null && j < employeeids.size(); j++) {
+				String employeeInId = employeeids.get(j);
+				if (employeeInId != null) {
+					// 0.获取身份证号与员工ID
+					EmployeeIn employeein = employeeInCustomMapper.findEmployeeInById(employeeInId);
+					String idCode = employeein.getIdcode();
+					// 1 成绩 根据身份证号
+					EmployeeexamExample employeeexamExample = new EmployeeexamExample();
+					EmployeeexamExample.Criteria criteria = employeeexamExample.createCriteria();
+					criteria.andEmployeeidEqualTo(idCode);
+					criteria.andEmployeetypeEqualTo("0");// 删除内部考试的信息，保留(短委培训时的信息)
+					employeeexamMapper.deleteByExample(employeeexamExample);
+					// 2 在线考试信息 在线考试详细信息表 在线答题信息
+					// 2.1删除在线答题信息
+					OnlineexamanswerinforExample onlineexamanswerinforExample = new OnlineexamanswerinforExample();
+					OnlineexamanswerinforExample.Criteria criteria_1 = onlineexamanswerinforExample.createCriteria();
+					criteria_1.andEmployeeidEqualTo(idCode);
+					onlineexamanswerinforMapper.deleteByExample(onlineexamanswerinforExample);
+					// 2.2删除在线信息
+					OnlineexaminforExample onlineexaminforExample = new OnlineexaminforExample();
+					OnlineexaminforExample.Criteria criteria_2 = onlineexaminforExample.createCriteria();
+					criteria_2.andEmployeeidEqualTo(idCode);
+					onlineexaminforMapper.deleteByExample(onlineexaminforExample);
+
+					// 3 违章信息 (根据员工ID)
+					EmplyinBreakrulesExample emplyinBreakrulesExample = new EmplyinBreakrulesExample();
+					EmplyinBreakrulesExample.Criteria criteria_3 = emplyinBreakrulesExample.createCriteria();
+					criteria_3.andEmpinemployeeidEqualTo(employeeInId);
+					emplyinBreakrulesMapper.deleteByExample(emplyinBreakrulesExample);
+					// 4 用户信息(调用飞哥的删除用户信息)
+					String userId = userMapper.getUseridByIdcard(idCode);
+					if (ValidateCheck.isNotNull(userId)) {// 不为空的话证明存在账号就删除账号
+						List<String> userids = new ArrayList<String>();
+						userids.add(userId);
+						userService.deleteUserById(userids);
+					}
+					// 5员工进入黑名单的记录(根据员工身份证编号删除)
+					employeeInCustomMapper.deleteBlackrulesById(idCode);
+					// 6 员工基本信息（根据员工编号删除）
+					flag = employeeInMapper.deleteByPrimaryKey(employeeInId);
+				}
+			}
+			// 2.删除部门
+			int result = departmentCustomMapper.deleteDepartmentByUpId(ids.get(i));
+			message = result > 0 ? "删除成功" : "删除失败";
+		}
+		return message;
+	}
+
 }

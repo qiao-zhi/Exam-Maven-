@@ -66,6 +66,8 @@ public interface UnitService {
 	 * @throws Exception
 	 */
 	public boolean updateUnit(Unit unit, Haulunit haulUnit,String projectids) throws Exception;
+	
+	public boolean updateUnit(Unit unit, Haulunit haulUnit) throws Exception;
 
 	/**
 	 * 通过id查询外来单位。
@@ -121,6 +123,9 @@ public interface UnitService {
 	 */
 	public PageBean<Map<String, Object>> findUnitsWithCondition(int currentPage, int currentCount,
 			Map<String, Object> condition) throws Exception;
+	
+	public PageBean<Map<String, Object>> findUnitsWithCondition2(int currentPage, int currentCount,
+			Map<String, Object> condition) throws Exception;
 
 	/**
 	 * 根据单位id查询单位的工程
@@ -172,6 +177,11 @@ public interface UnitService {
 	 * @throws SQLException
 	 */
 	PageBean<Map<String, Object>> getEmployeeOutsByUaulIdAndUnitId( int currentPage,
+			int currentCount,Map<String, Object> haulIdAndUnitId)
+			throws SQLException;
+	
+	//查询内部新员工培训的员工信息
+	PageBean<Map<String, Object>> getEmployeeOutsByUaulIdAndUnitId2( int currentPage,
 			int currentCount,Map<String, Object> haulIdAndUnitId)
 			throws SQLException;
 

@@ -16,10 +16,12 @@
 		<!-- 查询大修单位 -->
 		<action name="unit_*" class="findUnitAction" method="{1}"></action>
 		<!-- 修改单位基本信息 -->
-		<action name="updateUnit" class="updateUnitAction"></action>
-		<!-- 修改单位基本信息 -->
+		<action name="updateUnit" class="updateUnitAction"></action>				
+		<!-- 删除单位基本信息 -->
 		<action name="deleteUnit" class="deleteUnitAction"></action>
 		
+		<!-- 修改培训单位信息 -->
+		<action name="updateUnitInfo" class="updateUnitAction" method="updateUnitInfo"></action>
 		
 		<!--分配员工  -->
 		

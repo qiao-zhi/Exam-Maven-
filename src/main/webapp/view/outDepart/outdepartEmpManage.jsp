@@ -332,7 +332,7 @@
 										type="hidden" name="bigId" id="query_bigId" />
 									<!-- 隐藏当前页和显示条数 -->
 									<input type="hidden" name="currentPage" id="currentPage" /> <input
-										type="hidden" name="currentCount" id="currentCount" />
+										type="hidden" name="currentCount" id="currentCount"  value="8"/>
 									<!-- 增加标记外来单位员工管理 -->
 									<input type="hidden" name="markTrainType" value="1" />
 

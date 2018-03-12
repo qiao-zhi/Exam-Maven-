@@ -234,6 +234,8 @@ function showFenpeiTable(response) {
 				+ distributeinfos[i].bigid + '"/>'
 				+ '<input type="hidden" class="employeeid" value="'
 				+ distributeinfos[i].employeeid + '"/>'
+				+ '<input type="hidden" class="distributeId" value="'
+				+ distributeinfos[i].distributeid + '"/>'
 				+ '<input type="hidden" class="unitid" value="'
 				+ distributeinfos[i].unitid + '"/>'
 				+ '<input type="hidden" class="haulempid" value="'
@@ -461,6 +463,12 @@ function updateFenpeiInfo() {
 function selectFenpeiInfo() {
 	var distributeStatus = $("#el_showManager option:selected").val();
 	// 只有未分配的才能出来未分配按钮，其他隐藏此按钮
+	if (distributeStatus == '0') {
+		$("#notrainbtn").css("display", "");
+	} else {
+		$("#notrainbtn").css("display", "none");
+	}
+	// 只有未分配的才能出来未分配按钮，其他隐藏此按钮
 	if (distributeStatus == '1') {
 		$("#el_lookTrainDocument").css("display", "");
 	} else {
@@ -499,7 +507,7 @@ function clearQueryInfo() {
 function updateOperating() {
 	var distributeStatus = $("#el_showManager option:selected").val()
 	if (distributeStatus == '2') {
-		return '<a href=javascript:void(0) onclick="updateFenpei(this)">修改</a>';
+		return '<a href=javascript:void(0) onclick="updateFenpei(this)"><span title="修改分配信息" class="glyphicon glyphicon-pencil"></span></a>';
 	} else {
 		return "--";
 	}
@@ -735,3 +743,39 @@ function trainStatus_page(currentPage, totalCount, employeeOutIdCard) {
 				}
 			});
 }
+
+
+/** ******************S 免培训****************** */
+function notrain(){
+	var chooseEmpNum = 0;// 判断是否有员工被选中
+	$(".el_checks").each(function() { // 获取选择的员工
+		if ($(this).prop("checked")) {// 如果选中。。。
+			chooseEmpNum++;
+		}
+	})
+	if (chooseEmpNum == 0) {
+		alert("请先选择员工！")
+	} else if(chooseEmpNum== 1 ){
+		notrain_post();
+	}else{
+		alert("请选择单个员工进行免培训！")
+	}
+	
+}
+function notrain_post(){
+	var checkedPerson = $(".el_checks:checked");
+	var username = checkedPerson.parent().parent().children("td:eq(2)").text();
+	var empType = checkedPerson.parent().parent().children("td:eq(7)").text();
+	var  distributeId= checkedPerson.parent().parent().find(".distributeId").val();
+	if(confirm("您确认  "+username+"【"+empType+"】  免考本级考试?\n\n确认之后不可修改!!!")){
+		$.post(contextPath+"/distribute_updateDistributeForMiankao.action",
+				{"distributeId":distributeId},
+				function(response){
+					alert(response.result);
+					queryDistributeInfo();
+				},
+				"json"
+		)
+	}
+}
+/** ******************E 免培训****************** */

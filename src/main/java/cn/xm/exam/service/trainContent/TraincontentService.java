@@ -73,6 +73,7 @@ public interface TraincontentService {
 	 * @throws Exception
 	 */
 	public Traincontent getTrainContentById(Integer id) throws Exception;
+	public Map<String,Object> getTrainContentById2(Integer id) throws Exception;
 
 	/**
 	 * 根据文件id获取文件唯一的名字用于在Action根据路径与名字打开输入流提供下载
@@ -106,7 +107,7 @@ public interface TraincontentService {
 	 * @return  返回本页要显示的所有记录的信息
 	 * @throws Exception
 	 */
-	List<Traincontent> selectTraincontentWithFYCondition(Map map) throws Exception;
+	List<Map<String,Object>> selectTraincontentWithFYCondition(Map map) throws Exception;
 	//=======================lixianyuan 9.19 end
 	
 	/**

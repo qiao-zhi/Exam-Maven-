@@ -20,7 +20,7 @@
 			</if>
 			<!-- 增加检修状态的判断 -->
 			<if test="bigStatus != null">
-				and bigStatus != #{bigStatus}
+				and bigStatus = #{bigStatus}
 			</if>
 		</where>
 	</select>
@@ -503,7 +503,7 @@
 		
 		<!-- 增加检修状态的判断 -->
 		<if test="bigStatus != null">
-			and haulinfo.bigStatus != #{bigStatus}
+			and haulinfo.bigStatus = #{bigStatus}
 		</if>
 		
 		<if test="minusNumLeft !=null and minusNumLeft !='' ">
@@ -591,7 +591,7 @@
 		</if>
 		<!-- 增加检修状态的判断 -->
 		<if test="bigStatus != null">
-			and haulinfo.bigStatus != #{bigStatus}
+			and haulinfo.bigStatus = #{bigStatus}
 		</if>
 		
 		

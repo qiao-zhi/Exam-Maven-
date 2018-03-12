@@ -679,12 +679,12 @@ function geneDepartmentTree(departmentTrees) {
 		data : {
 			simpleData : {
 				enable : true,
-				idKey : "departmentId",
-				pIdKey : "upDepartmentId",
+				idKey : "departmentid",
+				pIdKey : "updepartmentid",
 				rootPId : null
 			},
 			key : {
-				name : "departmentName",
+				name : "departmentname",
 			}
 		},
 		callback : {
@@ -710,26 +710,26 @@ var el_chooseDepart1, className10 = "dark", el_id;
 function beforeCheck(treeId, treeNode) {
 	// alert(departmentIds);
 	className10 = (className10 === "dark" ? "" : "dark");
-	el_id = treeNode.departmentId;
+	el_id = treeNode.departmentid;
 	// 判断点击的节点是否被选中，返回false 和 true
 	if (!treeNode.checked) {// 选中
-		departmentIds += treeNode.departmentId + ",";
-		showLog10(treeNode.departmentName + ',');
+		departmentIds += treeNode.departmentid + ",";
+		showLog10(treeNode.departmentname + ',');
 		$("#department_employee_in")
 				.append(
 						// 添加部门到下面的选择员工
 						'<div class="panel panel-default el_departPersons" id="'
-								+ treeNode.departmentName
+								+ treeNode.departmentname
 								+ '">'
 								+ '<div class="panel-heading"><span class="el_addDepart" >'
-								+ treeNode.departmentName
+								+ treeNode.departmentname
 								+ '</span>&nbsp;&nbsp;'
 								+ '(人数：<span class="employeeNum">0</span>)</div>'
 								+ '<div class="panel-body"></div>' + '</div>');
 	} else { // 点击选中，向让其未选中
-		departmentIds = departmentIds.replace(treeNode.departmentId + ",", "");
-		$("#" + treeNode.departmentName).remove();// 删除部门
-		noshowLog10(treeNode.departmentName + ',', treeNode);
+		departmentIds = departmentIds.replace(treeNode.departmentid + ",", "");
+		$("#" + treeNode.departmentname).remove();// 删除部门
+		noshowLog10(treeNode.departmentname + ',', treeNode);
 		var parentzTree = treeNode.getParentNode();
 	}
 	return (treeNode.doCheck !== false);

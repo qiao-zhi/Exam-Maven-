@@ -60,6 +60,23 @@ public class FindUnitAction extends ActionSupport {
 		response.put("pageBean", pageBean);
 		return SUCCESS;
 	}
+	
+	//查询长委和正式工培训单位信息分页显示
+	public String getHaulUnitPage2() {
+		response = new HashMap();
+		PageBean<Map<String, Object>> pageBean = null;
+		Map<String, Object> condition = generateCondition();
+		try {
+			pageBean = unitService.findUnitsWithCondition2(Integer.valueOf(currentPage), Integer.valueOf(currentCount),
+					condition);
+		} catch (NumberFormatException e) {
+			logger.error("数字转换异常", e);
+		} catch (Exception e) {
+			logger.error("查询大修单位异常", e);
+		}
+		response.put("pageBean", pageBean);
+		return SUCCESS;
+	}
 
 	/**
 	 * 根据大修ID与单位ID查询员工信息
@@ -85,6 +102,38 @@ public class FindUnitAction extends ActionSupport {
 		PageBean<Map<String, Object>> pageBean = null;
 		try {
 			pageBean = unitService.getEmployeeOutsByUaulIdAndUnitId(Integer.valueOf(currentPage),
+					Integer.valueOf(currentCount),condition);
+		} catch (SQLException e) {
+			logger.error("查询大修单位员工异常", e);
+		}
+		response.put("pageBean", pageBean);
+		return SUCCESS;
+	}
+	
+	/**
+	 * 根据大修ID与单位ID查询内部新员工培训的员工信息
+	 * 
+	 * @return
+	 */
+	public String getEmployeesByHaulidAndUnitId2() {
+		response = new HashMap();
+		Map condition = new HashMap();
+		if (ValidateCheck.isNull(currentCount)) {
+			currentCount = DefaultValue.PAGE_SIZE;
+		}
+		if (ValidateCheck.isNull(currentPage)) {
+			currentPage = "1";
+		}
+		if (ValidateCheck.isNotNull(bigId)) {
+			condition.put("bigId", bigId);
+		}
+		if (ValidateCheck.isNotNull(unitId)) {
+			condition.put("unitId", unitId);
+		}
+		
+		PageBean<Map<String, Object>> pageBean = null;
+		try {
+			pageBean = unitService.getEmployeeOutsByUaulIdAndUnitId2(Integer.valueOf(currentPage),
 					Integer.valueOf(currentCount),condition);
 		} catch (SQLException e) {
 			logger.error("查询大修单位员工异常", e);

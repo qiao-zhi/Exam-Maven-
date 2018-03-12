@@ -8,12 +8,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
+import org.apache.struts2.ServletActionContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import com.opensymphony.xwork2.ActionSupport;
 
 import cn.xm.exam.bean.haul.Haulinfo;
+import cn.xm.exam.bean.system.User;
 import cn.xm.exam.service.haul.HaulinfoService;
 import cn.xm.exam.utils.DefaultValue;
 import cn.xm.exam.utils.PageBean;
@@ -163,8 +165,11 @@ public class FindHaulAction extends ActionSupport {
 	public String getHaulNameAndIdsForExam() {
 		response = new HashMap<String, Object>();
 		List<Map<String, Object>> haulNameAndIds = null;
+		// 获取Session中的用户信息
+		User user = (User) ServletActionContext.getRequest().getSession().getAttribute("userinfo");
+		String departmentIdSession = user.getDepartmentid();// 获取部门ID
 		try {
-			haulNameAndIds = haulinfoService.getHaulNameAndIdsForExam();
+			haulNameAndIds = haulinfoService.getHaulNameAndIdsForExam(departmentIdSession);
 		} catch (SQLException e) {
 			logger.error("查修大修名字与ID的时候错误", e);
 		}

@@ -1,5 +1,6 @@
 package cn.xm.exam.mapper.trainContent.custom;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -8,7 +9,7 @@ import cn.xm.exam.bean.trainContent.Traincontent;
 public interface TraincontentCustomMapper {
 	// ====== lixianyuan 9.16 start ============
 	// 用于根据条件进行分页查询
-	List<Traincontent> selectTraincontentWithFYCondition(Map map);
+	List<Map<String,Object>> selectTraincontentWithFYCondition(Map map);
 
 	// <!-- 根据分页的条件查询一共有多少条记录数 -->
 	int selectTraincontentCountWithFYCondition(Map map);
@@ -29,4 +30,14 @@ public interface TraincontentCustomMapper {
 	int findStudyTraincontentByFyDocCount(Map map);
 
 	// 和学习中心相关的操作 end
+	
+	/**
+	 * 查询单个视频的信息
+	 * @param id
+	 * @return
+	 * @throws SQLException
+	 */
+	public Map<String,Object> getTraincontentById(int id)throws SQLException;
+	
+	
 }

@@ -69,7 +69,7 @@ public class AddExamAction extends ActionSupport {
 		response = new HashMap();
 		List<Map<String, Object>> departmentTrees = null;
 		try {
-			departmentTrees = departmentService.getDepartmentTreeForExam(departmentId);
+			departmentTrees = departmentService.getDepartmentTreeCommon(departmentId);
 		} catch (SQLException e) {
 			logger.error("查询内部部门树出错！", e);
 		}

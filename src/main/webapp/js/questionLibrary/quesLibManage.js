@@ -84,12 +84,14 @@ function showQuestionBankInfo(data) {
 					+ Format(new Date(questionBankInfoList[i].createtime
 							.replace(/T/g, " ").replace(/-/g, "/")),
 							"yyyy-MM-dd HH:mm:ss")
-					+ "</td><td>"
-					+ "<a href='javascript:void(0)' onclick='el_statisticAnalyze(this)'>数据统计</a>&nbsp;|"
-					+ " <a href='javascript:void(0)' onclick='modifyQL(this)'>修改</a>"
-					+ " <a href='javascript:void(0)' onclick='el_export(this)'>题库导出</a>&nbsp;|"
-					+ " <a href='javascript:void(0)' class='el_delButton' onClick='delcfm(this)'>删除</a>"
-					+ "</td></tr>";
+					+ "</td><td>";
+			showQuestionBankListInfo +=  "<a href='javascript:void(0)' onclick='el_statisticAnalyze(this)'>统计</a>&nbsp;|"
+				+ " <a href='javascript:void(0)' onclick='el_export(this)'>题库导出</a>";
+			if(hasQuestionbankManager){
+				showQuestionBankListInfo += " <a href='javascript:void(0)' onclick='modifyQL(this)'>修改</a>&nbsp;|"
+					+ " <a href='javascript:void(0)' class='el_delButton' onClick='delcfm(this)'>删除题库</a>"
+			}
+			showQuestionBankListInfo += "</td></tr>";
 		}
 		// 清空表格
 		$("#questionBankListInfo").empty();

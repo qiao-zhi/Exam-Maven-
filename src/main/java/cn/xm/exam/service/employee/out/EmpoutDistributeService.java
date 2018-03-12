@@ -99,5 +99,11 @@ public interface EmpoutDistributeService {
 	 */
 	public boolean addSecondFenpeiUnitBatch(List<Haulemployeeout> haulemployeeouts,
 			List<Employeeoutdistribute> employeeoutdistributes) throws SQLException;
+	/**
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
+	public boolean updateDistributeForMiankao(String distributeId)throws SQLException;
 
 }

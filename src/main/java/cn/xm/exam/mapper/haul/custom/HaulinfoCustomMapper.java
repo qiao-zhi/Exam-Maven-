@@ -64,7 +64,7 @@ public interface HaulinfoCustomMapper {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, Object>> getHaulNameAndIdsForExam() throws SQLException;
+	public List<Map<String, Object>> getHaulNameAndIdsForExam(String departmentId) throws SQLException;
 	/*********S  查询标段信息****************/
 	/**
 	 * 根据大修ID查找标段信息

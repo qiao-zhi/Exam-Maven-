@@ -199,4 +199,14 @@ public class EmpoutDistributeServiceImpl implements EmpoutDistributeService {
 		
 	}
 
+	@Override
+	public boolean updateDistributeForMiankao(String distributeId) throws SQLException {
+		//0.创建一个外来员工分配对象
+		Employeeoutdistribute employeeoutdistribute = new Employeeoutdistribute();
+		employeeoutdistribute.setDistributeid(Integer.valueOf(distributeId));
+		employeeoutdistribute.setEmpoutexamstatus("1");;
+		//2.修改
+		return	employeeoutdistributeMapper.updateByPrimaryKeySelective(employeeoutdistribute)>0?true:false;
+	}
+
 }

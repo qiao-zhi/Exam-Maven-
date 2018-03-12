@@ -309,7 +309,7 @@ function saveUnit() {
 			return;
 		}
 		if (confirm("确认保存单位信息?")) {
-			$.post(contextPath + "/addUnit_addUnit.action",// url
+			$.post(contextPath + "/addUnit_addUnit2.action",// url
 			$("#addUnitForm").serialize(), // data
 			function(response) {
 				if (response.addResult != null) {
@@ -327,7 +327,7 @@ function saveUnit() {
 /** S 查询单位信息**************** */
 // 查询部门信息
 function queryHaulUnit() {
-	$.post(contextPath + '/unit_getHaulUnitPage.action',
+	$.post(contextPath + '/unit_getHaulUnitPage2.action',
 			$("#queryHaulunitForm").serialize(), showUnitTale, 'json');
 }
 // 添加信息到表格中
@@ -371,12 +371,10 @@ function showUnitTale(response) {
 								+ '</td><td>'
 								+ units[i].securePhone
 								+ '</td><td>'
-								+ units[i].projectNames
-								+ '</td><td><a href="javascript:void(0)" onclick="queryEmployeeBreakrule(this)">'
-								+ units[i].unitMinisMum
-								+ '</a></td><td><a href="javascript:void(0)" onclick="initVariable(this)">'
+								+ units[i].projectNames								
+								+ '</td><td><a href="javascript:void(0)" onclick="initVariable(this)">'
 								+ units[i].personNum
-								+ '</a></td><td>'+units[i].jiaquan+'</td><td>'
+								+ '</a></td><td>'
 								+operation
 								+ '</td></tr>');
 	}
@@ -496,7 +494,7 @@ function updateUnit() {
 		if(!confirm("确认修改?")){
 			return;
 		}
-		$.post(contextPath + '/updateUnit.action', $("#updateForm").serialize(),
+		$.post(contextPath + '/updateUnitInfo.action', $("#updateForm").serialize(),
 				function(response) {
 					if (response != null && response.updateResult != null) {
 						alert(response.updateResult);
@@ -521,7 +519,7 @@ function initVariable(obj){
 }
 // 查询内部员工
 function queryEmployeeOut() {
-	$.post(contextPath + '/unit_getEmployeesByHaulidAndUnitId.action', {
+	$.post(contextPath + '/unit_getEmployeesByHaulidAndUnitId2.action', {
 		"currentPage":$("#currentPage2").val(),
 		"currentCount":$("#currentCount2").val(),
 		"bigId" : 	$("#q_bigId").val(),

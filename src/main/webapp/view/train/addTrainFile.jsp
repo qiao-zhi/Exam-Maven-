@@ -61,7 +61,7 @@
 					//初始化资料类型
 					//initTrainType();
 					//初始化知识点
-					initKnowledgeType();
+					/* initKnowledgeType(); */
 
 					//初始化部门树
 					//initDepartment();
@@ -97,7 +97,7 @@
 										name="traincontent.documentname" />
 								</div>
 
-								<div class="input-group el_modellist" role="toolbar">
+								<div class="input-group el_modellist" role="toolbar" style="display:none">
 									<span class="el_spans">所属级别：</span> <label class="el_radioBox"><input
 										type="radio" value="一级" name="traincontent.level" checked>
 										一级</label> <label class="el_radioBox"><input type="radio"
@@ -113,7 +113,7 @@
 										class="el_modelinput el_chooseFile" name="attach" />
 								</div>
 
-								<div class="input-group el_modellist" role="toolbar">
+<%-- 								<div class="input-group el_modellist" role="toolbar">
 									<span class="el_spans el_chooseSpan">所属部门：</span>
 									<ul id="el_chooseDepart"
 										class="el_modelinput el_chooseInput log"></ul>
@@ -124,7 +124,19 @@
 									<!-- 隐藏所属部门选中的值  将所属部门选中的值赋给该隐藏域-->
 									<input id="trainDeptName" type="hidden"
 										name="traincontent.departmentname">
+								</div> --%>
+ 								<div class="input-group el_modellist" role="toolbar">
+									<span class="el_spans el_chooseSpan">上传部门：</span>
+									<!-- 隐藏所属部门选中的值  将所属部门选中的值赋给该隐藏域-->
+									<input id="trainDeptName" type="text"
+										readonly="readonly" class="form-control el_modelinput"
+										name="traincontent.departmentname" value="${session.userinfo.departmentname }">
 								</div>
+								
+								
+								
+								
+								
 
 								<!--根据试卷等级类型    来决定有没有部门和班的选择。-->
 								<div class="input-group el_modellist" role="toolbar">
@@ -138,11 +150,12 @@
 								</div>
 
 								<div class="input-group el_modellist" role="toolbar">
-									<span class="el_spans">知&nbsp;&nbsp;识&nbsp;点：</span> <select
-										id="trainKnowledge" class="selectpicker form-control"
-										title="请选择" name="traincontent.knowledgetype">
-										<option value="">--请选择--</option>
-									</select>
+									<span class="el_spans">资料类别：</span> 
+									<input id="trainType" type="text"
+										class="form-control el_modelinput"
+									    value="${traincontenttype.typename }" readonly="readonly" />
+									    <!-- 将知识点隐藏为培训内容类别 -->
+										<input type="hidden" name="traincontent.knowledgetype" value="${traincontenttype.typeid}">
 								</div>
 
 								<div class="input-group el_modellist" role="toolbar">

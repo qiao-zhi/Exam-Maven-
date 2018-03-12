@@ -85,8 +85,8 @@ function geneDepartmentTree(departmentTrees) {
 		}
 	};
 	var treeNodes = departmentTrees;
-	$.fn.zTree.init($("#treeDemo_permission"), setting, treeNodes);//生成分配树
-	$.fn.zTree.init($("#reDistribueTree"), setting, treeNodes);//生成二次分配树
+	$.fn.zTree.init($("#treeDemo_permission"), setting, treeNodes);// 生成分配树
+	$.fn.zTree.init($("#reDistribueTree"), setting, treeNodes);// 生成二次分配树
 }
 // 鼠标点击树事件(打印点击的id与名字)
 function zTreeOnClick(event, treeId, treeNode) {
@@ -235,6 +235,8 @@ function showFenpeiTable(response) {
 				+ distributeinfos[i].unitid + '"/>'
 				+ '<input type="hidden" class="employeeid" value="'
 				+ distributeinfos[i].employeeid + '"/>'
+				+ '<input type="hidden" class="distributeId" value="'
+				+ distributeinfos[i].distributeid + '"/>'
 				+ '<input type="hidden" class="haulempid" value="'
 				+ distributeinfos[i].haulempid + '"/>';
 		str += '</td></tr>';
@@ -459,6 +461,12 @@ function updateFenpeiInfo() {
 function selectFenpeiInfo() {
 	var distributeStatus = $("#el_showManager option:selected").val();
 	// 只有未分配的才能出来未分配按钮，其他隐藏此按钮
+	if (distributeStatus == '0') {
+		$("#notrainbtn").css("display", "");
+	} else {
+		$("#notrainbtn").css("display", "none");
+	}
+	// 只有未分配的才能出来未分配按钮，其他隐藏此按钮
 	if (distributeStatus == '1') {
 		$("#el_lookTrainDocument").css("display", "");
 	} else {
@@ -479,9 +487,9 @@ function selectFenpeiInfo() {
 	}
 	// 动态显示与隐藏重新发放
 	if (distributeStatus == '5') {
-		$("#reGeberateWord").css("display", "");
-		$("#reDistributeDepart").css("display", "");
-		$("#reDistributeUnit").css("display", "");
+		$("#reGeberateWord").css("display", "inline");
+		$("#reDistributeDepart").css("display", "inline");
+		$("#reDistributeUnit").css("display", "inline");
 	} else {
 		$("#reGeberateWord").css("display", "none");
 		$("#reDistributeDepart").css("display", "none");
@@ -506,7 +514,7 @@ function clearQueryInfo() {
 function updateOperating() {
 	var distributeStatus = $("#el_showManager option:selected").val()
 	if (distributeStatus == '2') {
-		return '<a href=javascript:void(0) onclick="updateFenpei(this)">修改</a>';
+		return '<a href=javascript:void(0) onclick="updateFenpei(this)"><span title="修改分配信息" class="glyphicon glyphicon-pencil"></span></a>';
 	} else {
 		return "--";
 	}
@@ -665,7 +673,7 @@ function saveReDis(){
     var treeObj = $.fn.zTree.getZTreeObj("reDistribueTree");
     /** 获取所有树节点 */
     var nodes = treeObj.transformToArray(treeObj.getNodes());
-    //获取选中的节点
+    // 获取选中的节点
     for (var k = 0, length_3 = nodes.length; k < length_3; k++) {
             if(nodes[k].checked==true){
             	reDistributeDepartmentId = nodes[k].departmentId;
@@ -686,17 +694,17 @@ function saveReDis(){
 				.html();// 身份证号
 		var emptype = $(this).parent().parent().children("td:eq(7)").html();// 员工工种
 		var hidden_input = $(this).parent().parent().children("td:eq(11)");
-		var bigid = hidden_input.find(".bigid").val();//大修ID
-		var unitid = hidden_input.find(".unitid").val();//单位ID
-		var empid = hidden_input.find(".employeeid").val();//员工ID
+		var bigid = hidden_input.find(".bigid").val();// 大修ID
+		var unitid = hidden_input.find(".unitid").val();// 单位ID
+		var empid = hidden_input.find(".employeeid").val();// 员工ID
 		$("#reDistributeForm").append(
-//				拼接分配信息
+// 拼接分配信息
 				'<input type="hidden" value="' + bigid+ '" name="employeeoutdistributes[' + i + '].bigid"/>'
 				+ '<input type="hidden" value="' + unitid+ '" name="employeeoutdistributes[' + i + '].unitid"/>'
 				+ '<input type="hidden" value="' + outempname+ '" name="employeeoutdistributes[' + i+ '].outempname"/>'
 				+ '<input type="hidden" value="'+ empoutidcard + '" name="employeeoutdistributes[' + i+ '].empoutidcard"/>' 
 				+ '<input type="hidden" value="'+ reDistributeDepartmentId + '" name="employeeoutdistributes[' + i	+ '].departmentid"/>'
-//				拼接大修员工信息
+// 拼接大修员工信息
 				+ '<input type="hidden" value="'+ bigid + '" name="haulemployeeouts[' + i+ '].bigid"/>'
 				+ '<input type="hidden" value="'+ unitid + '" name="haulemployeeouts[' + i+ '].unitid"/>'
 				+ '<input type="hidden" value="'+ empid + '" name="haulemployeeouts[' + i+ '].employeeid"/>'
@@ -718,7 +726,7 @@ function saveReDis(){
 	
 }
 /** *************************E 二次分配相关操作**************************** */
-/****************************S        重新分配单位相关操作 ****/
+/** **************************S 重新分配单位相关操作 *** */
 function reDistributeUnit(){
 	var chooseEmpNum = 0;// 判断是否有员工被选中
 	$(".el_checks").each(function() { // 获取选择的员工
@@ -735,13 +743,13 @@ function reDistributeUnit(){
 	}
 }
 
-/*************树的相关方法******* */
+/** ***********树的相关方法******* */
 
 $(function() {
 	searchDepartmentAndOverHualTree_2();
 })
 
-/******请求树信息*******/
+/** ****请求树信息****** */
 
 function searchDepartmentAndOverHualTree_2() {
 	$.ajax({
@@ -812,14 +820,14 @@ function saveReDisUnit(){
 				.html();// 身份证号
 		var emptype = $(this).parent().parent().children("td:eq(7)").html();// 员工工种
 		var hidden_input = $(this).parent().parent().children("td:eq(11)");
-		var empid = hidden_input.find(".employeeid").val();//员工ID
+		var empid = hidden_input.find(".employeeid").val();// 员工ID
 		$("#reDistributeUnitForm").append(
-//				拼接分配信息
+// 拼接分配信息
 				'<input type="hidden" value="' + reDisUnitBigId+ '" name="employeeoutdistributes[' + i + '].bigid"/>'
 				+ '<input type="hidden" value="' + reDisUnitUnitId+ '" name="employeeoutdistributes[' + i + '].unitid"/>'
 				+ '<input type="hidden" value="' + outempname+ '" name="employeeoutdistributes[' + i+ '].outempname"/>'
 				+ '<input type="hidden" value="'+ empoutidcard + '" name="employeeoutdistributes[' + i+ '].empoutidcard"/>' 
-//				拼接大修员工信息
+// 拼接大修员工信息
 				+ '<input type="hidden" value="'+ reDisUnitBigId + '" name="haulemployeeouts[' + i+ '].bigid"/>'
 				+ '<input type="hidden" value="'+ reDisUnitUnitId + '" name="haulemployeeouts[' + i+ '].unitid"/>'
 				+ '<input type="hidden" value="'+ empid + '" name="haulemployeeouts[' + i+ '].employeeid"/>'
@@ -847,7 +855,7 @@ function saveReDisUnit(){
 
 
 
-/****************************E       重新分配单位相关操作 ****/
+/** **************************E 重新分配单位相关操作 *** */
 
 /** *********************外来单位的员工的培训档案********************* */
 function lookTrainInfo() {
@@ -919,7 +927,7 @@ function showEmployeeOutExamsInfoList(employeeOutIdCard, currentPage,
 		}
 	});
 }
-//培训档案的分页函数
+// 培训档案的分页函数
 function trainStatus_page(currentPage, totalCount, employeeOutIdCard) {
 	$('#paginationID2').pagination(
 			{
@@ -939,18 +947,52 @@ function trainStatus_page(currentPage, totalCount, employeeOutIdCard) {
 			});
 }
 
-/************************S   历史检修和当前检修*******************************/
-//根据标记查询大修信息
+/** **********************S 历史检修和当前检修****************************** */
+// 根据标记查询大修信息
 function historyBigInfoFind(){
-	//获取当前的大修标记状态
+	// 获取当前的大修标记状态
 	var mark = $("#el_bigStatusMark").val();
-	//设置到隐藏域中
+	// 设置到隐藏域中
 	$("#bigStatus_Mark").val(mark);
 	searchDepartmentAndOverHualTree(mark);
+	$("#currentPage").val("");
 	queryDistributeInfo();
 }
 
-
+/** ******************S 免培训****************** */
+function notrain(){
+	var chooseEmpNum = 0;// 判断是否有员工被选中
+	$(".el_checks").each(function() { // 获取选择的员工
+		if ($(this).prop("checked")) {// 如果选中。。。
+			chooseEmpNum++;
+		}
+	})
+	if (chooseEmpNum == 0) {
+		alert("请先选择员工！")
+	} else if(chooseEmpNum== 1 ){
+		notrain_post();
+	}else{
+		alert("请选择单个员工进行免培训！")
+	}
+	
+}
+function notrain_post(){
+	var checkedPerson = $(".el_checks:checked");
+	var username = checkedPerson.parent().parent().children("td:eq(2)").text();
+	var empType = checkedPerson.parent().parent().children("td:eq(7)").text();
+	var  distributeId= checkedPerson.parent().parent().find(".distributeId").val();
+	if(confirm("您确认  "+username+"【"+empType+"】  免考本级考试?\n\n确认之后不可修改!!!")){
+		$.post(contextPath+"/distribute_updateDistributeForMiankao.action",
+				{"distributeId":distributeId},
+				function(response){
+					alert(response.result);
+					queryDistributeInfo();
+				},
+				"json"
+		)
+	}
+}
+/** ******************E 免培训****************** */
 
 
 

@@ -139,12 +139,12 @@ function getTree_2(treeList2) {
 		data : {
 			simpleData : {
 				enable : true,
-				idKey : "departmentId",
-				pIdKey : "upDepartmentId",
+				idKey : "departmentid",
+				pIdKey : "updepartmentid",
 				rootPId : null,
 			},
 			key : {
-				name : "departmentName",
+				name : "departmentname",
 			}
 		},
 		callback : {
@@ -195,9 +195,9 @@ function beforeClick(treeId, treeNode, clickFlag) {
 	clearBtn();
 	$("#yeHao").val("1");// 清空页号
 	clickRes = 1;
-	getName = treeNode.departmentName;// 当前选中的树的名字
-	selectedDepartmentID = treeNode.departmentId;// 当前选中的树的id
-	selectedOverHaulId = treeNode.upDepartmentId;// 当前选中的树的上级id
+	getName = treeNode.departmentname;// 当前选中的树的名字
+	selectedDepartmentID = treeNode.departmentid;// 当前选中的树的id
+	selectedOverHaulId = treeNode.updepartmentid;// 当前选中的树的上级id
 
 	// 隐藏当前选中的部门的部门id
 	$("#departmentidTree").val(selectedDepartmentID);

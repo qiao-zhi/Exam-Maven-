@@ -101,7 +101,7 @@ public interface HaulinfoService {
 	 * @return
 	 * @throws SQLException
 	 */
-	public List<Map<String, Object>> getHaulNameAndIdsForExam() throws SQLException;
+	public List<Map<String, Object>> getHaulNameAndIdsForExam(String departmentId) throws SQLException;
 	/**
 	 * 根据大修ID查找标段信息
 	 * @return

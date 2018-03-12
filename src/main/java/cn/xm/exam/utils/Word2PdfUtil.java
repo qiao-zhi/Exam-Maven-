@@ -15,8 +15,8 @@ import com.jacob.com.Variant;
 public class Word2PdfUtil {
     static final int wdFormatPDF = 17;// PDF 格式   
     public static void main(String[] args) throws Exception {
-    	  String source1 = "C:\\Users\\liqiang\\Desktop\\考试试卷.doc";
-          String target1 = "C:\\Users\\liqiang\\Desktop\\考试试卷.pdf";
+    	  String source1 = "C:\\Users\\liqiang\\Desktop\\sbgl.docx";
+          String target1 = "C:\\Users\\liqiang\\Desktop\\sbgl.pdf";
           Word2PdfUtil.word2pdf(source1, target1);
 	}
     

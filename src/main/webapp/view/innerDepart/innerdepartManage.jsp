@@ -95,20 +95,20 @@
 									<div class="col-md-3 el_qlmQuery">
 										<div class="input-group" role="toolbar">
 											<span class="el_spans">部门名称：</span> <input type="text"
-												class="form-control" name="departmentname" id="departname" />
+												class="form-control clearCon" name="departmentname" id="departname" />
 
 											<input type="hidden" name="currentPage" id="currentPage" />
 											<input type="hidden" name="currentCount" id="currentCount" />
 											<input type="hidden" name="updepartmentid"
-												id="queryUpDepartmentId" />
+												id="queryUpDepartmentId" class="clearCon" />
 										</div>
 									</div>
 									<div class="col-md-6" id="el_breakTimeIndex">
 										<div class="input-group" id="el_startEndTime" role="toolbar">
 											<span class="el_spans">违章时间：</span> <input type="text"
-												class=" form-control query_dep_starttime" name="fstarttime"
+												class=" form-control query_dep_starttime clearCon" name="fstarttime"
 												id="inpstart2" placeholder="开始时间" readonly> <input
-												type="text" class=" form-control query_dep_endtime"
+												type="text" class=" form-control query_dep_endtime clearCon"
 												id="inpend2" name="fendtime" placeholder="结束时间" readonly>
 										</div>
 									</div>
@@ -116,9 +116,9 @@
 
 									<!--清空按钮-->
 
-									<button type="reset"
+									<button type="button"
 										class="btn btn-default el_queryButton0 btn-sm"
-										style="padding-bottom: 5px; border-bottom-width: 1px; margin-bottom: 7px;">清空</button>
+										style="padding-bottom: 5px; border-bottom-width: 1px; margin-bottom: 7px;" onclick="clearCondition()">清空</button>
 
 
 
@@ -158,6 +158,11 @@
 													<shiro:hasPermission name="department:add">
 														<button class="btn btn-primary"
 															onclick="el_addDepartment()"><span class="glyphicon glyphicon-plus"></span>添加部门</button>
+													</shiro:hasPermission>
+													<!-- 删除长委单位功能 -->
+													<shiro:hasPermission name="cwdepartment:delete">
+														<button class="btn btn-primary"
+															onclick="delete_cwdw()">删除长委单位</button>
 													</shiro:hasPermission>
 																									
 											</div>
@@ -542,6 +547,53 @@
 								</div>
 								<!-- /.modal -->
 							</div>
+							
+							
+							
+							
+							 <!-- 模态框（Modal） -->
+							<div class="modal fade" id="sccw" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							    <div class="modal-dialog">
+							        <div class="modal-content">
+							            <div class="modal-header">
+							                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+							                    &times;
+							                </button>
+							                <h4 class="modal-title" id="myModalLabel">
+							                    	删除长委单位
+							                </h4>
+							            </div>
+							                <div class="modal-body" >
+							                	<table class="table table-bordered">
+							                		<thead>
+							                			<tr>
+							                				<th>序号</th>
+							                				<th>单位名称</th>
+							                				<th>操作</th>
+							                			</tr>
+							                		</thead>
+							                		<tbody id="cwdwTbody">
+							                		<!-- 数据 -->
+							                		</tbody>
+							                	</table>
+							                	
+            	                              <!--分页-->
+                                 			   <div id="paginationQ" class="paginationID"></div>
+                                 			   <!-- 隐藏分页信息 -->
+                                 			   <input type="hidden" id="currentPageQ" value="1"> 
+                                 			   <input type="hidden" id="currentCountQ" value="8">
+							                </div>
+							                <div class="modal-footer">
+							                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+							                    </button>
+							                    <button type="submit" class="btn btn-primary" onclick="xg()">
+							                        确认
+							                    </button>
+							                </div>
+							        </div><!-- /.modal-content -->
+							    </div><!-- /.modal -->
+							</div>
+							
 
 
 

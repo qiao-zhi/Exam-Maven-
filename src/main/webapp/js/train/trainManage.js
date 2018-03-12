@@ -203,12 +203,12 @@ function getTree_2(treeList2) {
 			data : {
 				simpleData : {
 					enable : true,
-					idKey: "departmentId",
-					pIdKey: "upDepartmentId",
+					idKey: "departmentid",
+					pIdKey: "updepartmentid",
 					rootPId : null,
 				},
 				key : {
-					name : "departmentName",
+					name : "departmentname",
 				}
 			},
 			callback : {
@@ -230,13 +230,13 @@ function getTree_2(treeList2) {
 var el_chooseDepart, className10 = "dark", el_id;
 function beforeClick2(treeId, treeNode, clickFlag) {
     className10 = (className10 === "dark" ? "" : "dark");
-    el_id = treeNode.departmentId;
+    el_id = treeNode.departmentid;
     //判断点击的节点是否被选中，返回false 和 true
     if (!treeNode.checked) {//选中
-        showLog10(treeNode.departmentName);
+        showLog10(treeNode.departmentname);
         
     } else {                //未选中
-        noshowLog10(treeNode.departmentName);
+        noshowLog10(treeNode.departmentname);
     }
     return (treeNode.doCheck !== false);
 }
@@ -443,14 +443,14 @@ function queryFy(resultCount, currentPage, currentTotal) {
 //清空按钮的事件
 function clearBtn() {
 	//部门的那个框
-	$("#el_chooseDepart").children("li").remove();
-	$("#trainDeptName").val('');//清空部门隐藏域的值
+	$(".qlqClear").val("");
+	$(".curSelectedNode").removeClass("curSelectedNode");
 }
 
 //查询按钮的事件
 function btnFindFy() {
 	$.ajax({
-		url : "${pageContext.request.contextPath}/train_findTrainByFYCondiction.action",
+		url : "train_findTrainByFYCondiction.action",
 		data : $("#findForm").serialize(),
 		dataType : "json",
 		type : "POST",
@@ -458,26 +458,27 @@ function btnFindFy() {
 		success : function(data) {
 			//数据显示之前 要先清空表格中的所有数据
 			$("#tBody tr").remove();
+			var list = data.pageInfo.list;//数据
 			var tdStr = "";
-			for (var i = 0; i < data.traincontentList.length; i++) {
+			for (var i = 0; i < list.length; i++) {
 				//培训资料的id
-				var documentid = data.traincontentList[i].documentid;
+				var documentid = list[i].documentid;
 				//资料名称
-				var documentname = data.traincontentList[i].documentname;
-				//资料级别
-				var level = data.traincontentList[i].level;
+				var documentname = list[i].documentname;
+				//资料类别
+				var typename = list[i].typename;
 				//资料类型
-				var traintype = data.traincontentList[i].traintype;
+				var traintype = list[i].traintype;
 				//文件大小
-				var size = data.traincontentList[i].size;
+				var size = list[i].size;
 				//浏览量
-				var browsetimes = data.traincontentList[i].browsetimes;
+				var browsetimes = list[i].browsetimes;
 				//所属部门
-				var departmentname = data.traincontentList[i].departmentname;
+				var departmentname = list[i].departmentname;
 				//上传时间
-				var uptime = Format(new Date(data.traincontentList[i].uptime.replace(/T/g," ").replace(/-/g,"/")),"yyyy-MM-dd HH:mm");
+				var uptime = Format(new Date(list[i].uptime.replace(/T/g," ").replace(/-/g,"/")),"yyyy-MM-dd HH:mm");
 				//上传人
-				var employeename = data.traincontentList[i].employeename;
+				var employeename = list[i].employeename;
 				
 				
 				
@@ -488,7 +489,7 @@ function btnFindFy() {
 				tdStr += "<input type='hidden' name='documentId' value="+documentid+" class='docID'/>";
 				tdStr += "<td><input type='checkbox' class='el_checks'/></td>";
 				tdStr += "<td>"	+ documentname+ "</td>";
-				tdStr += "<td>" + level+ "</td>";
+				tdStr += "<td>" + typename+ "</td>";
 				tdStr += "<td>"	+ traintype	+ "</td>";
 				tdStr += "<td>" + size	+ "</td>";
 				tdStr += "<td>"	+ browsetimes+ "</td>";
@@ -497,9 +498,11 @@ function btnFindFy() {
 				tdStr += "<td>"	+ employeename+ "</td>";
 				//
 				tdStr += "<td>";
-				tdStr += "<a title='查看详情' href='${pageContext.request.contextPath}/train_findDetail.action?trainContentId="+ documentid+ "'"	+ "><span class='glyphicon glyphicon-search'></span></a>"
-				tdStr += "<a title='修改信息' href='${pageContext.request.contextPath}/train_modifyButton.action?trainContentId="+ documentid+ "'"+ "><span class='glyphicon glyphicon-pencil'></span></a>"
-				tdStr += "<a href='javascript:void(0)' class='el_delButton' onClick='delcfm(this)' title='删除培训资料'><span class='glyphicon glyphicon-trash'></span></a>";
+				tdStr += "<a title='查看详情' href='train_findDetail.action?trainContentId="+ documentid+ "'"	+ "><span class='glyphicon glyphicon-search'></span></a>"
+				if(hasTrainContentManager){
+					tdStr += "<a title='修改信息' href='train_modifyButton.action?trainContentId="+ documentid+ "'"+ "><span class='glyphicon glyphicon-pencil'></span></a>"
+					tdStr += "<a href='javascript:void(0)' class='el_delButton' onClick='delcfm(this)' title='删除培训资料'><span class='glyphicon glyphicon-trash'></span></a>";
+				}
 				tdStr += "</td>";
 				//
 				tdStr += "</tr>";
@@ -514,7 +517,7 @@ function btnFindFy() {
 			
 
 			//参数一：总记录数   参数二：当前页页号  参数三：每页显示的记录条数
-			queryFy(data.resultCount,data.currentPage,data.currentTotal);
+			queryFy(data.pageInfo.total,data.pageInfo.pageNum,data.pageInfo.pageSize);
 
 			//alert(data.traincontentList.length)
 			//alert("执行查询的回掉函数")
@@ -598,3 +601,193 @@ function urlSubmit2() {
 
 
 
+
+
+
+
+/***********S  QLQ*********************/
+var zTree;
+var setting = {
+	view : {
+		addHoverDom : addHoverDom,
+		removeHoverDom : removeHoverDom,
+		selectedMulti : false
+	},
+	edit : {
+		enable : true,
+		editNameSelectAll : true,
+		removeTitle : '删除',
+		renameTitle : '重命名'
+	},
+	data : {
+		key : {
+			name:"typeName"
+		},
+		/* keep:{
+		    parent:true,
+		    leaf:true
+		}, */
+		simpleData : {
+			enable : true,
+			idKey: "typeId",
+			pIdKey: "upId",
+			rootPId: 1
+		}
+	},
+	callback : {
+		beforeRemove : beforeRemove,//点击删除时触发，用来提示用户是否确定删除
+		beforeEditName : beforeEditName,//点击编辑时触发，用来判断该节点是否能编辑
+		beforeRename : beforeRename,//编辑结束时触发，用来验证输入的数据是否符合要求
+		onRemove : onRemove,//删除节点后触发，用户后台操作
+		onRename : onRename,//编辑后触发，用于操作后台
+		onClick : clickNode
+	//点击节点触发的事件
+	}
+};
+function geneTypeTree(){
+	$.getJSON(contextPath+"/trainacontentType_getTraincontenttypeTree.action",function(response){
+		var zNodes = response.traincontenttypeTree;
+		zTree = $.fn.zTree.init($("#tree"),setting,zNodes);
+	});
+}
+
+$(document).ready(function() {
+	geneTypeTree();
+				});
+
+
+/******S  删除*******/
+function beforeRemove(treeId, treeNode) {
+	if(confirm("确认删除?\n将会删除下面的所有视频！")){
+		if(treeNode.isParent){
+			alert("该目录下面还有子目录，请从最底层目录开始删除!");
+			return false;
+		}
+		return true;
+	}
+	return false;
+}
+function onRemove(e, treeId,treeNode) {
+	var typeId = treeNode.typeId;
+	$.post(contextPath+"/trainacontentType_deleteTrainContentTypeById.action",
+			{"typeId":typeId},
+			function(repsonse){
+				alert(repsonse.result);
+				if("删除成功"==repsonse.result)//删除成功之后执行查询
+					btnFindFy();
+			}
+			,'json')
+	
+	
+}
+/******E  删除*******/
+
+function beforeEditName(treeId,treeNode) {
+	/* if(treeNode.isParent){
+	    alert("不准编辑非叶子节点！");
+	    return false;
+	} */
+	return true;
+}
+
+function beforeRename(treeId,treeNode, newName,isCancel) {
+	if (newName.length < 3) {
+		alert("名称不能少于3个字符！");
+		return false;
+	}
+	return true;
+}
+function onRename(e, treeId,treeNode, isCancel) {
+	if(confirm("您确认修改类别名称?")){
+		$.post(contextPath+"/trainacontentType_updateTraincontenttypeName.action",
+				{
+			"traincontenttype.typeid":treeNode.typeId,
+			"traincontenttype.typename":treeNode.typeName
+				},
+				function(response){
+					if(response != null){
+						if("修改成功"==response.result){
+							alert(response.result);
+						}
+					}
+				}
+				,
+		'json');
+	}
+}
+
+/************S   点击事件*********/
+function clickNode(e, treeId,treeNode) {
+	$("#trainContentTypeId").val(treeNode.typeId);//向隐藏的类别编号赋值
+	$("[name='typeId']").val(treeNode.typeId);//向隐藏的类别编号赋值
+	$("#yeHao").val("1");
+	btnFindFy();
+}
+/************E   点击事件*********/
+
+
+function addHoverDom(treeId,treeNode) {
+	var sObj = $("#"+ treeNode.tId+ "_span");
+	if (treeNode.editNameFlag|| $("#addBtn_"+ treeNode.tId).length > 0)
+		return;
+	var addStr = "<span class='button add' id='addBtn_"+ treeNode.tId+ "' title='添加子节点' onfocus='this.blur();'></span>";
+	sObj.after(addStr);
+	var btn = $("#addBtn_"+ treeNode.tId);
+	if (btn)btn.bind("click",function() {
+							if(confirm("确认在该目录下面添加培训内容类别?")){
+								var typeName = prompt("请输入类别名称");//获取到的名字
+								if(typeName != null){//点击确定
+									if(typeName.length>1){
+										var upId = treeNode.typeId;//上级编号
+										$.post(contextPath+"/trainacontentType_addTraincontenttype.action",
+												{
+													"traincontenttype.upid":upId,
+													"traincontenttype.typename":typeName
+												},
+												function(response){
+													if(response!=null){
+														alert(response.result);
+													}
+													if(response.result == "添加成功" ){
+														var traincontenttype = response.traincontenttype;//获取返回来的数据
+														zTree.addNodes(treeNode, {typeId:traincontenttype.typeid, upId:treeNode.id, typeName:typeName});
+													}
+//													geneTypeTree();
+												},
+											'json');
+									}else{
+										alert("请输入正确的类别名称")
+									}
+								}
+							}
+							//在这里向后台发送请求保存一个新建的叶子节点，父id为treeNode.id,让后将下面的100+newCount换成返回的id
+							//zTree.addNodes(treeNode, {id:(100 + newCount), pId:treeNode.id, name:"新建节点" + (newCount++)});
+							return false;
+						});
+}
+function removeHoverDom(treeId,treeNode) {
+	$("#addBtn_" + treeNode.tId).unbind().remove();
+}
+
+
+/*(function(){
+	alert("sssssssss")
+})();
+*/
+
+
+/***********E  QLQ*********************/
+
+
+/**S   增加培训内容****/
+function goToAdd(){
+	if($("#trainContentTypeId").val()==null || ""==$("#trainContentTypeId").val()){
+		alert("请先选择培训类别!");
+		return;
+	}
+	var form = $("<form action='"+contextPath+"/trainacontentType_forwardToAddTraincontent.action"+"' method='post'></form>")
+	form.append("<input type='hidden' name='typeId' value='"+$("#trainContentTypeId").val()+"'>");
+	$(document.body).append(form);
+	form.submit();
+}
+/**E   增加培训内容****/

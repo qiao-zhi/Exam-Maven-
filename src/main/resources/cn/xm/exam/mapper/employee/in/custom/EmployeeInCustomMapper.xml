@@ -129,6 +129,13 @@
 		departmentid=#{departmentid}
 
 	</select>
+	
+	<!-- 删除长委加的功能,查询所有的人员 -->
+	<select id="getALLEmployeeInByDepartmentId2" resultType="string"
+		parameterType="string">
+		SELECT employeeId FROM employee_in where
+		departmentid like '${value}%'
+	</select>
 
 	<!-- 通过身份证删除该员工的黑名单记录 -->
 	<select id="deleteBlackrulesById" parameterType="string">

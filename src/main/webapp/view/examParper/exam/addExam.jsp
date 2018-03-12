@@ -615,18 +615,20 @@
 										</select>
 									</div>
 								</div>
+								
+								<div class="col-md-3">
+									<div class="input-group" role="toolbar">
+										<span class="el_spans">试卷状态：</span> <select
+											class="selectpicker form-control" title="请选择" name="paperStatus"
+												id="paperStatus">
+												<option value="">--请选择--</option>
+													<option value="0" selected="selected">未归档</option>
+													<option value="1">已归档</option>
+												</select>
+										</div>
+								</div>	
 			
-										<div class="col-md-3 el_qlmQuery">
-												<div class="input-group" role="toolbar">
-													<span class="el_spans">试卷状态：</span> <select
-														class="selectpicker form-control" title="请选择" name="paperStatus"
-														id="paperStatus">
-															<option value="">--请选择--</option>
-															<option value="0" selected="selected">未归档</option>
-															<option value="1">已归档</option>
-														</select>
-													</div>
-										</div>								
+															
 								<!--清空按钮-->
 								<button type="reset"
 									class="btn btn-default el_queryButton0 btn-sm">清空</button>

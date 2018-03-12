@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.xm.exam.mapper.trainContent.custom.TraincontenttypeCustomMapper">
+
+	<!-- 查询类别树 -->
+	<select id="getTraincontenttypeTree" resultType="map">
+		SELECT  typeId,typeName,upId FROM traincontenttype
+	</select>
+	
+	<!-- 根据上级编号返回下级最大编号(如果不存在返回0) -->
+	<select id="getMaxTypeIdByUpId" parameterType="string" resultType="string">
+		SELECT  IFNULL(MAX(typeId),'0') FROM traincontenttype WHERE upId = #{upId}
+	</select>
+	
+	<!-- 修改名字 -->
+	<update id="updateTraincontenttypeById" parameterType="cn.xm.exam.bean.trainContent.Traincontenttype">
+		update traincontenttype 
+		<set>
+			<if test="typename != null">
+				typename = #{typename}
+			</if>
+			<if test="upid != null">
+				upid = #{upid}
+			</if>
+			<if test="typedescription != null">
+				typedescription = #{typedescription}
+			</if>
+		</set>
+		where typeid = #{typeid}
+	</update>
+	
+	<!-- 根据编号查询类别 -->
+	<select id="selectTraincontenttypeById" parameterType="string" resultType="cn.xm.exam.bean.trainContent.Traincontenttype">
+		select * from traincontenttype where typeid=#{value}
+	</select>
+	
+	<!-- 根据编号删除类别 -->
+	<delete id="deleteTraincontenttypeById">
+		delete from traincontenttype where typeid=#{id}
+	</delete>
+	
+	
+</mapper>

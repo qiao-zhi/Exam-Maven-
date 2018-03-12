@@ -171,9 +171,15 @@ var successList = function List(result) {
 	for (var i = 0; i < departments.length; i++) {
 		var departmentType_1 = departments[i].departmenttype == "0" ? "内部单位"
 				: "长期外来单位"
-		str = '<tr><td>' + departments[i].departmentname + '</td><td>'
-				+ departmentType_1 + '</td><td>' + departments[i].upDepartName
-				+ '</td><td>' + departments[i].employeeName + '</td><td>'
+		str = '<tr><td>'
+				+ departments[i].departmentname
+				+ '</td><td>'
+				+ departmentType_1
+				+ '</td><td>'
+				+ departments[i].upDepartName
+				+ '</td><td>'
+				+ departments[i].employeeName
+				+ '</td><td>'
 				+ departments[i].phone
 				+ '</td><td><a title="点击查看部门员工信息" onclick="openEmpCaseModal(this)">'
 				+ departments[i].perNum + '</a></td><td>'
@@ -913,21 +919,92 @@ function closeModal_symbol() {
 	departmentIdEqual = true;
 }
 
-
-
 /**
  * 内部部门查询按类型
  */
-function queryDepartIn(){
+function queryDepartIn() {
 	$("[name='departType']").val($("#el_departType option:selected").val());
-//	清空页号然后进行查询
+	// 清空页号然后进行查询
 	clearPageNum();
 }
 
-function el_departmentCount(){
-	window.location.href="innerdepartCount.jsp";
+function el_departmentCount() {
+	window.location.href = "innerdepartCount.jsp";
 }
 
+/** ******清空查询条件*********** */
+function clearCondition() {
+	$(".clearCon").val("");
+	$(".curSelectedNode").removeClass("curSelectedNode");
+}
 
-
-
+/** ******删除长委单位的操作******************** */
+function delete_cwdw() {
+	$("#sccw").modal("show");
+	$.post('department_getChangWeiDepartment.action', {
+		"currentPage" : $("#currentPageQ").val(),
+		"currentCount" : $("#currentCountQ").val()
+	}, showTables, 'json')
+}
+function showTables(result) {
+	var pageInfo = result.pageInfo;
+	var list = pageInfo.list;
+	var currentCount = pageInfo.pageSize;// 页大小
+	var totalCount = pageInfo.total;// 页总数
+	var currentPage = pageInfo.pageNum;// 当前页
+	$("#cwdwTbody").html("");
+	for (var i = 0; i < list.length; i++) {
+		$("#cwdwTbody")
+				.append(
+						"<tr><td>"
+								+ (parseInt(currentCount)
+										* parseInt(currentPage - 1) + (i + 1))
+								+ "</td><td>"
+								+ list[i]
+								+ "</td><td>"
+								+ "<a class='button' href=javascript:void(0) onclick='deleteCw(\""
+								+ list[i]
+								+ "\")'><span class='glyphicon glyphicon-trash'></span></a></td></tr>")
+	}
+	// 动态开启分页组件
+	page(currentPage, totalCount, currentCount);
+}
+// 显示分页
+function page(currentPage, totalCount, currentCount) {
+	// 修改分页的基本属性
+	$('#paginationQ').pagination(
+			{
+				// 组件属性
+				"total" : totalCount,// 数字 当分页建立时设置记录的总数量 1
+				"pageSize" : currentCount,// 数字 每一页显示的数量 10
+				"pageNumber" : currentPage,// 数字 当分页建立时，显示的页数 1
+				"pageList" : [ 8 ],// 数组 用户可以修改每一页的大小，
+				// 功能
+				"layout" : [ 'list', 'sep', 'first', 'prev', 'manual', 'next',
+						'last', 'links' ],
+				"onSelectPage" : function(pageNumber, pageSize) {
+					$("#currentPageQ").val(pageNumber);
+					$("#currentCountQ").val(pageSize);
+					// 查询大修
+					delete_cwdw();
+				}
+			});
+}
+/**
+ * 删除长委单位
+ */
+function deleteCw(obj) {
+	if (confirm("您确认删除此长委单位?")) {
+		if (confirm("您确认删除此长委单位?您的操作比较危险,确认后将删除此长委单位的全部信息!")) {
+			var departmentName = obj;
+			$.post('department_deleteCWByName.action', {
+				'deleteName' : departmentName
+			}, function(result) {
+				alert(result.message);
+				if ("删除成功" == result.message) {
+					window.location.reload();// 刷新页面
+				}
+			}, 'json');
+		}
+	}
+}

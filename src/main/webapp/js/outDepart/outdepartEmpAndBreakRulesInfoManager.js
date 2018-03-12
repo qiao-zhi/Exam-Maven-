@@ -69,7 +69,8 @@ function showEmployeeBaseInfo(data) {
 		var index = i + 1;
 		showEmployeeOutBaseInfoList += "<tr>" +
 				"<td><input type='radio' name='el_chooseEmp' class='el_checks' vaule='"+ employeeOutBaseInfoList[i].idCard+ "'/></td>" +
-				"<td>"+ (index + (data.pageBean.currentPage - 1) * 8)
+				/*"<td>"+ (index + (data.pageBean.currentPage - 1) * 8)*/
+				"<td>"+ (index + (data.pageBean.currentPage - 1) * $("#currentCount").val())
 				+ "<input class='find_employeeOutBirthday' type='hidden' value='"
 				+ employeeOutBaseInfoList[i].birthday
 				+ "'/>"
@@ -1098,6 +1099,8 @@ function historyBigInfoFind(){
 	//设置到隐藏域中
 	$("#bigStatus_Mark").val(mark);
 	searchDepartmentAndOverHualTree(mark);
+	// 执行查询操作前先将隐藏域中的值清空当前页清空或改为第一页
+	$("#currentPage").val("");
 	findEmployeeOutBaseInfo();
 }
 

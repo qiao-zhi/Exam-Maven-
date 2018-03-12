@@ -52,18 +52,10 @@
 			<script type="text/javascript">
 				var baseUrlPath = "${pageContext.request.contextPath}";
 				$(function() {
-					//初始化资料类型
-					//alert("初始化资料类型")
-					//initTrainType();
-					//初始化知识点
-					//alert("初始化知识点")
-					initKnowledgeType();
-
-					//初始化部门树
-					//initDepartment();
-
 					//初始化表单中的所有数据  也就是将未修改之前的数据在表单中显示
 					initFormData();
+					
+					geneTypeTree();
 				});
 			</script>
 
@@ -148,7 +140,7 @@
 										name="traincontent.documentname" />
 								</div>
 
-								<div class="input-group el_modellist" role="toolbar">
+								<div class="input-group el_modellist" role="toolbar" style="display:none">
 									<span class="el_spans">所属级别：</span> <label class="el_radioBox"><input
 										type="radio" value="一级" name="traincontent.level"> 一级
 									</label> <label class="el_radioBox"><input type="radio"
@@ -162,7 +154,7 @@
 									<!-- <input id="fileName" type="text" readonly="readonly"/> -->
 								</div>
 
-								<div class="input-group el_modellist" role="toolbar">
+								<div class="input-group el_modellist" role="toolbar" style="display:none">
 									<span class="el_spans">更改文件：</span>
 									<!-- 这个没有以javabean的形式，在action中需要进行处理一下 -->
 									<input type="file" accept="audio/mp4,video/mp4"
@@ -172,22 +164,16 @@
 
 
 								<div class="input-group el_modellist" role="toolbar">
-									<span class="el_spans el_chooseSpan">所属部门：</span>
-									<ul id="el_chooseDepart"
-										class="el_modelinput el_chooseInput log"></ul>
-									<img
-										src="${pageContext.request.contextPath }/controls/selectDropTree/smallTriangle.png"
-										class="el_smallTriangle" width="7" />
-									<ul id="treeDemo10" class="ztree"></ul>
+									<span class="el_spans el_chooseSpan">上传部门：</span>
 									<!-- 隐藏所属部门选中的值  将所属部门选中的值赋给该隐藏域-->
-									<input id="trainDeptName" type="hidden"
-										name="traincontent.departmentname">
+									<input id="trainDeptName" type="text"
+										name="traincontent.departmentname" readonly class="form-control el_modelinput"/>
 								</div>
 
 
 								<!--根据试卷等级类型
                     来决定有没有部门和班的选择。-->
-								<div class="input-group el_modellist" role="toolbar">
+								<div class="input-group el_modellist" role="toolbar" style="display:none">
 									<span class="el_spans">资料类型：</span>
 									<!-- <select id="trainType" class="selectpicker form-control" title="请选择" name="traincontent.traintype">
                         <option>--请选择--</option>
@@ -198,11 +184,12 @@
 								</div>
 
 								<div class="input-group el_modellist" role="toolbar">
-									<span class="el_spans">知&nbsp;&nbsp;识&nbsp;点：</span> <select
-										id="trainKnowledge" class="selectpicker form-control"
-										title="请选择" name="traincontent.knowledgetype">
-										<option>--请选择--</option>
-									</select>
+									<span class="el_spans">所属类别：</span> 
+									<input id="knowledgeType" type="text"
+										class="form-control el_modelinput"
+									    value="${traincontent.typename }" readonly="readonly" onclick="openModal()" />
+									    <!-- 将知识点隐藏为培训内容类别 -->
+									<input type="hidden" name="traincontent.knowledgetype" value="${traincontent.typeid}">
 								</div>
 
 								<div class="input-group el_modellist" role="toolbar">
@@ -256,12 +243,49 @@
 
 
 
-
-
-
-
 					</div>
 				</div>
+				
+				
+				
+
+							<!-- 模态框修改类别 -->
+							<div class="modal fade" id="el_empTrainDoc" tabindex="-1"
+								role="dialog" aria-labelledby="myModalLabel23"
+								data-backdrop="static" data-keyboard="false" aria-hidden="true">
+								<div class="modal-dialog" style="width: 50%;">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal"
+												aria-hidden="true">&times;</button>
+											<!--关闭符号-->
+											<!--标题-->
+											<h4 class="modal-title" id="myModalLabel234">修改类别</h4>
+										</div>
+										<form>
+											<!--树-->
+											<div class="el_leftTree">
+												<!--标题类，添加了一个颜色-->
+												<span class="el_treeTitle">类别</span>
+											</div>
+
+											<ul id="tree" class="ztree"
+												style="width: auto !important; height: auto !important; border: none !important;"></ul>
+
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default"
+													data-dismiss="modal">关闭</button>
+											</div>
+										</form>
+									</div>
+									<!-- /.modal-content -->
+								</div>
+								<!-- /.modal -->
+							</div>
+				
+				
+				
+				
 
 			</div>
 		</div>

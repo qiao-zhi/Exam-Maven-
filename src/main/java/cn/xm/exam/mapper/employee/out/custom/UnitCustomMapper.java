@@ -37,8 +37,7 @@ public interface UnitCustomMapper {
 	 * @return 满足条件的总数
 	 * @throws SQLException
 	 */
-	public int getHaulunitTotalByCondition(Map<String, Object> condition) throws SQLException;
-
+	public int getHaulunitTotalByCondition(Map<String, Object> condition) throws SQLException;	
 	/**
 	 * 组合条件查询大修单位信息
 	 * 
@@ -48,7 +47,7 @@ public interface UnitCustomMapper {
 	 * @throws SQLException
 	 */
 	public List<Map<String, Object>> getHaulunitByCondition(Map<String, Object> condition) throws SQLException;
-
+	public List<Map<String, Object>> getHaulunitByCondition2(Map<String, Object> condition) throws SQLException;
 	/**
 	 * 根据大修ID和单位ID查询员工信息
 	 * 
@@ -59,6 +58,8 @@ public interface UnitCustomMapper {
 	 */
 	public List<Map<String, Object>> getEmployeeOutsByUaulIdAndUnitId(Map<String, Object> haulIdAndUnitId)
 			throws SQLException;
+	public List<Map<String, Object>> getEmployeeOutsByUaulIdAndUnitId2(Map<String, Object> haulIdAndUnitId)
+			throws SQLException;
 
 	/**
 	 * 获取外来 单位员工的总数
@@ -67,6 +68,7 @@ public interface UnitCustomMapper {
 	 * @throws SQLException
 	 */
 	public int getEmployeeOutsTotalByUaulIdAndUnitId(Map<String,Object> condition)throws SQLException;
+	public int getEmployeeOutsTotalByUaulIdAndUnitId2(Map<String,Object> condition)throws SQLException;
 	/**
 	 * 根据大修ID和单位ID查询某次大修的所有违章员工的信息
 	 * 
@@ -76,8 +78,7 @@ public interface UnitCustomMapper {
 	 * @throws SQLException
 	 */
 	public List<Map<String, Object>> getEmployeeOutsBreakrulesByUaulIdAndUnitId(Map<String, Object> haulIdAndUnitId)
-			throws SQLException;
-
+			throws SQLException;	
 	/**
 	 * 根据单位的ID查出对应的Id与名称
 	 * 

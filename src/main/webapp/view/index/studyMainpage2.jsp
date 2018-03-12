@@ -26,14 +26,6 @@
 <script src="<%=path%>/js/index/studyMainpage2.js"></script>
 <!-- 自己写的js代码 start-->
 <script>
-	$(function() {
-		//页面加载的时候初始化左侧的菜单
-		/* initKnowledgeType(); */
-
-		//页面加载的时候初始化页面的数据
-		/* initPageData(); */
-
-	})//加载页面时初始化的方法的括号
 
 	//******页面加载的时候初始化一些数据出来(把所有数据查询出来) start
 	function initPageData() {
@@ -117,10 +109,8 @@
 	//视频专区的
 	function Fy() {
 		$.ajax({
-					url : "${pageContext.request.contextPath}/train_findStudyTraincontentByFy.action",
+					url : "train_findStudyTraincontentByFy.action",
 					data : {
-						"knowledge" : $("#selknow").val(),
-						"dataLevel" : $("#selLevel").val(),
 						"currentPage" : $("#currentPage").val(),
 						"resultCount" : $("#resultCount").val()
 					},
@@ -130,36 +120,36 @@
 					success : function(data) {
 
 						//data.traincontentList[i]代表视频的   data.traincontentListDoc[i]代表非视频也就是文档的
-
+						var list = data.pageInfo.list;
 						//---====视频专区
 						//数据显示之前 要先清空视频专区的的所有数据
 						$("#videoList li").remove();
 						var videoStr = "";
 						//alert("视频的数量:"+data.traincontentList.length)
-						for (var i = 0; i < data.traincontentList.length; i++) {
+						for (var i = 0; i < list.length; i++) {
 
 							//培训资料的id
-							var documentid = data.traincontentList[i].documentid;
+							var documentid = list[i].documentid;
 							//资料名称
-							var documentname = data.traincontentList[i].documentname;
+							var documentname = list[i].documentname;
 							//资料级别
-							var level = data.traincontentList[i].level;
+							var typename = list[i].typename;
 							//资料类型
-							var traintype = data.traincontentList[i].traintype;
+							var traintype = list[i].traintype;
 							//文件大小
-							var size = data.traincontentList[i].size;
+							var size = list[i].size;
 							//浏览量
-							var browsetimes = data.traincontentList[i].browsetimes;
+							var browsetimes = list[i].browsetimes;
 							//所属部门
-							var departmentname = data.traincontentList[i].departmentname;
+							var departmentname = list[i].departmentname;
 							//上传时间
-							var uptime = data.traincontentList[i].uptime;
+							var uptime = list[i].uptime;
 							//上传人
-							var employeename = data.traincontentList[i].employeename;
+							var employeename = list[i].employeename;
 							//资料描述
-							var description = data.traincontentList[i].description;
+							var description = list[i].description;
 							//当前文件名
-							var currentname = data.traincontentList[i].currentname;
+							var currentname = list[i].currentname;
 
 							videoStr += "<li>";
 							videoStr += "<div class='pricing pricing--yama'>";
@@ -171,14 +161,14 @@
 							videoStr += "<div class='pricing__price'>"
 									+ documentname + "</div>";
 							videoStr += "</li>";
-							videoStr += "<li class='pricing__feature'>" + level
+							videoStr += "<li class='pricing__feature2'>" + typename
 									+ "</li>";
 							videoStr += "<li class='pricing__feature'>" + size
 									+ "</li>";
 							videoStr += "<li class='pricing__feature2'>"
 									+ departmentname + "</li>";
-							videoStr += "<li class='pricing__feature'>"
-									+ traintype + "</li>";
+/* 							videoStr += "<li class='pricing__feature'>"
+									+ traintype + "</li>"; */
 							/* videoStr +="<li class='pricing__feature'>"+uptime+"</li>"; */
 
 							videoStr += "<li class='el_optionButton'>";
@@ -197,8 +187,8 @@
 						}
 						$("#videoList").append(videoStr);//添加到视频的列表中
 						//参数1：总记录数   参数2：当前页页号  参数3：每页显示的记录条数
-						queryFyVideo(data.videoCount, data.currentPage,
-								data.curTotal);
+						queryFyVideo(data.pageInfo.total, data.pageInfo.pageNum,
+								data.pageInfo.pageSize);
 
 					},
 					error : function() {
@@ -343,7 +333,7 @@
 	<div class="hc_lnav">
 
 
-		<div class="row-fluid">
+<!-- 		<div class="row-fluid">
 			<button type="button"
 				class="btn btn-default hvr-sweep-to-right button20"
 				id="baseMenuArrow">一级培训内容</button>
@@ -353,7 +343,7 @@
 			<button type="button"
 				class="btn btn-default hvr-sweep-to-left button20"
 				id="baseMenuRight">三级培训内容</button>
-		</div>
+		</div> -->
 	</div>
 	<!-- 结束菜单 -->
 

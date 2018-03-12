@@ -20,7 +20,7 @@
 	href="<%=path%>/css/outDepart/outEmployeeAllot.css">
 <!-- 日期格式转换 -->
 <script
-	src="${pageContext.request.contextPath }/js/questionLibrary/dateformat.js "></script>
+	src="${pageContext.request.contextPath }/js/questionLibrary/dateformat.js"></script>
 
 <script>
 	//定义一个全局变量
@@ -129,7 +129,7 @@ hasOperatingEmpout = true;
 										id="query_bigId" class="clearInput" />
 									<!-- 隐藏当前页和显示条数 -->
 									<input type="hidden" name="currentPage" id="currentPage" /> <input
-										type="hidden" name="currentCount" id="currentCount" />
+										type="hidden" name="currentCount" id="currentCount" value="8"/>
 									<!--提交查询按钮-->
 									<button type="button"
 										class="btn btn-primary el_queryButton btn-sm"
@@ -194,6 +194,13 @@ hasOperatingEmpout = true;
 												class="btn btn-primary" onclick="el_empCardModel()">
 												生成工作证</button>
 										</shiro:hasPermission>
+										<!--S 免培训  -->
+										<shiro:hasPermission name="trainmanager:notrain">
+											<button style="display: none" id="notrainbtn"
+												class="btn btn-primary" onclick="notrain()">
+												技术服务</button>
+										</shiro:hasPermission>
+										<!--S 免培训  -->
 										<shiro:hasPermission name="grademanager:revokecard">
 											<button style="display: none" id="revokeWork"
 												class="btn btn-primary" onclick="revokeWork()">

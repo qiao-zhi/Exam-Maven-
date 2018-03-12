@@ -30,9 +30,17 @@
 		var departmentIdFromSess = '${session.userinfo.departmentid}';
 		//定义一个全局变量
 		var basePathUrl = "${pageContext.request.contextPath}";
+		/* 题库管理权限 */
+		var hasQuestionbankManager = false;
 	</script>
 </head>
 <body>
+<!--  如果有题库管理权限啊修改全局变量的值-->
+<shiro:hasPermission name="questionbank:manager">
+	<script>
+		hasQuestionbankManager = true;
+	</script>
+</shiro:hasPermission>
 <!--头-->
 <jsp:include page="/view/public/header.jsp"></jsp:include>
 
@@ -127,9 +135,11 @@
 
                             <div class="el_topButton">
                                 <div class="col-md-2">
+                                <shiro:hasPermission name="questionbank:manager">
                                     <a href="<%=path %>/view/questionLibrary/addQuestionPage.jsp">
                                         <button class="btn btn-primary">添加试题</button>
                                     </a>
+                                </shiro:hasPermission>
                                 </div>
                             </div>
 

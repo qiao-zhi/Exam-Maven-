@@ -38,7 +38,7 @@
 		</if>
 		<!-- 增加检修状态的判断 -->
 		<if test="bigStatus != null">
-			and bigStatus != #{bigStatus}
+			and bigStatus = #{bigStatus}
 		</if>
 	</select>
 	<!-- E查询分给给本单位的大修单位树 -->
@@ -108,7 +108,7 @@
 		</if>
 		<!-- 增加检修状态的判断 -->
 		<if test="bigStatus != null">
-			and bigStatus != #{bigStatus}
+			and bigStatus = #{bigStatus}
 		</if>
 		<!-- 未参加本机培训 -->
 		<if test="distributeStatus != null and distributeStatus==0">

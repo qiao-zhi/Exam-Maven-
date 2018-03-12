@@ -40,6 +40,11 @@
     
 <script src="${baseurl}/controls/calendar/noCal.js"></script>
 
+
+<!-- 2018.03.07 QLQ 引入的ztree的插件 -->
+<link rel="stylesheet" href="${baseurl}/controls/zTree/css/zTreeStyle/zTreeStyle.css"/>
+<script src="${baseurl}/controls/zTree/js/jquery.ztree.all.js"></script> 
+
 <!-- <script>
 // 设置jQuery Ajax全局错误处理
 $(document).ajaxError( 

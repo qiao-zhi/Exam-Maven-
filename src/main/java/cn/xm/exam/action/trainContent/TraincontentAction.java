@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.ProgressListener;
 import org.apache.commons.io.FileUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -20,6 +20,8 @@ import org.apache.struts2.ServletActionContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.opensymphony.xwork2.ActionSupport;
 
 import cn.xm.exam.bean.common.Dictionary;
@@ -27,8 +29,10 @@ import cn.xm.exam.bean.system.User;
 import cn.xm.exam.bean.trainContent.Traincontent;
 import cn.xm.exam.mapper.employee.in.custom.DepartmentCustomMapper;
 import cn.xm.exam.service.common.DictionaryService;
+import cn.xm.exam.service.employee.in.DepartmentService;
 import cn.xm.exam.service.trainContent.TraincontentService;
 import cn.xm.exam.utils.UUIDUtil;
+import cn.xm.exam.utils.ValidateCheck;
 
 /**
  * @author 贤元
@@ -42,6 +46,8 @@ public class TraincontentAction extends ActionSupport {
 	private TraincontentService traincontentService;
 	@Resource
 	private DictionaryService dictionaryService;
+	@Resource
+	private DepartmentService departmentService;
 
 	@Resource
 	private DepartmentCustomMapper departmentCustomMapper;
@@ -177,7 +183,9 @@ public class TraincontentAction extends ActionSupport {
 		boolean permitted = currentUser.isPermitted("trainmanager:factory");// 判断是否有全厂管理的权限,有就不添加部门ID，没有就设为当前Session中的部门ID
 		String departmentId = permitted ? null : departmentIdSession;
 		// 将部门树的所有信息查询出来
-		List<Map<String, Object>> departmentTree = departmentCustomMapper.getDepartmentTreeForExam(departmentId);
+		//List<Map<String, Object>> departmentTree = departmentCustomMapper.getDepartmentTreeCommon(departmentId);
+		List<Map<String, Object>> departmentTree = departmentService.getDepartmentTreeCommon(departmentId);
+		
 		// struts2自动将map集合转成json
 		map.put("departmentTree", departmentTree);
 
@@ -331,10 +339,10 @@ public class TraincontentAction extends ActionSupport {
 		HttpServletRequest request = ServletActionContext.getRequest();
 		String trainId = request.getParameter("trainContentId");
 		// 根据培训资料的主键id查询该条培训信息
-		Traincontent trainContent = traincontentService.getTrainContentById(Integer.parseInt(trainId));
+		Map<String,Object> trainContent = traincontentService.getTrainContentById2(Integer.parseInt(trainId));
 		// 将日期转换成指定格式
 		SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-		String dateStr = sd.format(trainContent.getUptime());
+		String dateStr = sd.format(trainContent.get("uptime"));
 		// 将培训资料信息保存在request域中，在修改培训资料信息的jsp页面中回显出来
 		request.setAttribute("traincontent", trainContent);
 		request.setAttribute("dateStr", dateStr);
@@ -416,6 +424,10 @@ public class TraincontentAction extends ActionSupport {
 		return "ok";// 这个视图通过struts2将map集合转成json
 	}
 
+	private String documentName;//文档名称
+	private String departmentName;//部门名称
+	private String typeId;//类别编号
+	
 	/**
 	 * 根据资料名称、所属部门、资料级别、知识点、当前页页号、每页显示记录数进行分页查询
 	 * 
@@ -423,6 +435,31 @@ public class TraincontentAction extends ActionSupport {
 	 * @throws Exception
 	 */
 	public String findTrainByFYCondiction() throws Exception {
+		map = new LinkedHashMap<String, Object>();
+		// 封装查询条件
+		Map<String,Object> condition = new HashMap<String,Object>();//封装条件的map
+		if(ValidateCheck.isNotNull(documentName)){
+			condition.put("documentName", documentName);
+		}
+		if(ValidateCheck.isNotNull(departmentName)){
+			condition.put("departmentName", departmentName);
+		}
+		if(ValidateCheck.isNotNull(typeId)){
+			condition.put("typeId", typeId);
+		}
+		int current_page = Integer.parseInt(currentPage);//当前页
+		int current_total = Integer.parseInt(currentTotal);//页大小
+		/******S    PageHelper分页*********/
+		PageHelper.startPage(current_page,current_total);//开始分页
+		List<Map<String,Object>> traincontentList = traincontentService.selectTraincontentWithFYCondition(condition);
+		PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(traincontentList);
+		/******E    PageHelper分页*********/
+		
+		map.put("pageInfo", pageInfo);
+		
+		return "ok";
+	}
+/*	public String findTrainByFYCondiction() throws Exception {
 		map = new LinkedHashMap<String, Object>();
 		// 获取资料名称
 		String documentName = traincontent.getDocumentname();
@@ -432,7 +469,7 @@ public class TraincontentAction extends ActionSupport {
 		String level = traincontent.getLevel();
 		// 获取知识点
 		String knowledgeType = traincontent.getKnowledgetype();
-
+		
 		Subject currentUser = SecurityUtils.getSubject();
 		// 获取Session中的用户信息
 		User user = (User) ServletActionContext.getRequest().getSession().getAttribute("userinfo");
@@ -452,14 +489,14 @@ public class TraincontentAction extends ActionSupport {
 		mapFY.put("level", level);
 		// 知识点
 		mapFY.put("knowledgeType", knowledgeType);
-
+		
 		Map<String, Object> map2 = new LinkedHashMap<String, Object>();
 		map2.put("documentName", documentName);// 资料名称
 		map2.put("departmentName", departmentName);// 部门名称
 		map2.put("level", level);// 等级
 		map2.put("knowledgeType", knowledgeType);// 知识点
 		map2.put("departmentId", departmentId);// 部门
-
+		
 		// 根据 资料名称、部门名称、等级、知识点查询总记录数
 		int resultCount = traincontentService.selectTraincontentCountWithFYCondition(map2);
 		// 总页数 = 总记录数/每页显示的记录数
@@ -468,11 +505,11 @@ public class TraincontentAction extends ActionSupport {
 		mapFY.put("currentPage", currentPageInt);
 		// 每页显示的记录数
 		mapFY.put("currentTotal", Integer.parseInt(currentTotal));
-
-		List<Traincontent> traincontentList = traincontentService.selectTraincontentWithFYCondition(mapFY);
-
+		
+		List<Map> traincontentList = traincontentService.selectTraincontentWithFYCondition(mapFY);
+		
 		// 返回总页数 数据的页数 = 数据的总条数/每页显示的记录数
-
+		
 		if (traincontentList != null) {
 			// 封装当前页要显示的全部培训资料信息
 			map.put("traincontentList", traincontentList);
@@ -488,10 +525,10 @@ public class TraincontentAction extends ActionSupport {
 		} else {
 			map.put("result", "查询失败");
 		}
-
+		
 		return "ok";
 	}
-
+*/
 	/**
 	 * 根据培训资料表的主键id 删除单条培训信息
 	 * 
@@ -618,8 +655,9 @@ public class TraincontentAction extends ActionSupport {
 	 * 根据资料等级、资料类型(视频资料或者非视频资料)、知识点、 当前页页号、每页显示的记录数 的分页查询
 	 * 
 	 * @return
+	 * @throws Exception 
 	 */
-	public String findStudyTraincontentByFy() {
+	public String findStudyTraincontentByFy() throws Exception {
 		// 要转成json的map集合
 		map = new LinkedHashMap<String, Object>();
 
@@ -627,10 +665,6 @@ public class TraincontentAction extends ActionSupport {
 
 		// 接收从jsp页面传过来的数据
 		HttpServletRequest request = ServletActionContext.getRequest();
-		// 知识点
-		String knowledge = request.getParameter("knowledge");
-		// 资料等级
-		String dataLevel = request.getParameter("dataLevel");
 		// 当前页页号
 		String currentPage = request.getParameter("currentPage");
 		// 每页显示的记录数
@@ -641,47 +675,13 @@ public class TraincontentAction extends ActionSupport {
 		// 每页显示的记录数
 		int curTotal = Integer.parseInt(resultCount);
 
-		Map<String, Object> mapFy = new LinkedHashMap<String, Object>();
-
-		mapFy.put("level", dataLevel);// 资料等级
-		mapFy.put("trainType", "mp4");// 资料类型
-		mapFy.put("knowledgeType", knowledge);// 知识点
-		mapFy.put("currentPage", (curPage - 1) * curTotal);// 当前页页号
-															// (当前页页号-1)*每页显示的记录数
-		mapFy.put("currentTotal", curTotal);// 每页显示的记录数
-		// 查询出视频结果
-		List<Traincontent> traincontentList = traincontentService.findStudyTraincontentByFy(mapFy);
-		// 查询出视频的总记录数
-		int videoCount = traincontentService.findStudyTraincontentByFyCount(mapFy);
-
-		// 查询出非视频结果
-		List<Traincontent> traincontentListDoc = traincontentService.findStudyTraincontentByFyDoc(mapFy);
-		// 查询出非视频的总记录数
-		int docCount = traincontentService.findStudyTraincontentByFyDocCount(mapFy);
-
-
-		if ((traincontentList != null) || (traincontentListDoc != null)) {
-			// 封装当前页要显示的全部视频培训资料信息
-			map.put("traincontentList", traincontentList);
-			// 封装当前页要显示的文档培训资料信息
-			map.put("traincontentListDoc", traincontentListDoc);
-
-			// 封装总页数
-			// map.put("sumPages", sumPages);
-			// 视频总记录数(当前资料等级对应的视频总记录数)
-			map.put("videoCount", videoCount);
-			// 非视频总记录数(当前资料等级对应的文档总记录数)
-			map.put("docCount", docCount);
-
-			// 每页显示的记录条数
-			map.put("curTotal", curTotal);
-			// 当前页页号
-			map.put("currentPage", Integer.parseInt(currentPage));
-
-			map.put("result", "查询成功");
-		} else {
-			map.put("result", "查询失败");
-		}
+		/******S    PageHelper分页*********/
+		PageHelper.startPage(curPage,curTotal);//开始分页
+		List<Map<String,Object>> traincontentList = traincontentService.selectTraincontentWithFYCondition(null);
+		PageInfo<Map<String,Object>> pageInfo = new PageInfo<>(traincontentList);
+		/******E    PageHelper分页*********/
+		
+		map.put("pageInfo", pageInfo);
 
 		return "ok";
 	}
@@ -732,4 +732,29 @@ public class TraincontentAction extends ActionSupport {
 
 	}
 
+	
+	
+	public String getDocumentName() {
+		return documentName;
+	}
+
+	public void setDocumentName(String documentName) {
+		this.documentName = documentName;
+	}
+
+	public String getDepartmentName() {
+		return departmentName;
+	}
+
+	public void setDepartmentName(String departmentName) {
+		this.departmentName = departmentName;
+	}
+
+	public String getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(String typeId) {
+		this.typeId = typeId;
+	}
 }

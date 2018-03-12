@@ -75,7 +75,7 @@ public class QuestionbankAction extends ActionSupport implements ModelDriven<Que
 		String departmentId = permitted ? null : departmentIdSession;
 		try {
 			result = new HashMap<String, Object>();
-			List<Map<String, Object>> departmentTree = departmentService.getDepartmentTreeForExam(departmentId);
+			List<Map<String, Object>> departmentTree = departmentService.getDepartmentTreeCommon(departmentId);
 			result.put("departmentTree", departmentTree);
 		} catch (Exception e) {
 			e.printStackTrace();

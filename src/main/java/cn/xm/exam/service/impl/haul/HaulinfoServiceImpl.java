@@ -163,8 +163,8 @@ public class HaulinfoServiceImpl implements HaulinfoService {
 	}
 
 	@Override
-	public List<Map<String, Object>> getHaulNameAndIdsForExam() throws SQLException {
-		return haulinfoCustomMapper.getHaulNameAndIdsForExam();
+	public List<Map<String, Object>> getHaulNameAndIdsForExam(String departmentId) throws SQLException {
+		return haulinfoCustomMapper.getHaulNameAndIdsForExam(departmentId);
 	}
 
 	@Override

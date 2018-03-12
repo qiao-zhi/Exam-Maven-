@@ -27,6 +27,11 @@ public class TraincontentServiceImpl implements TraincontentService {
 	private TraincontentMapper traincontentMapper;
 	@Resource
 	private TraincontentCustomMapper traincontentCustomMapper;
+	
+	/**
+	 * 注入服务器目录地址
+	 */
+	private String savePath;
 
 	// 增加培训资料
 	// trainContent ： 要增加的培训记录
@@ -99,8 +104,8 @@ public class TraincontentServiceImpl implements TraincontentService {
 	 * 返回本页要显示的所有记录数
 	 */
 	@Override
-	public List<Traincontent> selectTraincontentWithFYCondition(Map map) throws Exception {
-		List<Traincontent> trainContentList = traincontentCustomMapper.selectTraincontentWithFYCondition(map);
+	public List<Map<String,Object>> selectTraincontentWithFYCondition(Map map) throws Exception {
+		List<Map<String,Object>> trainContentList = traincontentCustomMapper.selectTraincontentWithFYCondition(map);
 		if (trainContentList!=null) {
 			return trainContentList;
 		} else {
@@ -189,6 +194,20 @@ public class TraincontentServiceImpl implements TraincontentService {
 	public int findStudyTraincontentByFyDocCount(Map map) {
 		int count = traincontentCustomMapper.findStudyTraincontentByFyDocCount(map);
 		return count;
+	}
+
+	@Override
+	public Map<String, Object> getTrainContentById2(Integer id) throws Exception {
+		// TODO Auto-generated method stub
+		return traincontentCustomMapper.getTraincontentById(id);
+	}
+
+	public String getSavePath() {
+		return savePath;
+	}
+
+	public void setSavePath(String savePath) {
+		this.savePath = savePath;
 	}
 
 

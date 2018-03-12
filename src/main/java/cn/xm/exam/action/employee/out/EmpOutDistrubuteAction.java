@@ -79,11 +79,11 @@ public class EmpOutDistrubuteAction extends ActionSupport {
 				condition.put("longterm_train", DefaultValue.LONGTERM_EMPLOYEE_TRAIN);
 			}
 			if(ValidateCheck.isNotNull(bigStatusMark)){
-				//1表示查询所有的检修
+				//1表示查询已结束的检修，0代表查询进行中的检修
 				if(bigStatusMark.equals("1")){				
-					condition.put("bigStatus", null);
-				}else{
 					condition.put("bigStatus", "已结束");
+				}else{
+					condition.put("bigStatus", "进行中");
 				}
 			}
 			haulunitTree = empoutDistributeService.getHaulunitTreeByDepartmentId(condition);
@@ -178,11 +178,11 @@ public class EmpOutDistrubuteAction extends ActionSupport {
 			condition.put("longterm_train", DefaultValue.LONGTERM_EMPLOYEE_TRAIN);
 		}
 		if(ValidateCheck.isNotNull(bigStatusMark)){
-			//1表示查询所有的检修
+			//1表示查询已结束的检修，0代表查询进行中的检修
 			if(bigStatusMark.equals("1")){				
-				condition.put("bigStatus", null);
-			}else{
 				condition.put("bigStatus", "已结束");
+			}else{
+				condition.put("bigStatus", "进行中");
 			}
 		}
 		if (ValidateCheck.isNotNull(unitId)) {
@@ -380,6 +380,22 @@ public class EmpOutDistrubuteAction extends ActionSupport {
 		return SUCCESS;
 	}
 
+	private String distributeId;//分配ID
+	public String updateDistributeForMiankao(){
+		Map condition = new HashMap();
+		response = new HashMap<String, Object>();
+		String result = null;
+		if(ValidateCheck.isNotNull(distributeId)){
+			try {
+				result = empoutDistributeService.updateDistributeForMiankao(distributeId)? "免培训成功，请到待分配下将该员工分配到下级":"免培训失败";
+			} catch (SQLException e) {
+				logger.error("免培训失败!", e);
+				e.printStackTrace();
+			}
+		}
+		response.put("result", result);
+		return SUCCESS;
+	}
 	// get,set
 	public Map<String, Object> getResponse() {
 		return response;
@@ -507,6 +523,14 @@ public class EmpOutDistrubuteAction extends ActionSupport {
 
 	public void setBigStatusMark(String bigStatusMark) {
 		this.bigStatusMark = bigStatusMark;
+	}
+
+	public String getDistributeId() {
+		return distributeId;
+	}
+
+	public void setDistributeId(String distributeId) {
+		this.distributeId = distributeId;
 	}
 	
 

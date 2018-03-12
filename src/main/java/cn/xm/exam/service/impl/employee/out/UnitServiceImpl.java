@@ -191,6 +191,7 @@ public class UnitServiceImpl implements UnitService {
 		//2.1删掉记录
 		haulunitprojectMapper.deleteByExample(haulunitprojectExample);
 		//重新添加
+		
 		// 3.添加中间表工程信息
 		List<String> projectIds = Arrays.asList(projectids.split(","));
 		Haulunitproject haulunitproject = null;
@@ -202,6 +203,15 @@ public class UnitServiceImpl implements UnitService {
 			haulunitprojectMapper.insert(haulunitproject);
 		}
 		return true;
+	}
+	
+	@Override
+	public boolean updateUnit(Unit unit, Haulunit haulUnit) throws Exception {
+		//1.修改基本信息
+		boolean result = unitMapper.updateByPrimaryKeySelective(unit) > 0
+				&& haulunitMapper.updateByPrimaryKeySelective(haulUnit) > 0 ? true : false;
+		
+		return result;
 	}
 
 	@Override
@@ -247,6 +257,31 @@ public class UnitServiceImpl implements UnitService {
 		condition.put("index", index);
 		condition.put("currentCount", currentCount);
 		List<Map<String, Object>> haulunits = unitCustomMapper.getHaulunitByCondition(condition);
+		pageBean.setProductList(haulunits);// 5.设置数据
+		return pageBean;
+	}
+	
+	/*
+	 *查询培训部门信息
+	 */
+	@Override
+	public PageBean<Map<String, Object>> findUnitsWithCondition2(int currentPage, int currentCount,
+			Map<String, Object> condition) throws Exception {
+		PageBean<Map<String, Object>> pageBean = new PageBean();
+		pageBean.setCurrentPage(currentPage);// 1.设置当前页
+		pageBean.setCurrentCount(currentCount);// 2. 设置页大小
+		int totalCount = unitCustomMapper.getHaulunitTotalByCondition(condition);
+		pageBean.setTotalCount(totalCount);// 3. 设置总记录数
+		int totalPage = (int) Math.ceil(1.0 * totalCount / currentCount);
+		pageBean.setTotalPage(totalPage);// 4.设置总页数
+		/******
+		 * 1 0 8 2 8 16 3 16 24
+		 * 
+		 */
+		int index = (currentPage - 1) * currentCount;
+		condition.put("index", index);
+		condition.put("currentCount", currentCount);
+		List<Map<String, Object>> haulunits = unitCustomMapper.getHaulunitByCondition2(condition);
 		pageBean.setProductList(haulunits);// 5.设置数据
 		return pageBean;
 	}
@@ -298,6 +333,30 @@ public class UnitServiceImpl implements UnitService {
 		return pageBean;
 	}
 
+	@Override
+	public PageBean<Map<String, Object>> getEmployeeOutsByUaulIdAndUnitId2(int currentPage, int currentCount,
+			Map<String, Object> haulIdAndUnitId) throws SQLException {
+
+		PageBean<Map<String, Object>> pageBean = new PageBean();
+		pageBean.setCurrentPage(currentPage);// 1.设置当前页
+		pageBean.setCurrentCount(currentCount);// 2. 设置页大小
+		int totalCount = unitCustomMapper.getEmployeeOutsTotalByUaulIdAndUnitId2(haulIdAndUnitId);
+		pageBean.setTotalCount(totalCount);// 3. 设置总记录数
+		int totalPage = (int) Math.ceil(1.0 * totalCount / currentCount);
+		pageBean.setTotalPage(totalPage);// 4.设置总页数
+		/******
+		 * 1 0 8 2 8 16 3 16 24
+		 * 
+		 */
+		int index = (currentPage - 1) * currentCount;
+		haulIdAndUnitId.put("index", index);
+		haulIdAndUnitId.put("currentCount", currentCount);
+		List<Map<String, Object>> empls = unitCustomMapper.getEmployeeOutsByUaulIdAndUnitId2(haulIdAndUnitId);
+		pageBean.setProductList(empls);// 5.设置数据
+		return pageBean;
+	}
+
+	
 	@Override
 	public PageBean<Map<String, Object>> getEmployeeOutsBreakrulesByUaulIdAndUnitId(int currentPage, int currentCount,
 			Map<String, Object> condition) throws SQLException {

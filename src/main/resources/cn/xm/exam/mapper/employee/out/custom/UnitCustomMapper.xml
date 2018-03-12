@@ -92,6 +92,46 @@
 			DESC,CONVERT(unit.name USING gbk) </if> -->
 		<include refid="query_haulunit_limit"></include>
 	</select>
+	
+	<!-- 查询内部员工和长委的培训单位信息 -->
+	<select id="getHaulunitByCondition2" parameterType="hashmap"
+		resultType="map">
+		SELECT
+		haulunit.unitId,
+		haulunit.unitBigId,
+		haulunit.bigId,
+		haulunit.projectNames,
+		haulunit.manager,
+		haulunit.managerPhone,
+		haulunit.secure,
+		haulunit.securePhone,		
+		haulinfo.bigName,
+		haulinfo.bigStatus,
+		haulinfo.bigCreateDate,
+		unit.name,
+		unit.address,
+		unit.contact,
+		unit.phone,
+		(SELECT
+		COUNT(BigEmployeeoutId)
+		FROM haulemployeeout
+		WHERE
+		haulemployeeout.bigId
+		= haulunit.bigId
+		AND haulemployeeout.unitId =
+		haulunit.unitId) AS
+		personNum		
+		FROM haulunit,
+		haulinfo,
+		unit
+		<where>
+			<include refid="query_haulunit_where"></include>
+		</where>
+
+		ORDER BY personNum DESC	
+		<include refid="query_haulunit_limit"></include>
+	</select>
+	
 	<!--组合查询条件 -->
 	<sql id="query_haulunit_where">
 		<if test="1 == 1">
@@ -138,8 +178,20 @@
 		where unitId=#{unitId}
 		AND
 		bigId=#{bigId}
+		and trainstatus='2'
 	</select>
 	<!-- E 查询大修单位员工总数 -->
+	
+	<!-- S 查询内部长委和正式工总数 -->
+	<select id="getEmployeeOutsTotalByUaulIdAndUnitId2" resultType="_int"
+		parameterType="map">
+		select count(BigEmployeeoutId) from haulemployeeout
+		where unitId=#{unitId}
+		AND
+		bigId=#{bigId}
+	</select>
+	<!-- E 查询大修单位员工总数 -->
+	
 	<!--S 根据大修ID与单位ID查询员工信息 -->
 	<select id="getEmployeeOutsByUaulIdAndUnitId" parameterType="map"
 		resultType="hashmap">
@@ -161,6 +213,28 @@
 			limit #{index},#{currentCount}
 		</if>
 	</select>
+	
+	<!--S 根据大修ID与单位ID查询 内部新员工培训的员工信息 -->
+	<select id="getEmployeeOutsByUaulIdAndUnitId2" parameterType="map"
+		resultType="hashmap">
+		select
+		emp.name,emp.idCode,emp.sex,emp.address,emplhaul.empType,emplhaul.empOutPhone,(SELECT
+		sum(minusNum) FROM breakrules WHERE BigEmployeeoutId =
+		emplhaul.BigEmployeeoutId ) as minusNum from employee_out
+		emp,haulemployeeout emplhaul where emp.idCode in (SELECT empoutIdcard
+		FROM haulemployeeout WHERE unitId=#{unitId}
+		AND
+		bigId=#{bigId}) and
+		emp.idCode =
+		emplhaul.empoutIdcard
+		AND bigId = #{bigId}
+		and
+		emplhaul.unitId=#{unitId}
+		<if test="index != null">
+			limit #{index},#{currentCount}
+		</if>
+	</select>
+	
 	<!-- 查询总数 -->
 	<select id="getEmployeeOutsBreakrulesTotal" parameterType="map"
 		resultType="_int">

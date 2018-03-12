@@ -425,11 +425,11 @@
 		unit u
 		WHERE exam.examId =
 		employeeexam.examId
+		AND employeeexam.bigemployeeoutid = haulemployeeout.BigEmployeeoutId
 		AND employeeexam.employeeId =
 		haulemployeeout.empoutIdcard
 		AND
 		haulemployeeout.empoutIdcard=employee_out.idCode
-		AND employeeexam.bigemployeeoutid = haulemployeeout.BigEmployeeoutId
 		and employeeexam.unitId=haulemployeeout.unitId
 		AND
 		haulemployeeout.bigId=exam.bigId

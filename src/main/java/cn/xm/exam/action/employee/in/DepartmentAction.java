@@ -3,9 +3,7 @@ package cn.xm.exam.action.employee.in;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +16,8 @@ import org.apache.shiro.subject.Subject;
 import org.apache.struts2.ServletActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.opensymphony.xwork2.ActionSupport;
 
 import cn.xm.exam.bean.employee.in.Department;
@@ -44,7 +44,7 @@ public class DepartmentAction extends ActionSupport {
 		String departmentIdSession = user.getDepartmentid();// 获取部门ID
 		boolean permitted = currentUser.isPermitted("departmentmanager:factory");// 判断是否有全厂管理的权限,有就不添加部门ID，没有就设为当前Session中的部门ID
 		String departmentId = permitted ? null : departmentIdSession;
-		List<Map<String, Object>> treeList = departmentService.getDepartmentTree(departmentId);
+		List<Map<String, Object>> treeList = departmentService.getDepartmentTreeCommon(departmentId);
 
 		result.put("treeList", treeList);
 		return SUCCESS;
@@ -180,7 +180,7 @@ public class DepartmentAction extends ActionSupport {
 	/*
 	 * 按条件查询所有的部门
 	 */
-	
+
 	public String findDepartment() {
 		Map<String, Object> condition = new HashMap<String, Object>();
 		// result是用来返回到jsp中
@@ -263,9 +263,9 @@ public class DepartmentAction extends ActionSupport {
 	/*
 	 * 将条件判断之后放到一个集合中
 	 */
-	
+
 	private String departType;
-	
+
 	public String getDepartType() {
 		return departType;
 	}
@@ -420,6 +420,65 @@ public class DepartmentAction extends ActionSupport {
 
 	public void setBreakrulesbumen(String breakrulesbumen) {
 		this.breakrulesbumen = breakrulesbumen;
+	}
+
+	/******** S QLQ ****************/
+	private String depNameWords;
+
+	public String getChangWeiDepartment() {
+		result = new HashMap<String, Object>();
+		// 封装查询条件
+		int current_page = Integer.parseInt(currentPage);// 当前页
+		int current_total = Integer.parseInt(currentCount);// 页大小
+		if (ValidateCheck.isNull(depNameWords)) {
+			depNameWords = "";
+		}
+		/****** S PageHelper分页 *********/
+		PageHelper.startPage(current_page, current_total);// 开始分页
+		List<String> departmentnames = null;
+		try {
+			departmentnames = departmentService.getChangWeiDepartment(depNameWords);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		PageInfo<String> pageInfo = new PageInfo<>(departmentnames);
+		/****** E PageHelper分页 *********/
+
+		result.put("pageInfo", pageInfo);
+		return SUCCESS;
+	}
+
+	/**
+	 * 删除长委单位
+	 * 
+	 * @return
+	 */
+	private String deleteName;//要删除的长委单位的名字
+	public String deleteCWByName() throws Exception {
+		//1.根据名称查出所有的部门编号集合
+		result = new HashMap<String, Object>();
+		String message = departmentService.deleteCWDepartmentById(deleteName);
+
+		result.put("message", message);
+		return SUCCESS;
+	}
+
+	/******** E QLQ ****************/
+
+	public String getDepNameWords() {
+		return depNameWords;
+	}
+
+	public void setDepNameWords(String depNameWords) {
+		this.depNameWords = depNameWords;
+	}
+
+	public String getDeleteName() {
+		return deleteName;
+	}
+
+	public void setDeleteName(String deleteName) {
+		this.deleteName = deleteName;
 	}
 
 }

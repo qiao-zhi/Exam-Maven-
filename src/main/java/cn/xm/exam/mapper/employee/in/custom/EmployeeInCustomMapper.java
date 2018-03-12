@@ -38,6 +38,13 @@ public interface EmployeeInCustomMapper {
 	boolean batchImportEmployeeIn(EmployeeInInfo employeeInInfo);
 
 	List<String> getALLEmployeeInByDepartmentId(String departmentid);
+
+	/**
+	 * 用于获取长委单位的所有员工
+	 * @param departmentid
+	 * @return
+	 */
+	List<String> getALLEmployeeInByDepartmentId2(String departmentid);
 	
 	public int addEmployeeInBatch(List<EmployeeIn> employeeInList);
 	//判断该员工是否在永久黑名单中

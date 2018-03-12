@@ -35,9 +35,19 @@
     <script>
 		//定义一个全局变量
 		var basePathUrl = "${pageContext.request.contextPath}";
+		/* 题库管理权限 */
+		var hasQuestionbankManager = false;
 	</script>
 </head>
 <body>
+<!--  如果有题库管理权限啊修改全局变量的值-->
+<shiro:hasPermission name="questionbank:manager">
+	<script>
+		hasQuestionbankManager = true;
+	</script>
+</shiro:hasPermission>
+
+
 <!--头-->
 <jsp:include page="/view/public/header.jsp"></jsp:include>
 
@@ -121,6 +131,7 @@
                             <div class="panel-body el_MainxiaoMain">
 
                                 <div class="el_topButton">
+                               	 <shiro:hasPermission name="questionbank:manager">
                                     <!-- 按钮触发模态框1 -->
                                         <button class="btn btn-primary" onclick="el_addDictinary()">
                                             	添加题库
@@ -129,6 +140,7 @@
 	                                    <button class="btn btn-primary" onclick="questionsBatchImport()">
 	                                        	试题批量导入
 	                                    </button>
+								    </shiro:hasPermission>
 	                                    <button class="btn btn-primary" onclick="batchModalLoad()">
 									                        试题批量导入模版下载
 									    </button>

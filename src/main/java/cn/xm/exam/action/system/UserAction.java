@@ -12,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -26,6 +27,7 @@ import cn.xm.exam.bean.employee.in.EmployeeIn;
 import cn.xm.exam.bean.system.Permission;
 import cn.xm.exam.bean.system.Role;
 import cn.xm.exam.bean.system.User;
+import cn.xm.exam.service.employee.in.DepartmentService;
 import cn.xm.exam.service.system.RoleService;
 import cn.xm.exam.service.system.UserService;
 import cn.xm.exam.utils.PageBean;
@@ -53,6 +55,8 @@ public class UserAction extends ActionSupport {
 	private UserService userService;
 	@Resource
 	private RoleService roleService;
+	@Resource
+	private DepartmentService departmentService;
 	
 	private Map<String, Object> result; //用来封装结果为json
 	private Map<String, Object> condition;//用来封装查询条件
@@ -323,9 +327,11 @@ public class UserAction extends ActionSupport {
 			//判断是否有厂级系统管理权限，若有则可得到全厂的部门树，若没有则可得到本部门及其所属部门的部门树
 			if (permissioncodes!=null) {
 				if (havePermissionCode(permissioncodes)) {
-					DepTree=userService.getDepartTreeByPermAndDepartId(ELFACTORY_ID);
+					//DepTree=userService.getDepartTreeByPermAndDepartId(ELFACTORY_ID);
+					DepTree=departmentService.getDepartmentTreeCommon(ELFACTORY_ID);
 				}else {
-					DepTree=userService.getDepartTreeByPermAndDepartId(user.getDepartmentid());
+					//DepTree=userService.getDepartTreeByPermAndDepartId(user.getDepartmentid());
+					DepTree=departmentService.getDepartmentTreeCommon(user.getDepartmentid());
 				}
 			} 	
 			result.put("DepTree", DepTree);

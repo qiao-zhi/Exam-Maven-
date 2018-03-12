@@ -89,10 +89,18 @@
 	<!--E 根据大修ID查询所有的大修部门ID -->
 
 	<!--S 查询大修的名字与ID集合 -->
-	<select id="getHaulNameAndIdsForExam" resultType="map">
+	<select id="getHaulNameAndIdsForExam" resultType="map" parameterType="string">
 		SELECT
-		bigName,bigId,bigStatus FROM haulinfo WHERE bigStatus !='已结束' order by
-		bigCreateDate DESC
+		haulinfo.bigName,
+		haulinfo.bigId,
+		bigStatus
+		FROM haulinfo
+		WHERE bigStatus != '已结束'
+		AND haulinfo.bigid IN(SELECT DISTINCT
+		bigId
+		FROM employeeoutdistribute
+		WHERE employeeoutdistribute.departmentId = #{value})
+		ORDER BY bigCreateDate DESC
 	</select>
 	<!--E 查询大修的名字与ID集合 -->
 	<!-- S查询标段信息 -->
@@ -168,24 +176,29 @@
 		FROM haulunit,
 		haulinfo haul
 		WHERE haul.bigId = haulunit.bigId
-		AND haul.bigStatus = '进行中'
+		AND haul.bigStatus =
+		'进行中'
 		AND haulunit.bigId NOT
 		IN(#{regular_train},#{longterm_train}))
-		AS unitNnm,
+		AS
+		unitNnm,
 		(SELECT
 		COUNT(BigEmployeeoutId)
 		FROM haulemployeeout,
-		haulinfo haul
+		haulinfo
+		haul
 		WHERE haul.bigId = haulemployeeout.bigId
 		AND haul.bigStatus = '进行中'
 		AND haul.bigId NOT
 		IN(#{regular_train},#{longterm_train})
-		AND haulemployeeout.trainStatus = '2') AS perNum,
+		AND
+		haulemployeeout.trainStatus = '2') AS perNum,
 		(SELECT
 		COUNT(haulprojectid)
 		FROM haulproject,
 		haulinfo haul
-		WHERE haul.bigId = haulproject.bigId
+		WHERE haul.bigId =
+		haulproject.bigId
 		AND haul.bigStatus = '进行中'
 		AND haul.bigId NOT
 		IN(#{regular_train},#{longterm_train}))

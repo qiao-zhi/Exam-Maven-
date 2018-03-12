@@ -347,11 +347,11 @@ public class EmployeeOutPersonAction extends ActionSupport{
 		}
 		
 		if(ValidateCheck.isNotNull(bigStatusMark)){
-			//1表示查询所有的检修
+			//1表示查询已结束的检修，0代表查询进行中的检修
 			if(bigStatusMark.equals("1")){				
-				condition.put("bigStatus", null);
-			}else{
 				condition.put("bigStatus", "已结束");
+			}else{
+				condition.put("bigStatus", "进行中");
 			}
 		}
 		

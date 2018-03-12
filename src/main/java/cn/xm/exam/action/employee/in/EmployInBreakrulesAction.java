@@ -1,8 +1,6 @@
 package cn.xm.exam.action.employee.in;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +20,7 @@ import cn.xm.exam.bean.employee.in.EmployeeIn;
 import cn.xm.exam.bean.employee.in.EmplyinBreakrules;
 import cn.xm.exam.bean.employee.out.Blacklist;
 import cn.xm.exam.bean.system.User;
+import cn.xm.exam.service.employee.in.DepartmentService;
 import cn.xm.exam.service.employee.in.EmployeeInBreakrulesService;
 import cn.xm.exam.utils.DateHandler;
 import cn.xm.exam.utils.DefaultValue;
@@ -42,7 +41,10 @@ public class EmployInBreakrulesAction extends ActionSupport {
 
 	// @Resource
 	// private DepartmentCustomMapper departmentCustomMapper;
-
+	
+	@Resource
+	private DepartmentService departmentService;
+	
 	// 实例化要转成json的map集合
 	private Map<String, Object> map;
 
@@ -270,7 +272,8 @@ public class EmployInBreakrulesAction extends ActionSupport {
 		String departmentId = permitted ? null : departmentIdSession;
 		/***** S QLQ添加权限 *******/
 
-		List<Map<String, Object>> departmentTree = employeeInBreakrulesService.initLeftDepartmentTree(departmentId);
+		//List<Map<String, Object>> departmentTree = employeeInBreakrulesService.initLeftDepartmentTree(departmentId);
+		List<Map<String, Object>> departmentTree = departmentService.getDepartmentTreeCommon(departmentId);
 		// struts2自动将map集合转成json
 		map.put("departmentTree", departmentTree);
 		return "ok";
