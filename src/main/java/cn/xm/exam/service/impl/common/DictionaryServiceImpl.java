@@ -35,7 +35,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 */
 	@LogAnno(operateType = "添加了一个字典项")
 	@Override
-	public boolean addDictionary(Dictionary dictionary) throws Exception {
+	public boolean addDictionary(Dictionary dictionary) throws SQLException {
 		int result = dictionaryMapper.insert(dictionary);
 		if (result > 0) {
 			return true;

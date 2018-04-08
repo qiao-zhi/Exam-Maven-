@@ -18,7 +18,7 @@ public interface DictionaryService {
 	 * @return
 	 * @throws Exception
 	 */
-	public boolean addDictionary(Dictionary dictionary) throws Exception;
+	public boolean addDictionary(Dictionary dictionary) throws SQLException;
 
 	/**
 	 * 根据字典Id删除字典信息

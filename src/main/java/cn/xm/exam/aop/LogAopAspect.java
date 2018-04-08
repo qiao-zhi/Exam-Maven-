@@ -57,6 +57,7 @@ public class LogAopAspect {
 
 		Object result = null;
 		try {
+			//让代理方法执行
 			result = pjp.proceed();
 			// 2.相当于后置通知(方法成功执行之后走这里)
 			logtable.setOperateresult("正常");// 设置操作结果
