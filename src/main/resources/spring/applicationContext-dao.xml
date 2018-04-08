@@ -73,7 +73,8 @@
 
 	<!-- 5.开启注解管理aop事务 -->
 	<tx:annotation-driven />
-
+	<!-- 开启AOP注解 -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 
 
 	<!-- 事务模板对象，依赖于事务核心管理器 -->

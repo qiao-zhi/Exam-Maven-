@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import cn.xm.exam.annotation.LogAnno;
 import cn.xm.exam.bean.common.Dictionary;
 import cn.xm.exam.bean.common.DictionaryExample;
 import cn.xm.exam.mapper.common.DictionaryMapper;
@@ -32,6 +33,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	/**
 	 * 1、添加字典信息
 	 */
+	@LogAnno(operateType = "添加了一个字典项")
 	@Override
 	public boolean addDictionary(Dictionary dictionary) throws Exception {
 		int result = dictionaryMapper.insert(dictionary);
@@ -143,8 +145,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 	 */
 	@Override
 	public List<Dictionary> getDictionaryByUpDicId(String upDictionaryId) throws Exception {
-		
-		
+
 		// 从map集合中获取上级字典编号
 		List<Dictionary> dictionaryList = dictionaryCustomMapper.getDictionaryByUpDicId(upDictionaryId);
 		if (dictionaryList.size() > 0) {
@@ -371,17 +372,19 @@ public class DictionaryServiceImpl implements DictionaryService {
 	}
 
 	/**
-     * <!-- 根据上级字典编号upDictinonaryId   curPage当前页页号   perCount每页显示的记录数   查询所有下级字典信息 -->
-     * @param upDictionaryId 上级字典编号
-     * @return 下级字典信息
-     * @throws Exception
-     */
+	 * <!-- 根据上级字典编号upDictinonaryId curPage当前页页号 perCount每页显示的记录数 查询所有下级字典信息 -->
+	 * 
+	 * @param upDictionaryId
+	 *            上级字典编号
+	 * @return 下级字典信息
+	 * @throws Exception
+	 */
 	@Override
 	public List<Dictionary> getDictionaryByUpDicIdFY(Map<String, Object> map) throws Exception {
 		List<Dictionary> dictionaryList = dictionaryCustomMapper.getDictionaryByUpDicIdFY(map);
-		if(dictionaryList!=null){
+		if (dictionaryList != null) {
 			return dictionaryList;
-		}else{
+		} else {
 			return null;
 		}
 	}
@@ -394,6 +397,7 @@ public class DictionaryServiceImpl implements DictionaryService {
 		List<Dictionary> selectByExample = dictionaryMapper.selectByExample(example);
 		return selectByExample;
 	}
+
 	/*** S qlq */
 	@Override
 	public List<Map<String, Object>> getDictionaryIdAndNamesByUpId(String upDicId) throws SQLException {

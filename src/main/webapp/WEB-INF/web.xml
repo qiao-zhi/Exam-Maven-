@@ -4,6 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
 	<display-name>xm</display-name>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
 	<welcome-file-list>
 		<!-- <welcome-file>index.jsp</welcome-file> -->
 		<welcome-file>view/index/studyMainpage2.jsp</welcome-file>
